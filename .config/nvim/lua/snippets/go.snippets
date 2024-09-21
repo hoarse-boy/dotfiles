@@ -1,0 +1,48 @@
+# 
+# snippet v "kabommmmmm"
+# 	${1} := ${2}
+#
+snippet deferFunc "defer func to handle func with return"
+	defer func() {
+		if err := ${1}; err != nil {
+			${2}
+			return
+		}
+	}()
+	
+snippet del "comment FIX: TO DELETE"
+	// FIX: DELETE LATER
+
+snippet fix "comment FIX:"
+	// FIX: ${1}
+
+snippet todo "comment todo"
+	// TODO: ${1}
+
+snippet note "comment note"
+	// NOTE: ${1}
+
+snippet lo "go log but delete later"
+  log.Println(${1}) // FIX: DELETE LATER
+
+snippet fmt_del "fmt Println del"
+  fmt.Println("${1} ", ${2}) // FIX: DELETE LATER
+
+snippet log "go log.Prinlt"
+  log.Println(${1})
+
+snippet read_body_decoder "json new decoder"
+	var ${1:body} ${2:struct resp_body}
+	err := json.NewDecoder(${3:resp_body}).Decode(&${4:body})
+	if err != nil {
+		${5:error log}
+		return ${0}
+	}
+
+snippet execute_time "func exec time"
+	startTime := time.Now()
+	defer func() {
+		endTime := time.Now()
+		fmt.Println("ElapsedTime in seconds:", endTime.Sub(startTime))
+	}() // FIX: delete later
+

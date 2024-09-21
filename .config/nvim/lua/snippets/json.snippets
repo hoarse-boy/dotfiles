@@ -1,0 +1,37 @@
+snippet rust-json-debug "snippet to create launch.json for rust debuging"
+	{
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "${1}",
+				"type": "rt_lldb",
+				"request": "launch",
+				"cwd": "\${workspaceFolder\}",
+				"program": "\${workspaceFolder\}/target/debug/${workspaceFolderBasename}",
+				"stopAtEntry": true,
+				"env": {
+					"${2}": "${3}"
+				}
+			}
+		]
+	}
+
+snippet go-json-debug "create launch.json for go debugging"
+	{
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "${1}",
+				"type": "go",
+				"request": "launch",
+				// "program": "main.go",
+				// "program": "./cmd",
+				"program": "\${workspaceFolder\}/main.go",
+				// "args": ["--config-file=config.yaml", "arg2"],
+				"env": {
+					"${2}": "${3}"
+				}
+			}
+		]
+	}
+
