@@ -1,0 +1,3 @@
+#!/bin/bash
+# run this if there is a conflict in google drive. most of the time it was caused by google drive update in mac os that clashes with linux.
+rclone bisync ~/google-drive gdrive1: -v --conflict-resolve newer --resync
