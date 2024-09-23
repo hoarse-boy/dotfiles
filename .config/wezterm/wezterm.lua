@@ -3,7 +3,7 @@ local act = wezterm.action
 
 local is_macos = wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_triple == "aarch64-apple-darwin"
 
-local font_size = 10
+local font_size = 11
 if is_macos then
   font_size = 15.0
 end
@@ -94,7 +94,7 @@ return {
   -- https://wezfurlong.org/wezterm/config/default-keys.html
   disable_default_key_bindings = false,
   keys = {
-    { key = "t", mods = "CTRL", action = act.SpawnTab("CurrentPaneDomain") },
+    -- { key = "t", mods = "CTRL", action = act.SpawnTab("CurrentPaneDomain") },
     -- { key = "w", mods = "CTRL", action = act.CloseCurrentTab({ confirm = true }) }, -- accidently closing tab in wezterm sessin will delete it forever. -- NOTE: this keymap is used by supermaven
     { key = "C", mods = "CTRL", action = act.CopyTo("Clipboard") },               -- linux uses ctlr c to stop command in terminal.
     { key = "V", mods = "CTRL", action = act.PasteFrom("Clipboard") },            -- default nvim uses ctlr 'v' to do v-block mode.
