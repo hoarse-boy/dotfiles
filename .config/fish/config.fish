@@ -28,11 +28,15 @@ alias oin="cd ~/google-drive/obsidian-vault/inbox/ && nvim"
 # zoxide
 alias cd='z'
 
-# git
-alias config="/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
-# commit using commitizen.
-alias config-c="GIT_DIR=$HOME/dotfiles GIT_WORK_TREE=$HOME cz c"
 # TODO: add others.
+# git
+alias cfg="/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
+abbr cfgs 'cfg status'
+abbr cfga 'cfg add -u'
+abbr cfgP 'cfg push'
+abbr cfgp 'cfg pull'
+# commit using commitizen.
+abbr cfgc "GIT_DIR=$HOME/dotfiles GIT_WORK_TREE=$HOME cz c"
 
 # fish
 abbr sf 'source ~/.config/fish/config.fish'
