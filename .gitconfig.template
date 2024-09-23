@@ -1,0 +1,20 @@
+[core]
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    features = side-by-side
+    line-numbers = true
+    syntax-theme = Monokai Extended
+
+[delta "diff"]
+    syntax-highlighting = true
+
+[delta "side-by-side"]
+    width = 80
+
+[merge]
+    conflictstyle = diff3
+    git = delta

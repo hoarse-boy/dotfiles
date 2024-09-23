@@ -5,7 +5,7 @@
 # if `done` is `false` it will skip. and if it `true` it will check for the `tags`. if empty it will skip.
 
 # # copy from https://github.com/agalea91/dotfiles/blob/main/bin/on
-obsidianDir="$HOME/google-drive/obsidian-vault/"
+obsidianDir="$HOME/obsidian-syncthing/"
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
 	obsidianDir="$HOME/Google Drive/My Drive/obsidian-vault/"

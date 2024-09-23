@@ -4,7 +4,7 @@
 # it will be auto move to /completed-todo dir when `done` is true, else it will just skip it.
 
 # # copy from https://github.com/agalea91/dotfiles/blob/main/bin/on
-obsidianDir="$HOME/google-drive/obsidian-vault/"
+obsidianDir="$HOME/obsidian-syncthing/"
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
 	obsidianDir="$HOME/Google Drive/My Drive/obsidian-vault/"

@@ -35,7 +35,7 @@ local function toggle_checkbox_and_date()
   end
 end
 
-local obsidian_path = "~/google-drive/obsidian-vault"
+local obsidian_path = "~/obsidian-syncthing"
 
 local os_util = require("plugins.util.check-os")
 local os_name =  os_util.get_os_name()
