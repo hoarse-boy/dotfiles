@@ -30,13 +30,16 @@ alias cd='z'
 
 # git
 alias config="/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
+# commit using commitizen.
+alias config-c="GIT_DIR=$HOME/dotfiles GIT_WORK_TREE=$HOME cz c"
+# TODO: add others.
 
 # fish
 abbr sf 'source ~/.config/fish/config.fish'
 
 # abbreviation
 # nvim
-abbr v 'nvim'
+abbr v nvim
 abbr nv 'neovide --no-multigrid --fork --wayland_app_id neovide'
 abbr lazy 'cd ~/.local/share/nvim/lazy/LazyVim/ && nvim'
 
@@ -44,22 +47,22 @@ abbr lazy 'cd ~/.local/share/nvim/lazy/LazyVim/ && nvim'
 abbr ws 'wezterm connect unix & disown & exit' # re attached or create new wezterm session if not exist.
 
 # tmux 
-abbr t 'tmux'
+abbr t tmux
 abbr ta 'tmux attach-session -t'
 abbr tn 'tmux new-session -s'
 
 # other most used commands
 abbr dol 'nohup dolphin . > /dev/null 2>&1 &' # open dolphin for the current dir, quits terminal will not quit dolphin.
-abbr lg 'lazygit'
+abbr lg lazygit
 abbr pwd 'pwd && pwd | wl-copy'
 
 # FIX: need still to be updated.
 # kubernetes
-abbr kb 'kubectl'
+abbr kb kubectl
 
 # FIX: need still to be updated.
 # docker
-abbr dc 'docker'
+abbr dc docker
 
 # config abbreviation
 abbr hc 'cd ~/.config/hypr && nvim userprefs.conf'
@@ -84,11 +87,11 @@ abbr yr 'yay -R'
 abbr mkdir 'mkdir -p'
 
 # others
-abbr e 'exit'
-abbr c 'clear'
+abbr e exit
+abbr c clear
 abbr vc 'code .'
 abbr tree 'tree | wl-copy && tree'
-abbr sy 'systemctl'
+abbr sy systemctl
 abbr sudo 'sudo -E'
 
 # modify vim mode binding. location at .functions/fish_user_key_bindings.fish
@@ -100,7 +103,7 @@ set -Ux EDITOR nvim # currently only used when running crontab -e to open using 
 set -x PATH "$HOME/bin/" $PATH
 
 # opam configuration
-source /home/jho/.opam/opam-init/init.fish > /dev/null 2> /dev/null; or true
+source /home/jho/.opam/opam-init/init.fish >/dev/null 2>/dev/null; or true
 
 # npm
 set -U fish_user_paths (npm config get prefix)/bin $fish_user_paths

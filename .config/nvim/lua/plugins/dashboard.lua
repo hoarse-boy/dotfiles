@@ -58,9 +58,18 @@ return {
 
       -- TODO: update obsidian_todos and obsidian_inbox to have dynamic dir using util function. for macos and arch linux.
 
+      local obsidian_path = "~/obsidian-syncthing/obsidian-vault"
+
+      local os_util = require("plugins.util.check-os")
+      local os_name = os_util.get_os_name()
+
+      if os_name == os_util.OSX then
+        obsidian_path = "~/My Drive/obsidian-vault"
+      end
+
       -- add new dashboard item obsidian_todos.
       local obsidian_todos = {
-        action = [[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/google-drive/obsidian-vault/todos/")]],
+        action = string.format([[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("%s/todos/")]], obsidian_path),
         desc = printf("Obsidian Todos"),
         icon = "  ",
         key = "t",
@@ -73,7 +82,7 @@ return {
 
       -- add new dashboard item obsidian_inbox.
       local obsidian_inbox = {
-        action = [[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/google-drive/obsidian-vault/inbox/")]],
+        action = string.format([[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("%s/inbox/")]], obsidian_path),
         desc = printf("Obsidian Inbox"),
         icon = "󱉳  ",
         key = "i",

@@ -6,6 +6,11 @@
 
 # # copy from https://github.com/agalea91/dotfiles/blob/main/bin/on
 obsidianDir="$HOME/google-drive/obsidian-vault/"
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+	obsidianDir="$HOME/Google Drive/My Drive/obsidian-vault/"
+fi
+
 inboxDir="${obsidianDir}inbox/"
 
 if [ -z "$1" ]; then

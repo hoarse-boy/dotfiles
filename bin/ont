@@ -5,11 +5,16 @@
 
 # # copy from https://github.com/agalea91/dotfiles/blob/main/bin/on
 obsidianDir="$HOME/google-drive/obsidian-vault/"
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+	obsidianDir="$HOME/Google Drive/My Drive/obsidian-vault/"
+fi
+
 todosDir="${obsidianDir}todos/"
 
 if [ -z "$1" ]; then
-  echo "Error: A file name must be set, e.g., \"the wonderful thing about tiggers\"."
-  exit 1
+	echo "Error: A file name must be set, e.g., \"the wonderful thing about tiggers\"."
+	exit 1
 fi
 
 # Replace spaces with hyphens for the file name
@@ -26,7 +31,7 @@ title=$(echo "$file_name" | tr '-' ' ')
 # Write the complete content to the file
 # Create a temporary file with the complete content
 temp_file=$(mktemp)
-cat <<EOL >> "$temp_file"
+cat <<EOL >>"$temp_file"
 ---
 date: "$current_date"
 tags:
@@ -43,7 +48,7 @@ EOL
 
 # Append the existing content to the temporary file if any
 if [ -f "$file_path" ]; then
-  cat "$file_path" >> "$temp_file"
+	cat "$file_path" >>"$temp_file"
 fi
 
 # Replace the original file with the temporary file
