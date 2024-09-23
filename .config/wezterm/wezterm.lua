@@ -1,6 +1,13 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
 
+local is_macos = wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_triple == "aarch64-apple-darwin"
+
+local font_size = 10
+if is_macos then
+  font_size = 15.0
+end
+
 local function copyAll(win, pane) -- copy all text in a pane (except for bottom prompt in Xonsh)
   local prompt_bottom_offset = 0
   local proc = pane:get_foreground_process_info()
@@ -45,7 +52,7 @@ return {
   exit_behavior = "Close",
   max_fps = 75,
   font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Medium", stretch = "Normal", style = "Normal" }),
-  font_size = 10, -- the best for my nvim
+  font_size = font_size, -- the best for my nvim
   force_reverse_video_cursor = true,
   hide_tab_bar_if_only_one_tab = true,
   use_fancy_tab_bar = false,
@@ -91,6 +98,17 @@ return {
     -- { key = "w", mods = "CTRL", action = act.CloseCurrentTab({ confirm = true }) }, -- accidently closing tab in wezterm sessin will delete it forever. -- NOTE: this keymap is used by supermaven
     { key = "C", mods = "CTRL", action = act.CopyTo("Clipboard") },               -- linux uses ctlr c to stop command in terminal.
     { key = "V", mods = "CTRL", action = act.PasteFrom("Clipboard") },            -- default nvim uses ctlr 'v' to do v-block mode.
+    {
+      key = "n",
+      mods = "SHIFT|CTRL",
+      action = wezterm.action.ToggleFullScreen,
+    },
+    -- remove prompt when closing the tab
+    {
+      key = "w",
+      mods = "CMD",
+      action = wezterm.action.CloseCurrentPane({ confirm = false }),
+    },
   },
 
   scrollback_lines = 10000,
