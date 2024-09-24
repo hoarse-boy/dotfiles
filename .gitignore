@@ -2,11 +2,11 @@
 .gitconfig_local
 
 # tmux
-~/.tmux/plugins/*
-~/.config/tmux/plugins/*
+.tmux/plugins/*
+.config/tmux/plugins/*
 
-~/.config/fish/fish_variables
-~/.config/fish/conf.d/*
+.config/fish/fish_variables
+.config/fish/conf.d/*
 
 # Logs
 logs
