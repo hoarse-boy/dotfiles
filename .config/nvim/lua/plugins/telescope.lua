@@ -9,8 +9,23 @@ return {
       else
         opts.defaults.file_ignore_patterns = { "node_modules", "vendor", "proto/*", "**/*.pb.go" }
       end
-    end,
 
+      local actions = require("telescope.actions")
+      opts.defaults.mappings = {
+        i = {
+          ["<C-v>"] = actions.nop, -- to disable the default action of <C-v> in telescope which is open v split and change to paste using <C-s-v>
+          ["<C-k>"] = actions.cycle_history_next,
+          ["<C-j>"] = actions.cycle_history_prev,
+          ["<C-f>"] = actions.preview_scrolling_down,
+          ["<C-b>"] = actions.preview_scrolling_up,
+          ["<esc>"] = actions.close,
+        },
+        n = {
+          ["q"] = actions.close,
+          ["<esc>"] = actions.close,
+        },
+      }
+    end,
     keys = {
       -- disable the keymap to grep files. use "sg" instead
       { "<leader>/", false },

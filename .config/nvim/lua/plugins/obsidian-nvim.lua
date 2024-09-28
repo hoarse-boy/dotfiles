@@ -38,7 +38,7 @@ end
 local obsidian_path = "~/obsidian-syncthing"
 
 local os_util = require("plugins.util.check-os")
-local os_name =  os_util.get_os_name()
+local os_name = os_util.get_os_name()
 -- my current macos has different directory.
 if os_name == os_util.OSX then
   obsidian_path = "~/My Drive/obsidian-vault"
@@ -50,83 +50,133 @@ local my_img_folder = "_resources/"
 local notes_subdir = "inbox"
 local obsidian_extract_note_desc = printf("Extract Note in ") .. notes_subdir
 
+-- TODO: change to other plugins or create my own conceal and autocmd to show the same symbol like obsidian.nvim. as that's the only  usecase for this plugin.
+-- [ ] todo remove keymaps.
+
 return {
-  {
-    "epwalsh/obsidian.nvim",
-    version = "*", -- recommended, use latest release instead of latest commit
-    event = "VeryLazy",
-    -- ft = "markdown",
-    -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
-    -- event = {
-    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
-    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
-    --   "BufReadPre path/to/my-vault/**.md",
-    --   "BufNewFile path/to/my-vault/**.md",
-    -- },
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "hrsh7th/nvim-cmp",
-    },
-    config = function()
-      require("obsidian").setup({
-        workspaces = {
-          {
-            name = "work",
-            path = obsidian_path,
-          },
-        },
-        notes_subdir = notes_subdir,
-        new_notes_location = "notes_subdir",
-        disable_frontmatter = true,
-        templates = {
-          subdir = "templates",
-          date_format = "%Y-%m-%d",
-          time_format = "%H:%M:%S",
-        },
+  -- {
+  --   "epwalsh/obsidian.nvim",
+  --   version = "*", -- recommended, use latest release instead of latest commit
+  --   event = "VeryLazy",
+  --   -- enabled = false, -- disabled plugin
+  --   -- ft = "markdown",
+  --   -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
+  --   -- event = {
+  --   --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+  --   --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
+  --   --   "BufReadPre path/to/my-vault/**.md",
+  --   --   "BufNewFile path/to/my-vault/**.md",
+  --   -- },
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",
+  --     "hrsh7th/nvim-cmp",
+  --   },
+  --   config = function()
+  --     require("obsidian").setup({
+  --       workspaces = {
+  --         {
+  --           name = "work",
+  --           path = obsidian_path,
+  --         },
+  --       },
+  --       notes_subdir = notes_subdir,
+  --       new_notes_location = "notes_subdir",
+  --       disable_frontmatter = true,
+  --       templates = {
+  --         subdir = "templates",
+  --         date_format = "%Y-%m-%d",
+  --         time_format = "%H:%M:%S",
+  --       },
 
-        -- TODO: update this to create work's todo.
-        -- create its template using the daily todo in GUI (see Daily notes core plugin's option).
-        -- create shell command that when creating new todo works alongside GUI core plugin.
-        -- need to refactor the directory structure. currently it is inside nested folder of Office.
-        -- change it "work/daily-todo" to host all daily todos. create a shell to mv done todo to "work/done".
-        -- create new dir "work/todo" to host all of the todos that will be linked to "work/daily-todo".
-        -- create new dir "work/done" to host all of the todos that has been done.
-        -- use the current date like "Thu 20 Jun 2024", or change it?
-        -- the template is "Office/Stand up/Daily Todo/Daily Todo template". it will use the same template but the file will be moved.
-        -- update keybindings for daily notes.
-        daily_notes = {
-          folder = "work/daily-todo",
-          -- Optional, if you want to change the date format for the ID of daily notes.
-          date_format = "%Y-%m-%d",
-          -- Optional, if you want to change the date format of the default alias of daily notes.
-          alias_format = "%B %-d, %Y",
-          -- Optional, if you want to automatically insert a template from your template directory like 'daily.md'
-          template = nil,
-        },
+  --       -- TODO: update this to create work's todo.
+  --       -- create its template using the daily todo in GUI (see Daily notes core plugin's option).
+  --       -- create shell command that when creating new todo works alongside GUI core plugin.
+  --       -- need to refactor the directory structure. currently it is inside nested folder of Office.
+  --       -- change it "work/daily-todo" to host all daily todos. create a shell to mv done todo to "work/done".
+  --       -- create new dir "work/todo" to host all of the todos that will be linked to "work/daily-todo".
+  --       -- create new dir "work/done" to host all of the todos that has been done.
+  --       -- use the current date like "Thu 20 Jun 2024", or change it?
+  --       -- the template is "Office/Stand up/Daily Todo/Daily Todo template". it will use the same template but the file will be moved.
+  --       -- update keybindings for daily notes.
+  --       daily_notes = {
+  --         folder = "work/daily-todo",
+  --         -- Optional, if you want to change the date format for the ID of daily notes.
+  --         date_format = "%Y-%m-%d",
+  --         -- Optional, if you want to change the date format of the default alias of daily notes.
+  --         alias_format = "%B %-d, %Y",
+  --         -- Optional, if you want to automatically insert a template from your template directory like 'daily.md'
+  --         template = nil,
+  --       },
 
-        mappings = {}, -- disable default keybindings.
-        completion = {
-          nvim_cmp = true,
-          min_chars = 2,
-        },
-      })
-    end,
-    keys = {
-      { "<leader>og", "<cmd>ObsidianFollowLink<cr>", desc = printf("Go to Linked File"), mode = "n" },
-      { "<leader>ob", "<cmd>ObsidianBacklinks<cr>", desc = printf("Open List of Backlinks"), mode = "n" },
-      { "<leader>oe", "<cmd>ObsidianExtractNote<cr>", desc = obsidian_extract_note_desc, mode = "v" },
-      { "<leader>ol", "<cmd>ObsidianLink<cr>", desc = printf("Find Matching Note and Create Link"), mode = "v" },
-      { "<leader>ol", "<cmd>ObsidianLinks<cr>", desc = printf("List Links in Current Note"), mode = "n" },
-      { "<leader>os", "<cmd>ObsidianSearch<cr>", desc = printf("Search or Create New Note"), mode = "n" },
-      { "<leader>oo", "<cmd>ObsidianOpen<cr>", desc = printf("Open File in GUI"), mode = "n" },
-      -- stylua: ignore
-      { "<leader>oc", function() return toggle_checkbox_and_date() end, desc = printf "Toggle Checkbox",                     mode = "n" },
-      -- stylua: ignore
-      { "gt",         function() return toggle_checkbox_and_date() end, desc = printf "Toggle Checkbox",                     mode = "n" },
-      -- { "<leader>op", "<cmd>ObsidianPasteImg<cr>", desc = printf"Obsidian Paste Image", mode = "n" }, -- NOTE: this suck. use the plugin below instead.
-    },
-  },
+  --       ui = {
+  --         enable = true, -- set to false to disable all additional syntax features
+  --         update_debounce = 200, -- update delay after a text change (in milliseconds)
+  --         max_file_length = 5000, -- disable UI features for files with more than this many lines
+  --         -- Define how various check-boxes are displayed
+  --         checkboxes = {
+  --           -- NOTE: the 'char' value has to be a single character, and the highlight groups are defined below.
+  --           [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
+  --           ["X"] = { char = "", hl_group = "ObsidianDone" },
+  --           ["o"] = { char = "󰱒", hl_group = "ObsidianPartiallyDone" },
+  --           [">"] = { char = "", hl_group = "ObsidianRightArrow" },
+  --           ["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
+  --           ["!"] = { char = "", hl_group = "ObsidianImportant" },
+  --           -- Replace the above with this if you don't have a patched font:
+  --           -- [" "] = { char = "☐", hl_group = "ObsidianTodo" },
+  --           -- ["x"] = { char = "✔", hl_group = "ObsidianDone" },
 
+  --           -- You can also add more custom ones...
+  --         },
+  --         -- Use bullet marks for non-checkbox lists.
+  --         bullets = { char = "•", hl_group = "ObsidianBullet" },
+  --         external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
+  --         -- Replace the above with this if you don't have a patched font:
+  --         -- external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
+  --         reference_text = { hl_group = "ObsidianRefText" },
+  --         highlight_text = { hl_group = "ObsidianHighlightText" },
+  --         tags = { hl_group = "ObsidianTag" },
+  --         block_ids = { hl_group = "ObsidianBlockID" },
+  --         hl_groups = {
+  --           -- The options are passed directly to `vim.api.nvim_set_hl()`. See `:help nvim_set_hl`.
+  --           ObsidianTodo = { bold = true, fg = "#f78c6c" },
+  --           ObsidianDone = { bold = true, fg = "#89ddff" },
+  --           ObsidianPartiallyDone = { bold = true, fg = "#f0e4b1" },
+  --           ObsidianRightArrow = { bold = true, fg = "#f78c6c" },
+  --           ObsidianTilde = { bold = true, fg = "#ff5370" },
+  --           ObsidianImportant = { bold = true, fg = "#d73128" },
+  --           ObsidianBullet = { bold = true, fg = "#89ddff" },
+  --           ObsidianRefText = { underline = true, fg = "#c792ea" },
+  --           ObsidianExtLinkIcon = { fg = "#c792ea" },
+  --           ObsidianTag = { italic = true, fg = "#89ddff" },
+  --           ObsidianBlockID = { italic = true, fg = "#89ddff" },
+  --           ObsidianHighlightText = { bg = "#75662e" },
+  --         },
+  --       },
+
+  --       mappings = {}, -- disable default keybindings.
+  --       completion = {
+  --         nvim_cmp = true,
+  --         min_chars = 2,
+  --       },
+  --     })
+  --   end,
+  --   keys = {
+  --     { "<leader>og", "<cmd>ObsidianFollowLink<cr>", desc = printf("Go to Linked File"), mode = "n" },
+  --     { "<leader>ob", "<cmd>ObsidianBacklinks<cr>", desc = printf("Open List of Backlinks"), mode = "n" },
+  --     { "<leader>oe", "<cmd>ObsidianExtractNote<cr>", desc = obsidian_extract_note_desc, mode = "v" },
+  --     { "<leader>ol", "<cmd>ObsidianLink<cr>", desc = printf("Find Matching Note and Create Link"), mode = "v" },
+  --     { "<leader>ol", "<cmd>ObsidianLinks<cr>", desc = printf("List Links in Current Note"), mode = "n" },
+  --     { "<leader>os", "<cmd>ObsidianSearch<cr>", desc = printf("Search or Create New Note"), mode = "n" },
+  --     { "<leader>oo", "<cmd>ObsidianOpen<cr>", desc = printf("Open File in GUI"), mode = "n" },
+  --     -- stylua: ignore
+  --     { "<leader>oc", function() return toggle_checkbox_and_date() end, desc = printf "Toggle Checkbox",                     mode = "n" },
+  --     -- stylua: ignore
+  --     { "gt",         function() return toggle_checkbox_and_date() end, desc = printf "Toggle Checkbox",                     mode = "n" },
+  --     -- { "<leader>op", "<cmd>ObsidianPasteImg<cr>", desc = printf"Obsidian Paste Image", mode = "n" }, -- NOTE: this suck. use the plugin below instead.
+  --   },
+  -- },
+
+  -- FIX: remove this?
   {
     "folke/which-key.nvim",
     opts = function(_, _)
@@ -138,6 +188,7 @@ return {
     end,
   },
 
+  -- FIX: remove this?
   -- this plugin can imitate the obsidian paste image function.
   {
     "dfendr/clipboard-image.nvim",

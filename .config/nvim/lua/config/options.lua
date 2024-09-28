@@ -15,11 +15,28 @@ require("config.neovide").setup()
 
 -- opt.cursorline = true
 opt.list = false -- NOTE: make the > and other symbol to be hidden when the object is commented.
-opt.scrolloff = 10 -- minimal number of screen lines to keep above and below the cursor.
-opt.sidescrolloff = 10 -- minimal number of screen lines to keep left and right of the cursor.
-opt.writebackup = false -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited.
-opt.swapfile = false -- creates a swapfile. disable to avoid the annoying prompt.
+opt.scrolloff = 12 -- minimal number of screen lines to keep above and below the cursor.
+opt.sidescrolloff = 20 -- minimal number of screen lines to keep left and right of the cursor.
 opt.hlsearch = true -- highlight all matches on previous search pattern.
 opt.relativenumber = false
-
 vim.g.autoformat = false -- disable auto format. use <leader>cf to format.
+
+opt.backup = false
+opt.undofile = true
+opt.writebackup = false
+
+-- NOTE: the prompt is annoying. however, it is required in case of nvim or neovide crash.
+-- how to stop the prompt, choose the option 'r' or recover.
+-- if there is more than one swap file, choose no. 1 which is the most recent.
+-- save the file and quit or remove the buffer using <leader>bd.
+-- open the file or buffer again, the swap file probably still exists.
+-- choose 'd' to delete the swap file. the prompt will disappear.
+opt.swapfile = true
+opt.updatetime = 300 -- Set to 300 milliseconds for more frequent swap file updates
+
+local os_util = require("plugins.util.check-os")
+local os_name = os_util.get_os_name()
+
+if os_name == os_util.LINUX then
+  vim.opt.directory = "/tmp/nvim/swap//" -- NOTE: change dir as the .local/share/nvim/swap is not working on arch linux. macos works fine.
+end

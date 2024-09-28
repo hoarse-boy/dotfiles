@@ -62,4 +62,14 @@ for dap.
         notify("<F5> to continue, <F7> to toggle breakpoint, <F8> to step over, <F9> to step into, <F10> to step out, <F12> to reset windows", "info", { title = "DAP helper" })
       end, { desc = printf("DAP helper"), noremap = true, silent = true })
 
+explain this changes for arch linux only.
+  -- Move Lines with Ctrl key
+  vim.keymap.set("n", "<C-m>", "<cmd>m .-2<cr>==", { desc = printf("Move Line Up") })
+  vim.keymap.set("n", "<C-n>", "<cmd>m .+1<cr>==", { desc = printf("Move Line Down") })
+  vim.keymap.set("i", "<C-m>", "<esc><cmd>m .-2<cr>==gi", { desc = printf("Move Line Up") })
+  vim.keymap.set("i", "<C-n>", "<esc><cmd>m .+1<cr>==gi", { desc = printf("Move Line Down") })
+  vim.keymap.set("v", "<C-m>", ":m '<-2<cr>gv=gv", { desc = printf("Move Selected Line Up") })
+  vim.keymap.set("v", "<C-n>", ":m '>+1<cr>gv=gv", { desc = printf("Move Selected Line Down") })
+
+
 vim:ft=help
