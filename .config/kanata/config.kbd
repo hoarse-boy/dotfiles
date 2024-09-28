@@ -3,11 +3,11 @@
 (defalias
   nav (tap-hold 0 200 spc (layer-while-held navigation))
 
-  ;; home row left side
-  ctl_f (tap-hold 0 200 f lctl)
-  sft_d (tap-hold 0 200 d lsft)
-  alt_s (tap-hold 0 200 s lalt)
+  ;; home row left side. NOTE: meta, alt, shift, ctrl.
   met_a (tap-hold 0 200 a lmet)
+  alt_s (tap-hold 0 200 s lalt)
+  sft_d (tap-hold 0 200 d lsft)
+  ctl_f (tap-hold 0 200 f lctl)
 
   ;; home row right side
   ;; NOTE: this makes j, k and l to not have any repetition pressing. 
