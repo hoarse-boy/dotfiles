@@ -5,9 +5,11 @@ local is_macos = wezterm.target_triple == "x86_64-apple-darwin" or wezterm.targe
 
 local spawn_tab = { key = "t", mods = "CMD", action = act.SpawnTab("CurrentPaneDomain") }
 local font_size = 12.0
+local window_background_opacity = 0.9
 if is_macos then
 	font_size = 15.0
 else
+  window_background_opacity = 0.87 -- for wayland
 	spawn_tab = { key = "t", mods = "CMD", action = wezterm.action.Nop }
 end
 
@@ -70,9 +72,7 @@ return {
 	show_new_tab_button_in_tab_bar = false,
 	-- FIX: modify and fix the ugly tab bar.
 
-	-- window_background_opacity = 0.9,
-	window_background_opacity = 0.87,
-	-- text_background_opacity = 0.8, -- dont use this as it will make the todo comments to have less visibility.
+	window_background_opacity = window_background_opacity,
 	colors = {
 		tab_bar = {
 			-- background = "rgba(0,0,0,0)",
