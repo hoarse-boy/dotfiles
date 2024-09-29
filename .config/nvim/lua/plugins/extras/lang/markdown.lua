@@ -7,8 +7,44 @@ local markdown_keymaps = augroup("markdown_keymaps", {})
 local os_util = require("plugins.util.check-os")
 local os_name = os_util.get_os_name()
 
+-- Define the custom function to toggle checkbox and manage date and symbol
+local function toggle_checkbox_and_date()
+  -- Get the current date in the desired format
+  local date = os.date("%Y-%m-%d")
 
--- -- FIX: 
+  -- Define the symbol and date string
+  local symbol_and_date = "✅ " .. date
+
+  -- Get the current line content
+  local line = vim.api.nvim_get_current_line()
+
+  -- Check if the line has a checkbox
+  local checkbox_pattern = "^(%s*)%- %[ %]"
+  local checked_pattern = "^(%s*)%- %[x%]"
+
+  if string.match(line, checkbox_pattern) then
+    -- Replace '- [ ]' with '- [x]' and append the symbol and date
+    local new_line = line:gsub(checkbox_pattern, "%1- [x]") .. " " .. symbol_and_date
+    vim.api.nvim_set_current_line(new_line)
+  elseif string.match(line, checked_pattern) then
+    -- Replace '- [x]' with '- [ ]' and remove the symbol and date
+    local new_line = line:gsub(checked_pattern, "%1- [ ]"):gsub(" ✅ %d%d%d%d%-%d%d%-%d%d$", "")
+    vim.api.nvim_set_current_line(new_line)
+  elseif line:match("^%s*$") then
+    -- If the line is empty or only contains whitespace, add '- [ ] ' and place the cursor at the correct position
+    local indent = line:match("^(%s*)")
+    local new_line = indent .. "- [ ] "
+    vim.api.nvim_set_current_line(new_line)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<ESC>A", true, false, true), "n", true)
+  else
+    -- Prepend '- [ ]' to the line if it doesn't have a checkbox
+    local indent = line:match("^(%s*)")
+    local new_line = indent .. "- [ ] " .. line:sub(#indent + 1)
+    vim.api.nvim_set_current_line(new_line)
+  end
+end
+
+-- -- FIX:
 -- local function toggle_checkbox_and_date()
 --   -- Get the current date in the desired format
 --   local date = os.date("%Y-%m-%d")
@@ -87,7 +123,7 @@ local os_name = os_util.get_os_name()
 --   end
 -- end
 
--- -- FIX: 
+-- -- FIX:
 -- local function toggle_checkbox_and_date()
 --   -- Get the current date in the desired format
 --   local date = os.date("%Y-%m-%d")
@@ -128,7 +164,6 @@ local os_name = os_util.get_os_name()
 --     vim.api.nvim_set_current_line(new_line)
 --   end
 -- end
-
 
 -- FIX: move this to utils.lua?
 local function delete_current_file()
@@ -416,6 +451,18 @@ return {
             set("v", ">", "<Plug>(bullets-demote)", { buffer = true, desc = printf("Demote Bullet") })
             set("v", "<", "<Plug>(bullets-promote)", { buffer = true, desc = printf("Promote Bullet") })
 
+            -- FIX:
+            set("n", "<leader>lp", "<cmd>MarkdownPreviewToggle<cr>", { buffer = true, desc = printf("Markdown Preview") }) -- FIX:
+            -- FIX:
+            -- keys = {
+            --   {
+            --     "<leader>cp",
+            --     ft = "markdown",
+            --     "<cmd>MarkdownPreviewToggle<cr>",
+            --     desc = "Markdown Preview",
+            --   },
+            -- },
+
             -- Keymap to delete the current file
             set("n", "<leader>fD", function()
               delete_current_file()
@@ -442,6 +489,26 @@ return {
           end)
         end,
       })
+    end,
+  },
+
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    build = function()
+      require("lazy").load({ plugins = { "markdown-preview.nvim" } })
+      vim.fn["mkdp#util#install"]()
+    end,
+    -- keys = {
+    --   {
+    --     "<leader>cp",
+    --     ft = "markdown",
+    --     "<cmd>MarkdownPreviewToggle<cr>",
+    --     desc = "Markdown Preview",
+    --   },
+    -- },
+    config = function()
+      vim.cmd([[do FileType]])
     end,
   },
 }

@@ -7,7 +7,7 @@ M.setup = function()
   if vim.g.neovide then
     -- TODO: lualine "" and "" characters color is different in neovide. need to fix it.
 
-    opt.guifont = "JetBrainsMono Nerd Font:h11.70:Medium" -- the font used in graphical neovim applications
+    opt.guifont = "JetBrainsMono Nerd Font:h15.00:Medium" -- the font used in graphical neovim applications
 
     vim.g.neovide_scale_factor = 1.0
     local change_scale_factor = function(delta)
@@ -49,6 +49,8 @@ M.setup = function()
       -- stylua: ignore
       set_keymap("n", "<c-v>", function() vim.api.nvim_paste(vim.fn.getreg('+'), true, -1) end)
       set_keymap("v", "<c-C>", '"+y') -- Copy
+
+      vim.g.neovide_fullscreen = 1 -- fullscreen on macos, this is needed to make it onto a new macos workspace or desktop to avoid stacking with wezterm.
 
       -- paste
       set_keymap("n", "<D-s>", ":w<CR>") -- Save

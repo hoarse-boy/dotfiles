@@ -99,4 +99,5 @@ if os_name == os_util.LINUX then
   vim.keymap.set("v", "<C-n>", ":m '>+1<cr>gv=gv", { desc = printf("Move Selected Line Down") })
 end
 
-
+-- TODO: move to other place?
+set("n", "<leader>Ol", '<cmd>lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/.local/share/nvim/lazy/LazyVim/")<cr>', { desc = printf("Open Lazyvim Config") })

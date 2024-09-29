@@ -9,7 +9,7 @@ local window_background_opacity = 0.9
 if is_macos then
 	font_size = 15.0
 else
-  window_background_opacity = 0.87 -- for wayland
+	window_background_opacity = 0.87 -- for wayland
 	spawn_tab = { key = "t", mods = "CMD", action = wezterm.action.Nop }
 end
 
@@ -61,7 +61,7 @@ return {
 	font_size = font_size, -- the best for my nvim
 	force_reverse_video_cursor = true,
 	default_cursor_style = "SteadyBlock",
-
+	enable_kitty_graphics = true,
 	hide_tab_bar_if_only_one_tab = true,
 	use_fancy_tab_bar = false,
 

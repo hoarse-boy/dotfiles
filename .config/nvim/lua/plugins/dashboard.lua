@@ -1,19 +1,13 @@
 local printf = require("plugins.util.printf").printf
 
 local logo = [[
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣶⣶⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠿⠿⠿⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⡀⠀⠀⠀⠀⠀⣠⣾⣿⠀⠀⣠⣿⣿⣷⣄⡀⠀⠀⠀⠀⣠⣾⣷⡀⠀⠀⠀⢀⣾⣿⠀⠀⠀⠀⣠⣾⡇⠀⠀⣰⣿⣿⣷⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⣷⠀⠀⠀⠀⢾⣿⣿⣿⡄⠀⠻⢿⣿⣿⣿⣿⣦⡀⠀⠐⣿⣿⣿⣇⠀⠀⠀⣿⣿⣿⡇⠀⠀⢴⣿⣿⣿⠀⠘⠻⢿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣿⣧⠀⠀⠀⠘⣿⣿⣿⡇⠀⠀⠀⠉⠻⣿⣿⣿⡇⠀⠀⠸⣿⣿⣿⡄⠀⠀⢸⣿⣿⡇⠀⠀⠘⣿⣿⣿⠀⠀⠀⠀⠈⠻⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣿⡆⠀⠀⠀⣿⣿⣿⡇⠀⣀⣀⣀⠀⢹⣿⣿⡇⠀⠀⠀⢻⣿⣿⣧⠀⠀⣼⣿⡿⠀⠀⠀⠀⣿⣿⣿⠀⠀⠀⠀⠀⠀⢸⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⡀⠀⠀⣸⣿⣿⠇⠀⣿⣿⣿⠀⢸⣿⣿⡇⠀⠀⠀⠘⣿⣿⣿⣶⣾⣿⠟⠀⠀⠀⠀⠀⣿⣿⡏⠀⠀⠀⠀⠀⢀⣿⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣧⠀⢀⣿⣿⡟⠀⠀⠈⠉⠉⠀⢸⣿⣿⡇⠀⠀⠀⠀⢻⣿⣿⣿⠟⠁⠀⠀⠀⠀⢀⣼⣿⡿⠀⠀⠀⠀⠀⢠⣾⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣾⣿⣿⠟⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⡇⠀⠀⠀⠀⠈⣿⣿⣿⡆⠀⠀⣀⣤⣶⣿⣿⠟⠀⠀⠀⠀⠀⠀⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣶⣾⣿⣿⣿⣿⡿⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⡇⠀⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⡿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠏⠀⠀⠀⠀⠀⠀⠀⠙⠿⠿⠿⠿⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠉⠁⣶⣶⣶⣶⣶⣶⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣶⣶⡆⢰⣶⣶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠛⠛⠛⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠿⠿⠃⠸⠿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣦⣤⣄⣠⣤⣀⣤⣄⡀⠀⣰⣦⣄⣀⡀⠀⠀⣴⣦⣤⣠⣤⣄⣤⣤⣀⡀⠀⣰⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀⠻⣿⣿⣿⣿⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⢿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⠃⠀⠀⠀⠈⢹⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⠁⠀⠀⠀⠀⢹⣿⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⢀⣼⠃⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⡟⠀⠀⠀⠀⢸⣿⡄⠀⠀⠀⠀⢸⣿⠀⠀⢠⣾⡗⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⠀⠀⢸⣿⡇⠀⠀⠀⠀⢸⣿⠀⠀⢸⣿⡇⠀⠀⠀⠀⢸⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⠇⠀⠀⠀⠀⢸⡿⠃⠀⠀⠀⠀⢸⡿⠀⠀⣸⣿⠇⠀⠀⠀⠀⣸⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ]]
 
 -- modify existing dashboard shortcut in config.center. the one showing when launching nvim.
@@ -54,8 +48,6 @@ return {
       logo = string.rep("\n", 8) .. logo .. "\n\n"
       opts.config.header = vim.split(logo, "\n")
 
-      -- TODO: update obsidian_todos and obsidian_inbox to have dynamic dir using util function. for macos and arch linux.
-
       local obsidian_path = "~/obsidian-syncthing"
 
       local os_util = require("plugins.util.check-os")
@@ -78,36 +70,36 @@ return {
 
       table.insert(opts.config.center, 2, obsidian_todos)
 
-      -- add new dashboard item obsidian_inbox.
-      local obsidian_inbox = {
-        action = string.format([[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("%s/inbox/")]], obsidian_path),
-        desc = printf("Obsidian Inbox"),
-        icon = "󱉳  ",
-        key = "i",
-      }
-
-      obsidian_inbox.desc = obsidian_inbox.desc .. string.rep(" ", 43 - #obsidian_inbox.desc)
-      obsidian_inbox.key_format = "  %s"
-
-      table.insert(opts.config.center, 3, obsidian_inbox)
-
-      local lazyvim_config = {
-        action = [[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/.local/share/nvim/lazy/LazyVim/")]],
-        desc = printf("Lazyvim Config"),
-        icon = "  ",
-        key = "L",
-      }
-
-      lazyvim_config.desc = lazyvim_config.desc .. string.rep(" ", 43 - #lazyvim_config.desc)
-      lazyvim_config.key_format = "  %s"
-
-      table.insert(opts.config.center, 11, lazyvim_config)
-
       update_dashboard_shortcut(opts, "c", [[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/.config/nvim/")]], " Config")
 
       -- remove some defaults dashboard items.
-      remove_dashboard_item(opts, "n")
-      remove_dashboard_item(opts, "x")
+      remove_dashboard_item(opts, "n") -- remove create new file.
+      remove_dashboard_item(opts, "x") -- remove lazyvim xtra.
+      remove_dashboard_item(opts, "l") -- remove lazy.
+      remove_dashboard_item(opts, "p") -- remove projects.
+      remove_dashboard_item(opts, "r") -- remove recent files.
+
+      -- NOTE: not used dashboard items.
+      -- -- add new dashboard item obsidian_inbox.
+      -- local obsidian_inbox = {
+      --   action = string.format([[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("%s/inbox/")]], obsidian_path),
+      --   desc = printf("Obsidian Inbox"),
+      --   icon = "󱉳  ",
+      --   key = "i",
+      -- }
+      -- obsidian_inbox.desc = obsidian_inbox.desc .. string.rep(" ", 43 - #obsidian_inbox.desc)
+      -- obsidian_inbox.key_format = "  %s"
+      -- table.insert(opts.config.center, 3, obsidian_inbox)
+
+      -- local lazyvim_config = {
+      --   action = [[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/.local/share/nvim/lazy/LazyVim/")]],
+      --   desc = printf("Lazyvim Config"),
+      --   icon = "  ",
+      --   key = "L",
+      -- }
+      -- lazyvim_config.desc = lazyvim_config.desc .. string.rep(" ", 43 - #lazyvim_config.desc)
+      -- lazyvim_config.key_format = "  %s"
+      -- table.insert(opts.config.center, 11, lazyvim_config)
     end,
   },
   {
@@ -159,3 +151,20 @@ return {
 -- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠛⠛⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠛⠀⠘⠛⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 -- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 --     ]]
+
+-- local logo = [[
+-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣶⣶⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠿⠿⠿⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⡀⠀⠀⠀⠀⠀⣠⣾⣿⠀⠀⣠⣿⣿⣷⣄⡀⠀⠀⠀⠀⣠⣾⣷⡀⠀⠀⠀⢀⣾⣿⠀⠀⠀⠀⣠⣾⡇⠀⠀⣰⣿⣿⣷⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⣷⠀⠀⠀⠀⢾⣿⣿⣿⡄⠀⠻⢿⣿⣿⣿⣿⣦⡀⠀⠐⣿⣿⣿⣇⠀⠀⠀⣿⣿⣿⡇⠀⠀⢴⣿⣿⣿⠀⠘⠻⢿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣿⣧⠀⠀⠀⠘⣿⣿⣿⡇⠀⠀⠀⠉⠻⣿⣿⣿⡇⠀⠀⠸⣿⣿⣿⡄⠀⠀⢸⣿⣿⡇⠀⠀⠘⣿⣿⣿⠀⠀⠀⠀⠈⠻⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣿⡆⠀⠀⠀⣿⣿⣿⡇⠀⣀⣀⣀⠀⢹⣿⣿⡇⠀⠀⠀⢻⣿⣿⣧⠀⠀⣼⣿⡿⠀⠀⠀⠀⣿⣿⣿⠀⠀⠀⠀⠀⠀⢸⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⡀⠀⠀⣸⣿⣿⠇⠀⣿⣿⣿⠀⢸⣿⣿⡇⠀⠀⠀⠘⣿⣿⣿⣶⣾⣿⠟⠀⠀⠀⠀⠀⣿⣿⡏⠀⠀⠀⠀⠀⢀⣿⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣧⠀⢀⣿⣿⡟⠀⠀⠈⠉⠉⠀⢸⣿⣿⡇⠀⠀⠀⠀⢻⣿⣿⣿⠟⠁⠀⠀⠀⠀⢀⣼⣿⡿⠀⠀⠀⠀⠀⢠⣾⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣾⣿⣿⠟⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⡇⠀⠀⠀⠀⠈⣿⣿⣿⡆⠀⠀⣀⣤⣶⣿⣿⠟⠀⠀⠀⠀⠀⠀⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣶⣾⣿⣿⣿⣿⡿⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⡇⠀⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⡿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠏⠀⠀⠀⠀⠀⠀⠀⠙⠿⠿⠿⠿⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠉⠁⣶⣶⣶⣶⣶⣶⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣶⣶⡆⢰⣶⣶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+-- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠛⠛⠛⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠿⠿⠃⠸⠿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+-- ]]
+
