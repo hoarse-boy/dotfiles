@@ -118,4 +118,12 @@ snippet create_notify_with_highlight "generate notify with treesitter highlight"
 		end,
 	})
 
+snippet create_os_check "generate os check"
+  local os_util = require("plugins.util.check-os")
+  local os_name = os_util.get_os_name()
+
+  if os_name == os_util.LINUX then
+    ${1:logic}
+  end
+
 

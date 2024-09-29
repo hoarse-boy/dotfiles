@@ -6,8 +6,11 @@ end
 
 zoxide init fish | source
 
-# my_fav_pokemon
-# fastfetch --logo-type kitty
+# makes the cursor change shape when in vim insert mode and normal mode
+set -g fish_vi_force_cursor 1
+set fish_cursor_default block
+set fish_cursor_insert line
+set fish_cursor_replace_one underscore
 
 # List Directory
 alias ls="lsd"
@@ -16,14 +19,14 @@ alias la="ls -a"
 alias lla="ls -la"
 alias lt="ls --tree"
 
+set -l editor "neovide --fork --wayland_app_id neovide" # or "nvim"
+
 # Personal
-alias hypr-conf="cd ~/.config/hypr && nvim"
-alias fish-conf="cd ~/.config/fish && nvim config.fish"
 alias fastfetch="fastfetch --logo-type kitty"
 
 # obsidian dir
-alias oto="cd ~/google-drive/obsidian-vault/todos/ && nvim"
-alias oin="cd ~/google-drive/obsidian-vault/inbox/ && nvim"
+alias oto="cd ~/obsidian-syncthing/todos/ && $editor ."
+alias oin="cd ~/obsidian-syncthing/inbox/ && $editor ."
 
 # zoxide
 alias cd='z'
@@ -45,8 +48,9 @@ abbr sf 'source ~/.config/fish/config.fish'
 # abbreviation
 # nvim
 abbr v nvim
-abbr nv 'neovide --no-multigrid --fork --wayland_app_id neovide'
-abbr lazy 'cd ~/.local/share/nvim/lazy/LazyVim/ && nvim'
+abbr nv 'neovide --fork --wayland_app_id neovide' # no no-multigrid has better animation but will make the floating window to have dark background.
+# abbr nv 'neovide --no-multigrid --fork --wayland_app_id neovide'
+abbr lazy "cd ~/.local/share/nvim/lazy/LazyVim/ && $editor"
 
 # wezterm
 abbr ws 'wezterm connect unix & disown & exit' # re attached or create new wezterm session if not exist.
@@ -61,25 +65,26 @@ abbr dol 'nohup dolphin . > /dev/null 2>&1 &' # open dolphin for the current dir
 abbr lg lazygit
 abbr pwd 'pwd && pwd | wl-copy'
 
-# FIX: need still to be updated.
+# TODO: add more for kubernetes
 # kubernetes
 abbr kb kubectl
 
-# FIX: need still to be updated.
+# TODO: add more for docker
 # docker
 abbr dc docker
 
 # config abbreviation
-abbr hc 'cd ~/.config/hypr && nvim userprefs.conf'
-abbr fc 'cd ~/.config/fish && nvim config.fish'
-abbr wc 'cd ~/.config/wezterm/ && nvim wezterm.lua'
-abbr tc 'cd ~/.config/tmux/ && nvim tmux.conf'
+abbr hc "cd ~/.config/hypr && $editor userprefs.conf"
+abbr fc "cd ~/.config/fish && $editor config.fish"
+abbr wc "cd ~/.config/wezterm/ && $editor wezterm.lua"
+abbr tc "cd ~/.config/tmux/ && $editor tmux.conf"
 
 # Handy change dir shortcuts
 abbr .. 'cd ..'
 abbr ... 'cd ../..'
 abbr b 'cd ..'
 abbr bb 'cd ../..'
+abbr bbb 'cd ../../..'
 abbr .3 'cd ../../..'
 abbr .4 'cd ../../../..'
 abbr .5 'cd ../../../../..'
@@ -87,6 +92,7 @@ abbr .5 'cd ../../../../..'
 # yay abbr
 abbr ys 'yay -S'
 abbr yr 'yay -R'
+# TODO: yay list packages.
 
 # Always mkdir a path (this doesn't inhibit functionality to make a single dir)
 abbr mkdir 'mkdir -p'

@@ -71,3 +71,32 @@ set("n", "<leader>ul", function()
   vim.cmd("set nu signcolumn=yes")
   print("enabled (this is to counter dashboard issue)")
 end, { desc = printf("Enable line number and signcolumn"), noremap = true, silent = true })
+
+local os_util = require("plugins.util.check-os")
+local os_name = os_util.get_os_name()
+
+if os_name == os_util.LINUX then
+  -- Unset the Alt-based line moving keybindings from lazyvim
+  vim.keymap.del("n", "<A-j>")
+  vim.keymap.del("n", "<A-k>")
+  vim.keymap.del("i", "<A-j>")
+  vim.keymap.del("i", "<A-k>")
+  vim.keymap.del("v", "<A-j>")
+  vim.keymap.del("v", "<A-k>")
+
+  -- Unset the window resizing mappings from lazyvim
+  vim.keymap.del("n", "<C-Up>")
+  vim.keymap.del("n", "<C-Down>")
+  vim.keymap.del("n", "<C-Left>")
+  vim.keymap.del("n", "<C-Right>")
+
+  -- Move Lines
+  vim.keymap.set("n", "<C-m>", "<cmd>m .-2<cr>==", { desc = printf("Move Line Up") })
+  vim.keymap.set("n", "<C-n>", "<cmd>m .+1<cr>==", { desc = printf("Move Line Down") })
+  vim.keymap.set("i", "<C-m>", "<esc><cmd>m .-2<cr>==gi", { desc = printf("Move Line Up") })
+  vim.keymap.set("i", "<C-n>", "<esc><cmd>m .+1<cr>==gi", { desc = printf("Move Line Down") })
+  vim.keymap.set("v", "<C-m>", ":m '<-2<cr>gv=gv", { desc = printf("Move Selected Line Up") })
+  vim.keymap.set("v", "<C-n>", ":m '>+1<cr>gv=gv", { desc = printf("Move Selected Line Down") })
+end
+
+

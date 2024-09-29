@@ -4,7 +4,7 @@ local act = wezterm.action
 local is_macos = wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_triple == "aarch64-apple-darwin"
 
 local spawn_tab = { key = "t", mods = "CMD", action = act.SpawnTab("CurrentPaneDomain") }
-local font_size = 11
+local font_size = 12.0
 if is_macos then
 	font_size = 15.0
 else
@@ -55,8 +55,11 @@ return {
 	exit_behavior = "Close",
 	max_fps = 75,
 	font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Medium", stretch = "Normal", style = "Normal" }),
+	-- font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Medium", stretch = "Normal", style = "Normal" }),
 	font_size = font_size, -- the best for my nvim
 	force_reverse_video_cursor = true,
+	default_cursor_style = "SteadyBlock",
+
 	hide_tab_bar_if_only_one_tab = true,
 	use_fancy_tab_bar = false,
 
@@ -113,7 +116,8 @@ return {
 			action = wezterm.action.CloseCurrentPane({ confirm = false }),
 		},
 		spawn_tab,
-		-- 	{ action = wezterm.action.Nop, mods = "ALT", key = "Enter" }, -- TODO: use this to disable keybinding.
+		{ action = wezterm.action.Nop, mods = "SHIFT|CTRL", key = "t" },
+		-- { action = wezterm.action.Nop, mods = "SHIFT|CTRL", key = "t" }, -- TODO: use this to disable keybinding.
 	},
 
 	scrollback_lines = 10000,
@@ -123,10 +127,8 @@ return {
 	window_close_confirmation = "NeverPrompt",
 	window_padding = {
 		-- left = "0.5cell",
-		left = "1.0cell",
-		right = 0,
 		-- right = 0,
-		top = "0.5cell", -- hyprland makes the upper part of the terminal to be missing, so it needs space.
-		bottom = "0.2cell",
+		top = 2, -- hyprland makes the upper part of the terminal to be missing, so it needs space.
+		bottom = 0,
 	},
 }
