@@ -2,9 +2,15 @@
     "profiles": [
         {
             "complex_modifications": {
+                "parameters": {
+                    "basic.to_delayed_action_delay_milliseconds": 100,
+                    "basic.to_if_alone_timeout_milliseconds": 100,
+                    "basic.to_if_held_down_threshold_milliseconds": 100
+                },
                 "rules": [
                     {
                         "description": "Key bindings for navigation layer",
+                        "enabled": false,
                         "manipulators": [
                             {
                                 "conditions": [
@@ -166,6 +172,7 @@
                     },
                     {
                         "description": "Activate navigation layer on spacebar hold delay",
+                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": { "key_code": "spacebar" },
