@@ -77,6 +77,7 @@ abbr dc docker
 # config abbreviation
 abbr hc "cd ~/.config/hypr && $editor userprefs.conf"
 abbr fc "cd ~/.config/fish && $editor config.fish"
+abbr kc "cd ~/.config/kitty && $editor kitty.conf"
 abbr wc "cd ~/.config/wezterm/ && $editor wezterm.lua"
 abbr tc "cd ~/.config/tmux/ && $editor tmux.conf"
 
