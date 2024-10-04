@@ -1,0 +1,17 @@
+# startup_mode fullscreen
+macos_traditional_fullscreen yes
+macos_quit_when_last_window_closed no
+
+# mapping
+# NOTE: no need to manually add mapping. macos_option_as_alt yes will fix it.
+# for nvim to buffer naviagation
+# map option+[ send_text all \x1b[
+# map option+] send_text all \x1b]
+# Fullscreen toggle
+map shift+ctrl+n toggle_fullscreen
+map cmd+c copy_to_clipboard
+map cmd+v paste_from_clipboard
+map cmd+t launch --cwd=current --type=tab
+
+# This forces kitty to treat the Option key as a normal modifier
+macos_option_as_alt yes
