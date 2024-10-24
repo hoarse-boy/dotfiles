@@ -2,6 +2,8 @@
 macos_traditional_fullscreen yes
 macos_quit_when_last_window_closed no
 
+font_size        16.0
+
 # mapping
 # NOTE: no need to manually add mapping. macos_option_as_alt yes will fix it.
 # for nvim to buffer naviagation

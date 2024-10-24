@@ -3,7 +3,7 @@ local printf = require("plugins.util.printf").printf
 return {
   "sindrets/diffview.nvim",
   event = "VeryLazy",
-  enabled = false, -- disabled plugin -- FIX: test which plugin causes the slow quit nvim.
+  enabled = false, -- disabled plugin
   -- dependencies = {},
   -- init = function() end, -- functions are always executed during startup
   -- opts = function(_, opts) end, -- use this to not overwrite this plugin config (usefull in lazyvim)

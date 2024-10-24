@@ -17,18 +17,18 @@ return {
         -- which doesnt convey alot of go common syntax highlighter like printf %v, & and * pointer in type and other.
         "charlespascoe/vim-go-syntax",
         config = function()
-          vim.g.go_highlight_comma = 1         -- it uses the highlight color of func?
+          vim.g.go_highlight_comma = 1 -- it uses the highlight color of func?
           -- NOTE: with catpuccin it is better in vanilla setting. but need to be changed. the highlight is called 'Identifier'
-          vim.g.go_highlight_fields = 1        -- Fields in expressions, e.g. bar in foo.bar = 123
+          vim.g.go_highlight_fields = 1 -- Fields in expressions, e.g. bar in foo.bar = 123
           vim.g.go_highlight_struct_fields = 1 -- Field names in struct literals, e.g. Bar in f := Foo{ Bar: 123 }.
           vim.g.go_highlight_variable_assignments = 1
           -- vim.g.go_highlight_types = 0
           -- vim.g.go_highlight_type_parameters = 0
           vim.g.go_highlight_semicolon = 1
           vim.g.go_highlight_struct_type_fields = 1
-          vim.g.go_highlight_struct_tags = 1           -- Struct tags, the backtick-delimited strings in structs, e.g. `json:bar` in struct { Bar int `json:"bar"` }.
-          vim.g.go_highlight_function_parameters = 1   -- Parameter names, e.g. bar in func foo(bar int)
-          vim.g.go_highlight_slice_brackets = 1        -- The brackets in slice types, e.g. []string.
+          vim.g.go_highlight_struct_tags = 1 -- Struct tags, the backtick-delimited strings in structs, e.g. `json:bar` in struct { Bar int `json:"bar"` }.
+          vim.g.go_highlight_function_parameters = 1 -- Parameter names, e.g. bar in func foo(bar int)
+          vim.g.go_highlight_slice_brackets = 1 -- The brackets in slice types, e.g. []string.
           vim.g.go_highlight_variable_declarations = 1 -- disable highlight in var name of 'kaobm', ex. kaobm := os.Getenv("REDIS_HOST")
           -- vim.g.go_highlight_dot = 0 -- this works
         end,
@@ -132,65 +132,52 @@ return {
         pattern = { "go", "gomod" },
         callback = function()
           vim.schedule(function()
-            vim.keymap.set("n", "<leader>la", "<cmd>GoCodeAction<cr>", { buffer = true, desc = printf("Code Action") })
-            vim.keymap.set("n", "<leader>ls", "<cmd>GoFillStruct<cr>", { buffer = true, desc = printf("Fill Struct") })
-            vim.keymap.set("n", "<leader>ls", "<cmd>GoFillStruct<cr>", { buffer = true, desc = printf("Fill Struct") })
-            vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, { buffer = true, desc = printf("Rename") })
-
-            -- go tags.
-            vim.keymap.set("n", "<leader>lTj",
-              "<cmd>GoModifyTag -add-tags json -transform snakecase -add-options json=<cr>",
-              { buffer = true, desc = printf("Add Tags snakecase No 'omitempty'") })
-            vim.keymap.set("n", "<leader>lTa",
-              "<cmd>GoModifyTag -add-tags json -transform camelcase -add-options json=<cr>",
-              { buffer = true, desc = printf("Add Tags No 'omitempty'") })
-            vim.keymap.set("n", "<leader>lTA", "<cmd>GoModifyTag -add-tags json -transform camelcase<cr>",
-              { buffer = true, desc = printf("Add Tags") })
-            vim.keymap.set("n", "<leader>lTr", "<cmd>GoRename<cr>", { buffer = true, desc = printf("Remove Tags") })
-            vim.keymap.set("n", "<leader>lTr", "<cmd>GoRename<cr>", { buffer = true, desc = printf("Remove Tags") })
-
-            -- go test.
-            vim.keymap.set("n", "<leader>lta", "<cmd>GoAddTest<cr>",
-              { buffer = true, desc = printf("Add Test for Current Func") })
-            vim.keymap.set("n", "<leader>ltA", "<cmd>GoAddAllTest<cr>",
-              { buffer = true, desc = printf("Add Test for all Func") })
-            vim.keymap.set("n", "<leader>lte", "<cmd>GoAddExpTest<cr>",
-              { buffer = true, desc = printf("Add Exported Func") })
-            vim.keymap.set("n", "<leader>ltT", "<cmd>GoTest<cr>", { buffer = true, desc = printf("Test All") })
-            vim.keymap.set("n", "<leader>ltt", "<cmd>GoTestFunc<cr>", { buffer = true, desc = printf("Test a Func") })
-            vim.keymap.set("n", "<leader>ltF", "<cmd>GoTestFile<cr>",
-              { buffer = true, desc = printf("Test All Func in the File") })
-            vim.keymap.set("n", "<leader>ltP", "<cmd>GoTestPkg<cr>", { buffer = true, desc = printf("Test Package") })
-            vim.keymap.set("n", "<leader>ltc", "<cmd>GoCoverage<cr>",
-              { buffer = true, desc = printf("Test -coverprofile") })
-            vim.keymap.set("n", "<leader>ld", "<cmd>GoDoc<cr>", { buffer = true, desc = printf("Go Doc") })
-            vim.keymap.set("n", "<leader>le", "<cmd>GoIfErr<cr>",
-              { buffer = true, desc = printf("Auto Generate 'if err'") })
-            vim.keymap.set("n", "<leader>ll", "<cmd>GoLint<cr>", { buffer = true, desc = printf("Run 'golangci_lint'") })
-            vim.keymap.set("n", "<leader>lm", "<cmd>Gomvp<cr>", { buffer = true, desc = printf("Rename Module name") })
-            vim.keymap.set("n", "<leader>lc", "<cmd>GoCheat<cr>", { buffer = true, desc = printf("Cheatsheet") })
-            vim.keymap.set("n", "<leader>lC", "<cmd>GoCmt<cr>",
-              { buffer = true, desc = printf("Go Generate Func Comments") })
-            -- -- map("n", "<leader>lgm", "<cmd>GoFixPlurals<cr>", { desc = printf"Go Fix Redundant Func Params" }) -- not working?
-
-            -- goplay.nvim keymaps
-            vim.keymap.set("n", "<leader>lpo", ":GPOpen<CR>", { buffer = true, desc = printf("Open Goplay") })
-            vim.keymap.set("n", "<leader>lpt", ":GPToggle<CR>", { buffer = true, desc = printf("Toggle Goplay") })
-            vim.keymap.set("n", "<leader>lpe", ":GPExec<CR>", { buffer = true, desc = printf("Execute") })
-            vim.keymap.set("n", "<leader>lpE", ":GPExecFile<CR>", { buffer = true, desc = printf("Execute File") })
-            vim.keymap.set("n", "<leader>lpc", ":GPClose<CR>", { buffer = true, desc = printf("Close Goplay") })
-            vim.keymap.set("n", "<leader>lpC", ":GPClear<CR>", { buffer = true, desc = printf("Clear Goplay") })
-
             local wk = require("which-key")
-            local opts = { prefix = "<leader>", buffer = 0 }
             local mappings = {
-              { "<leader>l", icon = "󰟓", group = printf("lsp (go.nvim)"), mode = "n" },
-              { "<leader>lT", icon = "󰟓", group = printf("tags"), mode = "n" },
-              { "<leader>lt", icon = "󰟓", group = printf("test"), mode = "n" },
-              { "<leader>lp", icon = "󰟓", group = printf("goplay.nvim"), mode = "n" },
+              { "<leader>l", icon = "󰟓", group = printf("lsp (go.nvim)"), mode = "n", buffer = 0 },
+              { "<leader>lT", icon = "󰟓", group = printf("tags"), mode = "n", buffer = 0 },
+              { "<leader>lt", icon = "󰟓", group = printf("test"), mode = "n", buffer = 0 },
+              { "<leader>lp", icon = "󰟓", group = printf("goplay.nvim"), mode = "n", buffer = 0 },
+
+              -- Code actions
+              { "<leader>la", "<cmd>GoCodeAction<cr>", mode = { "n" }, desc = printf("Code Action"), buffer = 0 },
+              { "<leader>ls", "<cmd>GoFillStruct<cr>", mode = { "n" }, desc = printf("Fill Struct"), buffer = 0 },
+              { "<leader>lr", vim.lsp.buf.rename, mode = { "n" }, desc = printf("Rename"), buffer = 0 },
+
+              -- Go tags
+              { "<leader>lTj", "<cmd>GoModifyTag -add-tags json -transform snakecase -add-options json=<cr>", mode = { "n" }, desc = printf("Add Tags snakecase No 'omitempty'"), buffer = 0 },
+              { "<leader>lTa", "<cmd>GoModifyTag -add-tags json -transform camelcase -add-options json=<cr>", mode = { "n" }, desc = printf("Add Tags No 'omitempty'"), buffer = 0 },
+              { "<leader>lTA", "<cmd>GoModifyTag -add-tags json -transform camelcase<cr>", mode = { "n" }, desc = printf("Add Tags"), buffer = 0 },
+              { "<leader>lTr", "<cmd>GoRename<cr>", mode = { "n" }, desc = printf("Remove Tags"), buffer = 0 },
+
+              -- Go tests
+              { "<leader>lta", "<cmd>GoAddTest<cr>", mode = { "n" }, desc = printf("Add Test for Current Func"), buffer = 0 },
+              { "<leader>ltA", "<cmd>GoAddAllTest<cr>", mode = { "n" }, desc = printf("Add Test for all Func"), buffer = 0 },
+              { "<leader>lte", "<cmd>GoAddExpTest<cr>", mode = { "n" }, desc = printf("Add Exported Func"), buffer = 0 },
+              { "<leader>ltT", "<cmd>GoTest<cr>", mode = { "n" }, desc = printf("Test All"), buffer = 0 },
+              { "<leader>ltt", "<cmd>GoTestFunc<cr>", mode = { "n" }, desc = printf("Test a Func"), buffer = 0 },
+              { "<leader>ltF", "<cmd>GoTestFile<cr>", mode = { "n" }, desc = printf("Test All Func in the File"), buffer = 0 },
+              { "<leader>ltP", "<cmd>GoTestPkg<cr>", mode = { "n" }, desc = printf("Test Package"), buffer = 0 },
+              { "<leader>ltc", "<cmd>GoCoverage<cr>", mode = { "n" }, desc = printf("Test -coverprofile"), buffer = 0 },
+
+              -- Go documentation and utilities
+              { "<leader>ld", "<cmd>GoDoc<cr>", mode = { "n" }, desc = printf("Go Doc"), buffer = 0 },
+              { "<leader>le", "<cmd>GoIfErr<cr>", mode = { "n" }, desc = printf("Auto Generate 'if err'"), buffer = 0 },
+              { "<leader>ll", "<cmd>GoLint<cr>", mode = { "n" }, desc = printf("Run 'golangci_lint'"), buffer = 0 },
+              { "<leader>lm", "<cmd>Gomvp<cr>", mode = { "n" }, desc = printf("Rename Module name"), buffer = 0 },
+              { "<leader>lc", "<cmd>GoCheat<cr>", mode = { "n" }, desc = printf("Cheatsheet"), buffer = 0 },
+              { "<leader>lC", "<cmd>GoCmt<cr>", mode = { "n" }, desc = printf("Go Generate Func Comments"), buffer = 0 },
+
+              -- goplay.nvim keymaps
+              { "<leader>lpo", ":GPOpen<CR>", mode = { "n" }, desc = printf("Open Goplay"), buffer = 0 },
+              { "<leader>lpt", ":GPToggle<CR>", mode = { "n" }, desc = printf("Toggle Goplay"), buffer = 0 },
+              { "<leader>lpe", ":GPExec<CR>", mode = { "n" }, desc = printf("Execute"), buffer = 0 },
+              { "<leader>lpE", ":GPExecFile<CR>", mode = { "n" }, desc = printf("Execute File"), buffer = 0 },
+              { "<leader>lpc", ":GPClose<CR>", mode = { "n" }, desc = printf("Close Goplay"), buffer = 0 },
+              { "<leader>lpC", ":GPClear<CR>", mode = { "n" }, desc = printf("Clear Goplay"), buffer = 0 },
             }
 
-            wk.add(mappings, opts)
+            wk.add(mappings)
           end)
         end,
       })
@@ -325,11 +312,11 @@ return {
     config = function()
       require("goplay").setup({
         template = require("goplay.templates").default, -- template which will be used as the default content for the playground
-        mode = "current",                               -- current/split/[vsplit] specifies where the playground will be opened
+        mode = "current", -- current/split/[vsplit] specifies where the playground will be opened
         -- mode = "vsplit", -- current/split/[vsplit] specifies where the playground will be opened
-        playgroundDirName = "goplayground",             -- a name of the directory under GOPATH/src where the playground will be saved
-        tempPlaygroundDirName = "goplayground_temp",    -- a name of the directory under GOPATH/src where the temporary playground will be saved. This option is used when you need to execute a file
-        output_mode = "raw",                            -- [formatted]/raw mode to display output
+        playgroundDirName = "goplayground", -- a name of the directory under GOPATH/src where the playground will be saved
+        tempPlaygroundDirName = "goplayground_temp", -- a name of the directory under GOPATH/src where the temporary playground will be saved. This option is used when you need to execute a file
+        output_mode = "raw", -- [formatted]/raw mode to display output
         -- output_mode = "formatted", -- [formatted]/raw mode to display output
       })
     end,

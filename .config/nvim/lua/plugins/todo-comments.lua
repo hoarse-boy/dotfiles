@@ -60,9 +60,9 @@ return {
       },
       {
         "<leader>mF",
-        "<cmd>Trouble todo filter = {tag = {FIX}}<cr>",
+        "<cmd>Trouble todo filter = {tag = {FIX, MARKED}}<cr>",
         mode = "n",
-        desc = printf("Trouble Open 'FIX' Todo"),
+        desc = printf("Trouble Open 'FIX' and 'MARKED' Todo"),
         noremap = true,
         silent = true,
       },

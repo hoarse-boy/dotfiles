@@ -1,4 +1,7 @@
-local char_symbol = "▏"
+local char_symbol = "▎"
+-- local char_symbol = "▍"
+-- local char_symbol = "┃"
+-- local char_symbol = "│"
 
 -- NOTE: best v2 with wezterm enable undercurl => https://wezfurlong.org/wezterm/faq.html#how-do-i-enable-undercurl-curly-underlines
 -- disable these plugins to use one plugin that can do both without mini.indentscope performance hit.
@@ -10,12 +13,21 @@ return {
     -- enabled = false, -- disabled plugin
     opts = {
       indent = {
-        -- char = "│",
-        -- tab_char = "│",
         char = char_symbol,
         tab_char = char_symbol,
       },
-      scope = { enabled = false },
+      scope = {
+        enabled = true, -- This replaces 'show_current_context'
+        show_start = true, -- Optional: customize context scope start
+        highlight = { "Function", "Label" },
+        show_end = false, -- Optional: hide context scope end. in case of lua, the 'end' in a function will be have underline highlight.
+        -- show_exact_scope = true,
+      },
+      whitespace = {
+        -- remove_blankline_trail = false,
+      },
+
+      -- scope = { enabled = false },
       exclude = {
         filetypes = {
           "help",
@@ -30,6 +42,7 @@ return {
           "toggleterm",
           "lazyterm",
           "nvimtree",
+          -- "markdown", -- frontmatter to behave strangely, but it is needed to make todo checkbox to have indent line.
         },
       },
     },
@@ -42,7 +55,7 @@ return {
   {
     "echasnovski/mini.indentscope",
     version = false, -- wait till new 0.7.0 release to put it back on semver
-    -- enabled = false, -- disabled plugin
+    enabled = false, -- disabled plugin
     event = "LazyFile",
     opts = {
       -- symbol = "▏",

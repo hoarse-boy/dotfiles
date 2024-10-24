@@ -1,6 +1,6 @@
 local hl_colors = {
   dark_blue = "#0286c7",
-  types = "#15a191",
+  types = "#2b8756", -- #15a191 
   todo_NOTE = "#15a191",
   todo_TODO = "#18a4db",
   todo_WARN = "#b0ab8b",
@@ -58,7 +58,14 @@ return {
           return {
             Comment = { fg = "#4d4b49" }, -- comments
             FlashBackdrop = { fg = "#4d4b49" },
-            Operator = { fg = "#d1d1d1" }, -- operator := , * & etc.
+
+            -- NOTE: must have identical or similar color to @text or text (words or var) below, to make them distinct.
+            -- NOTE: Operator has a rule to abide to avoid identical color with different highlight groups (mostly for golang). the following are the highlighter to avoid having similar color / color group:
+            -- - variable / text / @text. ex. &request => & must have different color than 'request' (var). var or text is usually white.
+            -- - types / @type / @lsp.type.class etc.  ex. *gin.Context => '*' must have different color than 'gin.Context'.
+            Operator = { fg = "#99875c" }, -- operator := , * & etc. old color "#d1d1d1"
+            -- Operator = { fg = "#b0ab8b" }, -- operator := , * & etc. old color "#d1d1d1"
+
             Boolean = { fg = "#7833f5" },
             Number = { fg = "#87b7c7" },
             Type = { fg = hl_colors.types },
@@ -108,7 +115,10 @@ return {
 
             -- go highlighter
             ["@variable.builtin"] = { fg = "#d61c9f" }, -- golang nil, if ST (semanteic token) is enabled, it will overwrite goNil
-            ["@type.builtin"] = { fg = "#ab9d3c" }, -- primitive type: string, int, float etc in golang
+
+            -- make the primitive type to be still a green like 'type'
+            ["@type.builtin"] = { fg = "#5e7843" }, -- primitive type: string, int, float etc in golang. "#ab9d3c", "#009688", "#4f8066"
+
             -- ["goVarIdentifier"] = { fg = "#55B4BE" }, -- go const. but not imported const (will follow Identifier). is commented as the default is linked to Identifier
             ["goStructTypeField"] = { fg = "#10b7c7" }, -- go struct field
             goVarAssign = { fg = "#D7658B" }, -- go overwrite var
@@ -153,8 +163,10 @@ return {
 
           -- peach = "#BC1B8C", -- number
           peach = "#da8ede", -- number
-          text = "#b0ab8b", -- var
-          -- text = "#bab49b", -- var
+
+          -- NOTE: text or var must be white. this is done to make markdown or file name / variable in programming language to be less burden to the eyes.
+          text = "#c7c7c7", -- var. old colors; "#bab49b", "#dedede", "#b0ab8b"
+
           red = "#a10524",
           -- red = "#d42f62", -- NOTE:  disable for now. as it will overwrite the following: rainbow bracket, nil / overwrite goNil highlighter when using semantic token, param var
 

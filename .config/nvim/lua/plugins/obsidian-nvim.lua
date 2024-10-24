@@ -176,55 +176,55 @@ return {
   --   },
   -- },
 
-  -- FIX: remove this?
-  {
-    "folke/which-key.nvim",
-    opts = function(_, _)
-      local wk = require("which-key")
-      local mapping = {
-        { "<leader>o", icon = "󱞁", group = printf("obsidian"), mode = "n" },
-      }
-      wk.add(mapping)
-    end,
-  },
+  -- -- FIX: remove this?
+  -- {
+  --   "folke/which-key.nvim",
+  --   opts = function(_, _)
+  --     local wk = require("which-key")
+  --     local mapping = {
+  --       { "<leader>o", icon = "󱞁", group = printf("obsidian"), mode = "n" },
+  --     }
+  --     wk.add(mapping)
+  --   end,
+  -- },
 
   -- FIX: remove this?
   -- this plugin can imitate the obsidian paste image function.
-  {
-    "dfendr/clipboard-image.nvim",
-    event = "VeryLazy",
-    -- enabled = false, -- disabled plugin
-    keys = {
-      { "<leader>op", "<cmd>PasteImg<cr>", mode = "n", desc = printf("Paste Image"), noremap = true, silent = true },
-    },
-    config = function()
-      require("clipboard-image").setup({
-        -- Default configuration for all filetype
-        default = {
-          img_name = function()
-            return os.date("%Y-%m-%d-%H-%M-%S")
-          end, -- Example result: "2021-04-13-10-04-18"
-          affix = "<\n  %s\n>", -- Multi lines affix
-        },
-        -- You can create configuration for ceartain filetype by creating another field (markdown, in this case)
-        -- If you're uncertain what to name your field to, you can run `lua print(vim.bo.filetype)`
-        -- Missing options from `markdown` field will be replaced by options from `default` field
-        markdown = {
-          img_dir = { "~", "google-drive", "obsidian-vault", "_resources" }, -- Use table for nested dir (New feature form PR #20)
-          img_dir_txt = "", -- no directory name as it uses obsidian wiki format.
-          -- NOTE: this one if failed. create strange text in nvim.
-          -- img_handler = function(img) -- New feature from PR #22
-          -- local script = string.format('./image_compressor.sh "%s"', img.path)
-          -- os.execute(script)
-          -- end,
+  -- {
+  --   "dfendr/clipboard-image.nvim",
+  --   event = "VeryLazy",
+  --   -- enabled = false, -- disabled plugin
+  --   keys = {
+  --     { "<leader>op", "<cmd>PasteImg<cr>", mode = "n", desc = printf("Paste Image"), noremap = true, silent = true },
+  --   },
+  --   config = function()
+  --     require("clipboard-image").setup({
+  --       -- Default configuration for all filetype
+  --       default = {
+  --         img_name = function()
+  --           return os.date("%Y-%m-%d-%H-%M-%S")
+  --         end, -- Example result: "2021-04-13-10-04-18"
+  --         affix = "<\n  %s\n>", -- Multi lines affix
+  --       },
+  --       -- You can create configuration for ceartain filetype by creating another field (markdown, in this case)
+  --       -- If you're uncertain what to name your field to, you can run `lua print(vim.bo.filetype)`
+  --       -- Missing options from `markdown` field will be replaced by options from `default` field
+  --       markdown = {
+  --         img_dir = { "~", "google-drive", "obsidian-vault", "_resources" }, -- Use table for nested dir (New feature form PR #20)
+  --         img_dir_txt = "", -- no directory name as it uses obsidian wiki format.
+  --         -- NOTE: this one if failed. create strange text in nvim.
+  --         -- img_handler = function(img) -- New feature from PR #22
+  --         -- local script = string.format('./image_compressor.sh "%s"', img.path)
+  --         -- os.execute(script)
+  --         -- end,
 
-          img_name = function()
-            local random_number = math.random(1000000, 9999999)
-            return string.format("%s%s", os.date("%Y-%m-%d-%H-%M-%S"), random_number)
-          end, -- Example result: "2021-04-13-10-04-18-1234567"
-          affix = "![[%s]]", -- NOTE: for obsidian wiki format.
-        },
-      })
-    end,
-  },
+  --         img_name = function()
+  --           local random_number = math.random(1000000, 9999999)
+  --           return string.format("%s%s", os.date("%Y-%m-%d-%H-%M-%S"), random_number)
+  --         end, -- Example result: "2021-04-13-10-04-18-1234567"
+  --         affix = "![[%s]]", -- NOTE: for obsidian wiki format.
+  --       },
+  --     })
+  --   end,
+  -- },
 }

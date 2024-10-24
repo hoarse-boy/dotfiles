@@ -4,6 +4,8 @@ local M = {}
 local filetype_formats = {
   javascript = "// %s",
   typescript = "// %s",
+  json = "// %s",
+  jsonc = "// %s",
   java = "// %s",
   c = "// %s",
   go = "// %s",
@@ -43,9 +45,7 @@ function M.insert_custom_todo_comments(keyword_str)
 
   -- Handle cases where the file type isn't in the list
   if comment_symbol == nil then
-    print("Filetype " ..
-    filetype ..
-    " is not supported. manually add it to the comment_symbols in insert_custom_todo_comments.lua in util folder.")
+    print("Filetype " .. filetype .. " is not supported. manually add it to the comment_symbols in insert_custom_todo_comments.lua in util folder.")
     comment_symbol = "%s"
   end
 
@@ -88,9 +88,7 @@ function M.append_todo_comments_to_current_line(keyword_str, is_entering_insert_
 
   -- Handle cases where the file type isn't in the list
   if comment_symbol == nil then
-    print("Filetype " ..
-    filetype ..
-    " is not supported. manually add it to the comment_symbols in insert_custom_todo_comments.lua in util folder.")
+    print("Filetype " .. filetype .. " is not supported. manually add it to the comment_symbols in insert_custom_todo_comments.lua in util folder.")
     comment_symbol = "%s"
   end
 

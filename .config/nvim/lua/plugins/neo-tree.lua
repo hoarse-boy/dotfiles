@@ -67,7 +67,8 @@ return {
           ["o"] = "system_open", -- custom command
           ["<space>"] = "none",
           ["/"] = "none", -- disable neo-tree native filter. to use vim search instead. can be used by flash if it is enabled
-          -- ["s"] = "none", -- disabled "s" which is the open vsplit. to let the s of "flash" be usefull in searching files
+          ["s"] = "none", -- disabled "s" which is the open vsplit. to let the s of "flash" be usefull in searching files
+          ["S"] = "open_vsplit", -- rewrite the "S" to open vsplit
 
           -- to make the same behaviour as nvim-tree in lunarvim.
           -- move move back to the parent node.

@@ -128,10 +128,10 @@ return {
         dapui.open({})
       end
       dap.listeners.before.event_terminated["dapui_config"] = function()
-        dapui.close({})
+        -- dapui.close({}) -- NOTE: disable both close to avoid closing the debugger when exiting the buffer if an error occured. this is done to check the repl log.
       end
       dap.listeners.before.event_exited["dapui_config"] = function()
-        dapui.close({})
+        -- dapui.close({})
       end
     end,
   },

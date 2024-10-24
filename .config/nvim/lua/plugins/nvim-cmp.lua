@@ -45,6 +45,7 @@ return {
       opts.preselect = cmp.PreselectMode.None
       opts.completion = { completeopt = "menu,menuone,noinsert,noselect" }
 
+      -- NOTE: dont bind c-i as most terminal will bind it as tab.
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
         ["<esc>"] = cmp.mapping.abort(), -- default is control + e
         ["<CR>"] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
@@ -54,7 +55,7 @@ return {
         }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 
         -- add tab and shift tab to navigate the autocompleteion
-        -- NOTE: use arrow keys to select cmp suggestion. tab will be solely used by lausnip until the luasnip placeholder are gone
+        -- this tab and shift tab can also works for lausnip placeholder jumping, but 'esc' is needed to close the cmp menu while editing code.
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
@@ -66,6 +67,7 @@ return {
             fallback()
           end
         end, { "i", "s" }),
+
         ["<S-Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_prev_item()
@@ -75,6 +77,20 @@ return {
             fallback()
           end
         end, { "i", "s" }),
+
+        -- this function the same as above 'tab' but it will open cmp menu if the word has some suggestion. which is not quite good.
+        -- this is the newest one. leave it here for now.
+        -- ["<Tab>"] = cmp.mapping(function(fallback)
+        --       if cmp.visible() then
+        --         cmp.select_next_item()
+        --       elseif luasnip.expand_or_locally_jumpable() then
+        --         luasnip.expand_or_jump()
+        --       elseif has_words_before() then
+        --         cmp.complete()
+        --       else
+        --         fallback()
+        --       end
+        --     end, { "i", "s" }),
       })
     end,
   },

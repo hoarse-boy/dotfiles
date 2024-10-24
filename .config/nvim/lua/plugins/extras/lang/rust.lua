@@ -43,41 +43,29 @@ return {
         pattern = { "rust" },
         callback = function()
           vim.schedule(function()
-            vim.keymap.set("n", "K", "<cmd>RustHoverActions<cr>",
-              { buffer = true, desc = printf("Hover Actions (Rust)") })
-            vim.keymap.set("n", "<leader>la", "<cmd>RustCodeAction<cr>",
-              { buffer = true, desc = printf("Code Action (Rust)") })
-            vim.keymap.set("n", "<leader>dr", "<cmd>RustDebuggables<cr>",
-              { buffer = true, desc = printf("Run Debuggables (Rust)") })
-            vim.keymap.set("n", "<leader>l", "", { buffer = true, desc = printf("Lsp (Rust)") })
-            vim.keymap.set("n", "<leader>lc", "<cmd>RustOpenCargo<cr>",
-              { buffer = true, desc = printf("Open Cargo (Rust)") })
-            vim.keymap.set("n", "<leader>lmu", "<cmd>RustMoveItemUp<cr>",
-              { buffer = true, desc = printf("Move Item Up (Rust)") })
-            vim.keymap.set("n", "<leader>lmd", "<cmd>RustMoveItemDown<cr>",
-              { buffer = true, desc = printf("Move Item Down (Rust)") })
-            vim.keymap.set("n", "<leader>lr", "<cmd>RustHoverRange<cr>",
-              { buffer = true, desc = printf("Hover Range (Rust)") })
-            -- stylua: ignore
-            vim.keymap.set("n", "<leader>lp", "<cmd>RustParentModule<cr>",
-              { buffer = true, desc = printf "Go to Parent Module (Rust)" })
-            vim.keymap.set("n", "<leader>lj", "<cmd>RustJoinLines<cr>",
-              { buffer = true, desc = printf("Join Line(Rust)") })
-            --   -- TODO: RustSSR [query]
-            --   -- RustViewCrateGraph [backend [output]]
+            -- TODO: RustSSR [query]
+            -- RustViewCrateGraph [backend [output]]
 
             local wk = require("which-key")
-            local opts = { prefix = "<leader>", buffer = 0 }
             local mappings = {
-              l = {
-                name = printf("lsp (rust_tools)"),
-                m = {
-                  name = printf("item"),
-                },
-              },
+              { "<leader>l", icon = "󱘗", group = printf("lsp (rust-tools)"), mode = "n", buffer = 0 },
+              { "<leader>lm", icon = "󱘗", group = printf("move items"), mode = "n", buffer = 0 },
+
+              -- stylua: ignore start
+              { "K", "<cmd>RustHoverActions<cr>", icon = "󱘗", desc = printf("Hover Actions (Rust)"), mode = "n", buffer = 0 },
+              { "<leader>la", "<cmd>RustCodeAction<cr>", icon = "󱘗", desc = printf("Code Action (Rust)"), mode = "n", buffer = 0 },
+              { "<leader>dr", "<cmd>RustDebuggables<cr>", icon = "󱘗", desc = printf("Run Debuggables (Rust)"), mode = "n", buffer = 0 },
+              { "<leader>lc", "<cmd>RustOpenCargo<cr>", icon = "󱘗", desc = printf("Open Cargo (Rust)"), mode = "n", buffer = 0 },
+              { "<leader>lmu", "<cmd>RustMoveItemUp<cr>", icon = "󱘗", desc = printf("Move Item Up (Rust)"), mode = "n", buffer = 0 },
+              { "<leader>lmd", "<cmd>RustMoveItemDown<cr>", icon = "󱘗", desc = printf("Move Item Down (Rust)"), mode = "n", buffer = 0 },
+              { "<leader>lr", "<cmd>RustHoverRange<cr>", icon = "󱘗", desc = printf("Hover Range (Rust)"), mode = "n", buffer = 0 },
+              { "<leader>lp", "<cmd>RustParentModule<cr>", icon = "󱘗", desc = printf "Go to Parent Module (Rust)", mode = "n", buffer = 0 },
+              { "<leader>lj", "<cmd>RustJoinLines<cr>", icon = "󱘗", desc = printf("Join Line(Rust)"), mode = "n", buffer = 0 },
+              -- stylua: ignore end
             }
 
-            wk.register(mappings, opts)
+            wk.add(mappings)
+            -- wk.register(mappings) -- FIX:
           end)
         end,
       })

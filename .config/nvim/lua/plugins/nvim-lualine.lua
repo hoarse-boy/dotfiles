@@ -119,7 +119,10 @@ return {
         theme = bubbles_theme,
         component_separators = "",
         section_separators = { left = "", right = "" },
-        disabled_filetypes = { statusline = { "dashboard", "alpha", "starter" } },
+        -- disabled_filetypes = { statusline = { "dashboard", "alpha", "starter" } },
+        -- TODO: lualine is active in dap-ui. happen only in tmux session. now it happens in non tmux too. if that error occurs, it still shows lualine in non dap-ui windows.
+        -- after closing and opening the ui, dapui_console and dapui_watches are still active. even when it is disabled below.
+        disabled_filetypes = { statusline = { "dashboard", "alpha", "starter", "dap-repl", "dapui_console", "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes" } },
         globalstatus = true,
       }
 

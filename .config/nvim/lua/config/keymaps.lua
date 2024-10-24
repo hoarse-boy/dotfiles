@@ -53,10 +53,6 @@ set("n", "U", "<C-r>") -- dont have to use ctrl r to undo again.
 set("n", "<A-]>", "<cmd>BufferLineCycleNext<cr>", { desc = printf("Next Buffer") })
 set("n", "<A-[>", "<cmd>BufferLineCyclePrev<cr>", { desc = printf("Prev Buffer") })
 
--- this will be used by neovide.
--- set("n", "<C-Tab>", "<cmd>BufferLineCycleNext<cr>", { desc = printf"Next buffer" })
--- set("n", "<C-S-Tab>", "<cmd>BufferLineCyclePrev<cr>", { desc = printf"Prev buffer" })
-
 -- TODO: what is this for? remove?
 set("n", "<leader>sx", require("telescope.builtin").resume, { noremap = true, silent = true, desc = printf("Resume") })
 
@@ -77,26 +73,26 @@ local os_name = os_util.get_os_name()
 
 if os_name == os_util.LINUX then
   -- Unset the Alt-based line moving keybindings from lazyvim
-  vim.keymap.del("n", "<A-j>")
-  vim.keymap.del("n", "<A-k>")
-  vim.keymap.del("i", "<A-j>")
-  vim.keymap.del("i", "<A-k>")
-  vim.keymap.del("v", "<A-j>")
-  vim.keymap.del("v", "<A-k>")
+  del("n", "<A-j>")
+  del("n", "<A-k>")
+  del("i", "<A-j>")
+  del("i", "<A-k>")
+  del("v", "<A-j>")
+  del("v", "<A-k>")
 
   -- Unset the window resizing mappings from lazyvim
-  vim.keymap.del("n", "<C-Up>")
-  vim.keymap.del("n", "<C-Down>")
-  vim.keymap.del("n", "<C-Left>")
-  vim.keymap.del("n", "<C-Right>")
+  del("n", "<C-Up>")
+  del("n", "<C-Down>")
+  del("n", "<C-Left>")
+  del("n", "<C-Right>")
 
   -- Move Lines
-  vim.keymap.set("n", "<C-m>", "<cmd>m .-2<cr>==", { desc = printf("Move Line Up") })
-  vim.keymap.set("n", "<C-n>", "<cmd>m .+1<cr>==", { desc = printf("Move Line Down") })
-  vim.keymap.set("i", "<C-m>", "<esc><cmd>m .-2<cr>==gi", { desc = printf("Move Line Up") })
-  vim.keymap.set("i", "<C-n>", "<esc><cmd>m .+1<cr>==gi", { desc = printf("Move Line Down") })
-  vim.keymap.set("v", "<C-m>", ":m '<-2<cr>gv=gv", { desc = printf("Move Selected Line Up") })
-  vim.keymap.set("v", "<C-n>", ":m '>+1<cr>gv=gv", { desc = printf("Move Selected Line Down") })
+  set("n", "<C-m>", "<cmd>m .-2<cr>==", { desc = printf("Move Line Up") })
+  set("n", "<C-n>", "<cmd>m .+1<cr>==", { desc = printf("Move Line Down") })
+  set("i", "<C-m>", "<esc><cmd>m .-2<cr>==gi", { desc = printf("Move Line Up") })
+  set("i", "<C-n>", "<esc><cmd>m .+1<cr>==gi", { desc = printf("Move Line Down") })
+  set("v", "<C-m>", ":m '<-2<cr>gv=gv", { desc = printf("Move Selected Line Up") })
+  set("v", "<C-n>", ":m '>+1<cr>gv=gv", { desc = printf("Move Selected Line Down") })
 end
 
 -- TODO: move to other place?

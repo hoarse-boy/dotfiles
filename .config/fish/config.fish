@@ -53,6 +53,9 @@ abbr nv 'neovide --fork --wayland_app_id neovide' # no no-multigrid has better a
 # abbr nv 'neovide --no-multigrid --fork --wayland_app_id neovide'
 abbr lazy "cd ~/.local/share/nvim/lazy/LazyVim/ && $editor"
 
+# kitty
+abbr kt 'kitten ssh'
+
 # wezterm
 abbr ws 'wezterm connect unix & disown & exit' # re attached or create new wezterm session if not exist.
 

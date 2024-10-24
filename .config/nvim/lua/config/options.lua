@@ -15,8 +15,14 @@ require("config.neovide").setup()
 
 -- opt.cursorline = true
 opt.list = false -- NOTE: make the > and other symbol to be hidden when the object is commented.
-opt.scrolloff = 12 -- minimal number of screen lines to keep above and below the cursor.
+
+-- minimal number of screen lines to keep above and below the cursor.
+-- make the number lower to make image.nvim works by showing all part of the image as possible.
+-- scroll using ctlr-e or y or z+enter
+opt.scrolloff = 4
+-- opt.scrolloff = 12 -- minimal number of screen lines to keep above and below the cursor.
 opt.sidescrolloff = 20 -- minimal number of screen lines to keep left and right of the cursor.
+
 opt.hlsearch = true -- highlight all matches on previous search pattern.
 opt.relativenumber = false
 vim.g.autoformat = false -- disable auto format. use <leader>cf to format.

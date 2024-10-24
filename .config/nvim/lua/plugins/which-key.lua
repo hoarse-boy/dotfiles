@@ -31,6 +31,7 @@ return {
     }
 
     local printf = require("plugins.util.printf").printf
+    local util = require("plugins.util.util")
 
     -- update which-key mapping
     local wk = require("which-key")
@@ -38,6 +39,10 @@ return {
       { "<leader>:", icon = "󰋚", group = "Command History", mode = "n" }, -- NOTE: just add a symbol, not a new custom keymap.
       { "<leader>K", icon = "", group = "Keywordprg", mode = "n", hidden = true },
       { "<leader>O", icon = "", group = printf("others"), mode = "n" },
+
+      { "<leader>bR", "<cmd>recover<cr>", desc = printf("Recover Buffer"), mode = "n" }, -- FIX:
+      -- stylua: ignore
+      { "<leader>bD", function() util.delete_swap_folder() end, desc = printf("delete swapfile folder"), mode = "n", },
     }
 
     wk.add(mapping)

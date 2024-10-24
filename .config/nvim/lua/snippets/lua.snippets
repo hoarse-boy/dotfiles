@@ -31,8 +31,15 @@ snippet todo "comment todo"
 snippet note "comment note"
 	-- NOTE: ${1}
 
+snippet warn "comment warning"
+	-- WARN: ${1}
+
 snippet stylua_ignore "stylelua ignore comment"
 	-- stylua: ignore
+
+snippet stylua_ignore_lines "stylelua ignore comment lines"
+  -- stylua: ignore start
+  -- stylua: ignore end
 
 snippet lazy_keymap "lazy keymap"
 	keys = {
@@ -72,17 +79,30 @@ snippet add_which_key "generate which-key plugin"
 	{
 		"folke/which-key.nvim",
 		opts = function(_, _)
-			local printf = require("plugins.util.printf").printf
 			local wk = require("which-key")
-			local mapping = {
-				-- examples
-				-- { "<leader>h", icon = "󰓥", group = printf("harpoon"), mode = "n" }, -- group key with prefix like '+'
-				-- { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = printf"Find File", mode = "n", icon = "󰜉" },
-				-- { "<leader>fb", function() print("hello") end, desc = "Foobar" },
-			}
-			wk.add(mapping)
-		end,
-	},
+			local printf = require("plugins.util.printf").printf
+      local autocmd = vim.api.nvim_create_autocmd
+      local augroup = vim.api.nvim_create_augroup
+      local ${1:some_keymap_group} = augroup("${1:some_keymap_group}", {})
+
+      autocmd("Filetype", {
+        group = ${1:some_keymap_group},
+        pattern = "${2:filetype pattern}", -- * for all filetypes
+        callback = function()
+          vim.schedule(function()
+            local mapping = {
+              -- uncomment to use examples below. -- NOTE: `buffer = 0` is needed to not make it merge with other keymaps when opening other filetypes.
+              -- this will create local keymaps for that specific filetype. -- FIX: remove this comment after creating keymaps.
+              -- { "<leader>h", icon = "󰓥", group = printf("harpoon"), mode = "n", buffer = 0 }, -- group key with prefix like '+'
+              -- { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = printf"Find File", mode = "n", icon = "󰜉", buffer = 0 },
+              -- { "<leader>fb", function() print("hello") end, desc = "Foobar", buffer = 0 },
+            }
+            wk.add(mapping)
+          end)
+        end,
+      })
+    end,
+  },
 
 snippet log_table_create "generate func to log a table usefull for debugging, use snippet log_table to call it"
 	local function log_table(tbl, message)

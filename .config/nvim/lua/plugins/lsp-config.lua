@@ -94,11 +94,32 @@ return {
     opts = function(_, _)
       local printf = require("plugins.util.printf").printf
       local wk = require("which-key")
-      local mapping = {
-        { "<leader>cs", "<cmd>LspStart<CR>", desc = printf("Start Lsp"), mode = "n", icon = "" },
-        { "<leader>cR", "<cmd>LspRestart<CR>", desc = printf("Restart Lsp"), mode = "n", icon = "󰜉" },
-      }
+      local mapping = {}
       wk.add(mapping)
+    end,
+  },
+  {
+    "folke/which-key.nvim",
+    opts = function(_, _)
+      local wk = require("which-key")
+      local printf = require("plugins.util.printf").printf
+      local autocmd = vim.api.nvim_create_autocmd
+      local augroup = vim.api.nvim_create_augroup
+      local my_lsp_keymap_group = augroup("my_lsp_keymap_group", {})
+
+      autocmd("Filetype", {
+        group = my_lsp_keymap_group,
+        pattern = "*", -- * for all filetypes
+        callback = function()
+          vim.schedule(function()
+            local mapping = {
+              { "<leader>cs", "<cmd>LspStart<CR>", desc = printf("Start Lsp"), mode = "n", icon = "" }, -- FIX: sometimes it is not showing. change to use vim schedule. test again.
+              { "<leader>cR", "<cmd>LspRestart<CR>", desc = printf("Restart Lsp"), mode = "n", icon = "󰜉" },
+            }
+            wk.add(mapping)
+          end)
+        end,
+      })
     end,
   },
 }

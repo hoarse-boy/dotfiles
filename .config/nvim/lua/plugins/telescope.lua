@@ -3,6 +3,11 @@ local printf = require("plugins.util.printf").printf
 return {
   {
     "nvim-telescope/telescope.nvim",
+    dependencies = {
+      "nvim-telescope/telescope-media-files.nvim",
+      "nvim-lua/popup.nvim",
+      "nvim-lua/plenary.nvim",
+    },
     opts = function(_, opts)
       if type(opts.ensure_installed) == "table" then
         vim.list_extend(opts.defaults.file_ignore_patterns, { "node_modules", "vendor", "proto/*", "**/*.pb.go" }) -- NOTE: ignore folder / files for live grep
@@ -25,6 +30,16 @@ return {
           ["<esc>"] = actions.close,
         },
       }
+
+      -- opts.extensions = { -- not working on kitty and wezterm
+      --   media_files = {
+      --     -- filetypes whitelist
+      --     -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
+      --     filetypes = { "png", "webp", "jpg", "jpeg", "avif" },
+      --     -- find command (defaults to `fd`)
+      --     find_cmd = "rg",
+      --   },
+      -- }
     end,
     keys = {
       -- disable the keymap to grep files. use "sg" instead
@@ -46,6 +61,8 @@ return {
     },
   },
 }
+
+-- TODO: clean up
 
 -- return {
 --   {

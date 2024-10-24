@@ -8,13 +8,22 @@ local augroup = vim.api.nvim_create_augroup
 
 augroup("mygroup", { clear = true })
 
+augroup(printf("IgnoreHelpFileType"), { clear = true })
+autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = "~/.config/nvim/doc/*.txt",
+  callback = function()
+    vim.bo.filetype = "plain"
+  end,
+})
 
-augroup(printf"IgnoreHelpFileType", { clear = true })
-autocmd({"BufRead", "BufNewFile"}, {
-    pattern = "~/.config/nvim/doc/*.txt",
-    callback = function()
-        vim.bo.filetype = "plain"
-    end,
+-- lazyvim created autocmds to enable spell check for markdown files. this is to disable it.
+local disable_spell_group = augroup("disable_spell", { clear = true })
+autocmd("FileType", {
+  group = disable_spell_group,
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.spell = false
+  end,
 })
 
 -- NOTE: disable this in favor of the yanky plugin

@@ -20,49 +20,77 @@ return {
     -- install honza's communty driven snippets. copy the path and use require 'from_snipmate' above to load it.
     { "honza/vim-snippets" },
   },
-  opts = {
-    history = true,
-    delete_check_events = "TextChanged",
-  },
+  opts = function(_, opts)
+    opts.history = true
+    opts.delete_check_events = "TextChanged"
+
+    local types = require("luasnip.util.types")
+    require("luasnip").config.setup({
+      ext_opts = {
+        [types.choiceNode] = {
+          active = {
+            virt_text = { { "●", "GruvboxOrange" } },
+          },
+        },
+        [types.insertNode] = {
+          active = {
+            virt_text = { { "●", "GruvboxBlue" } },
+          },
+        },
+      },
+    })
+  end,
 
   keys = {
-    {
-      "<tab>",
-      function()
-        return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
-      end,
-      expr = true,
-      silent = true,
-      mode = "i",
-    },
-    {
-      "<tab>",
-      function()
-        require("luasnip").jump(1)
-      end,
-      mode = "s",
-    },
-    {
-      "<s-tab>",
-      function()
-        require("luasnip").jump(-1)
-      end,
-      mode = {
-        "i",
-        "s",
-      },
-    },
+    -- NOTE: dont bind c-i as most terminal will bind it as tab.
+    -- this will be handled on cmp.nvim
+    -- {
+    --   "<tab>",
+    --   function()
+    --     return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
+    --   end,
+    --   expr = true,
+    --   silent = true,
+    --   mode = "i",
+    -- },
+    -- { -- why tab again?
+    --   "<tab>",
+    --   function()
+    --     require("luasnip").jump(1)
+    --   end,
+    --   mode = "s",
+    -- },
+    -- {
+    --   "<s-tab>",
+    --   function()
+    --     require("luasnip").jump(-1)
+    --   end,
+    --   mode = {
+    --     "i",
+    --     "s",
+    --   },
+    -- },
 
-    -- for luansip placeholder jumping
+    -- {
+    --   "<tab>",
+    --   function()
+    --     require("luasnip").jump(1)
+    --   end,
+    --   mode = "s",
+    -- },
+
+    -- for luansip placeholder jumping. deprecated, cmp.nvim can now handle this if the current mode is snippets. the downside is to close cmp suggestion esc is needed.
+    -- this can still be enable in case clicking 'esc' is still a hasle. 
+    -- disable this if keyboard can have capslock as 'esc' (kanata and karabiner_elements).
     {
-      "<C-J>",
+      "<C-G>",
       function()
         local luasnip = require("luasnip")
         if luasnip.jumpable() then
-          luasnip.jump(1)
+          luasnip.jump(-1)
         end
       end,
-      desc = printf("Jump to next placeholder (LuaSnip)"),
+      desc = printf("Jump to previous placeholder (LuaSnip)"),
       noremap = true,
       silent = true,
       mode = {
@@ -71,14 +99,14 @@ return {
       },
     },
     {
-      "<C-I>",
+      "<C-H>",
       function()
         local luasnip = require("luasnip")
         if luasnip.jumpable() then
-          luasnip.jump(-1)
+          luasnip.jump(1)
         end
       end,
-      desc = printf("Jump to previous placeholder (LuaSnip)"),
+      desc = printf("Jump to next placeholder (LuaSnip)"),
       noremap = true,
       silent = true,
       mode = {
