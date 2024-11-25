@@ -13,7 +13,7 @@ font_size        16.0
 map shift+ctrl+n toggle_fullscreen
 map cmd+c copy_to_clipboard
 map cmd+v paste_from_clipboard
-map cmd+t launch --cwd=current --type=tab
+# map cmd+t launch --cwd=current --type=tab
 
 # This forces kitty to treat the Option key as a normal modifier
 macos_option_as_alt yes
