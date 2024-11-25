@@ -13,6 +13,7 @@ require("lazy").setup({
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
     -- import any extras modules here from lazyvim.
+    -- { import = "lazyvim.plugins.extras.coding.blink" }, -- FIX: new one. check
     { import = "lazyvim.plugins.extras.lang.docker" },
     { import = "lazyvim.plugins.extras.lang.yaml" },
     { import = "lazyvim.plugins.extras.lang.typescript" },

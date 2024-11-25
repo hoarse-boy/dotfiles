@@ -2,6 +2,7 @@ return {
   {
     "stefanlogue/hydrate.nvim",
     event = "VeryLazy",
+    enabled = false,
     -- This installs the latest stable release.
     -- Set to false or omit to install the latest development version
     version = "*",
@@ -29,16 +30,16 @@ return {
       })
     end,
   },
-  {
-    "folke/which-key.nvim",
-    opts = function(_, _)
-      local printf = require("plugins.util.printf").printf
-      local wk = require("which-key")
-      local mapping = {
-        { "<leader>Oh", "<cmd>HydrateNow<cr>", icon = "󰆫", desc = printf("Reset Hydrate Timer"), mode = "n" },
-        { "<leader>Ow", "<cmd>HydrateWhen<cr>", icon = "󰆫", desc = printf("Show Remaining Hydrate Timer"), mode = "n" },
-      }
-      wk.add(mapping)
-    end,
-  },
+  -- {
+  --   "folke/which-key.nvim",
+  --   opts = function(_, _)
+  --     local printf = require("plugins.util.printf").printf
+  --     local wk = require("which-key")
+  --     local mapping = {
+  --       { "<leader>oh", "<cmd>HydrateNow<cr>", icon = "󰆫", desc = printf("Reset Hydrate Timer"), mode = "n" },
+  --       { "<leader>ow", "<cmd>HydrateWhen<cr>", icon = "󰆫", desc = printf("Show Remaining Hydrate Timer"), mode = "n" },
+  --     }
+  --     wk.add(mapping)
+  --   end,
+  -- },
 }

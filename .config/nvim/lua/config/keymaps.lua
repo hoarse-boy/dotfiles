@@ -96,4 +96,4 @@ if os_name == os_util.LINUX then
 end
 
 -- TODO: move to other place?
-set("n", "<leader>Ol", '<cmd>lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/.local/share/nvim/lazy/LazyVim/")<cr>', { desc = printf("Open Lazyvim Config") })
+set("n", "<leader>ol", '<cmd>lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/.local/share/nvim/lazy/LazyVim/")<cr>', { desc = printf("Open Lazyvim Config") })

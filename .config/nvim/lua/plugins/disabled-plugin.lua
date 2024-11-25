@@ -6,6 +6,10 @@ return {
     enabled = false,
   },
   {
+    "echasnovski/mini.surround", -- use kylechui/nvim-surround instead, as it has more features.
+    enabled = false,
+  },
+  {
     "folke/tokyonight.nvim",
     enabled = false,
   },

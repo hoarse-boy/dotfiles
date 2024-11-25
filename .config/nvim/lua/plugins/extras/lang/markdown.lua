@@ -73,7 +73,7 @@ return {
         pattern = "*", -- Or specify a filetype like 'markdown' if needed
         callback = function()
           vim.schedule(function()
-            vim.wo.wrap = false
+            -- vim.wo.wrap = false
 
             -- remove bullets.vim keymaps. regular nvim del key not working.
             local bufnr = vim.api.nvim_get_current_buf()
@@ -141,9 +141,11 @@ return {
         pattern = { "md", "markdown" }, -- README.md will have buggy keymaps. find the fix or rename it other than README.md
         callback = function()
           vim.schedule(function()
+            local util = require("plugins.util.util")
+
             local l_mapping = {
               -- stylua: ignore start
-              { "<leader>l", group = printf("lsp (markdown)"), icon = "󰍔", mode = "n", buffer = 0 },
+              { "<leader>l", group = printf("lsp (markdown)"), icon = "󰍔", mode = { "v", "n" }, buffer = 0 },
 
               -- checkbox
               { "gt", function() markdown_func.check_or_add_checkbox(true) end, mode = { "n", "v" }, desc = printf("Add Checkbox and Insert Mode"), buffer = 0 },
@@ -183,6 +185,15 @@ return {
               { "<leader>ld", function() markdown_func.toggle_is_done_in_buffer() end, mode = "n", desc = printf("Toggle is_done in buffer"), buffer = 0 },
               { "<leader>lD", function() telekasten.delete_current_file() end, desc = printf("Delete current file"), buffer = 0 }, -- FIX: not working
               { "<leader>lI", function() markdown_func.delete_image_file() end, desc = printf("Delete image file"), buffer = 0 }, -- FIX: notworking
+
+              -- FIX:  delete all of these
+              -- { "<leader>lw", group = printf("Wrap Markdown Code Block"), icon = "󰍔", mode = "v", buffer = 0 },
+              -- { "<leader>lwj", function() util.wrap_markdown_code_block("json") end, mode = "v", desc = printf("JSON Code Block"), buffer = 0 }, -- FIX: remove this and mini.surround. use https://github.com/kylechui/nvim-surround instead and use the surround function ? https://github.com/kylechui/nvim-surround/discussions/53 -- FIX:
+              -- { "<leader>lwe", function() util.wrap_markdown_code_block("") end, mode = "v", desc = printf("empty Code Block"), buffer = 0 }, -- FIX: remove this and mini.surround. use https://github.com/kylechui/nvim-surround instead and use the surround function ? https://github.com/kylechui/nvim-surround/discussions/53 -- FIX:
+
+              -- formatter
+              { "<leader>lj", ":!prettier --parser json<CR>",mode = "v", desc = printf("Format JSON code"), buffer = 0 },
+              -- { "<leader>lj", function() util.format_json_selection() end,mode = "v", desc = printf("Format JSON code"), buffer = 0 },
               -- stylua: ignore end
             }
 
@@ -508,4 +519,23 @@ return {
       })
     end,
   },
+
+  -- { -- FIX: rmeove this.
+  --   "nvimtools/none-ls.nvim",
+  --   optional = true,
+  --   opts = function(_, opts)
+  --     if type(opts.sources) == "table" then
+  --       local null_ls = require("null-ls")
+
+  --       null_ls.setup({
+  --         sources = {
+  --           null_ls.builtins.formatting.prettier.with({
+  --             extra_args = { "--parser", "json" },
+  --             filetypes = { "markdown" }, -- Enable in Markdown files
+  --           }),
+  --         },
+  --       })
+  --     end
+  --   end,
+  -- },
 }

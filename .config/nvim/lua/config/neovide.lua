@@ -74,7 +74,7 @@ M.setup = function()
     vim.g.neovide_cursor_vfx_mode = "ripple" -- wireframe, sonicboom, pixiedust, railgun
     -- vim.g.neovide_cursor_vfx_particle_curl = 1.5 -- only for railgun
     vim.g.neovide_cursor_vfx_particle_density = 25.0
-    vim.g.neovide_cursor_vfx_opacity = 300.0
+    vim.g.neovide_cursor_vfx_opacity = 300.0 
     vim.g.neovide_cursor_vfx_particle_lifetime = 13.5
     vim.g.neovide_cursor_vfx_particle_speed = 100.0
   end
