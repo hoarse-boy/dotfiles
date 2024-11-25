@@ -125,3 +125,8 @@ source /home/jho/.opam/opam-init/init.fish >/dev/null 2>/dev/null; or true
 set -U fish_user_paths (npm config get prefix)/bin $fish_user_paths
 
 set -U fish_user_paths $HOME/.local/bin $fish_user_paths
+
+# for luarock package magick to display image in nvim
+set -x PATH $HOME/lua5.1/bin $PATH
+# set -Ux LUA_PATH "$HOME/lua5.1/share/lua/5.1/?.lua;./?.lua;$HOME/lua5.1/share/lua/5.1/?/init.lua;$HOME/.luarocks/share/lua/5.1/?.lua;$HOME/.luarocks/share/lua/5.1/?/init.lua"
+# set -Ux LUA_CPATH "./?.so;$HOME/lua5.1/lib/lua/5.1/?.so;$HOME/lua5.1/lib/lua/5.1/loadall.so;$HOME/.luarocks/lib/lua/5.1/?.so"
