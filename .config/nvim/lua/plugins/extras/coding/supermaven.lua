@@ -2,9 +2,6 @@ return {
   {
     "supermaven-inc/supermaven-nvim",
     event = "VeryLazy",
-    dependencies = {
-      "saghen/blink.cmp", -- NOTE: this is needed if using blink.cmp, otherwise it will show auto cmd error at startup.
-    },
     build = ":SupermavenUseFree", -- this line is optional, remove if you are using pro
     config = function()
       require("supermaven-nvim").setup({

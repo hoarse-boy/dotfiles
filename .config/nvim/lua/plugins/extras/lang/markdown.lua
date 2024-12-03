@@ -69,7 +69,8 @@ return {
 
       vim.api.nvim_create_autocmd("FileType", {
         group = vim.api.nvim_create_augroup("RemoveBulletsMapping", { clear = true }),
-        pattern = "*", -- Or specify a filetype like 'markdown' if needed
+        -- pattern = "*", -- Or specify a filetype like 'markdown' if needed
+        pattern = "markdown", -- Or specify a filetype like 'markdown' if needed
         callback = function()
           vim.schedule(function()
             -- vim.wo.wrap = false
@@ -82,7 +83,8 @@ return {
             pcall(vim.api.nvim_buf_del_keymap, bufnr, "v", "<")
             pcall(vim.api.nvim_buf_del_keymap, bufnr, "v", ">")
 
-            pcall(vim.keymap.set, "n", "<CR>", "<cmd>pu _<cr>") -- overwrite enter
+            pcall(vim.keymap.set, "n", "<CR>", "<cmd>pu _<cr>") -- overwrite enter -- FIX: explain better.
+            -- pcall(vim.keymap.set, "i", "<CR>", "<Plug>(bullets-newline)") -- overwrite enter -- FIX: explain better.
           end)
         end,
       })
@@ -154,7 +156,7 @@ return {
 
               -- bullets manipulation
               { "gN", "<Plug>(bullets-renumber)", mode = { "n", "v" }, desc = printf("Renumber Bullets"), buffer = 0 },
-              { "<cr>", "<Plug>(bullets-newline)", mode = { "i" }, desc = printf("Bullets Newline in insert mode"), buffer = 0 },
+              -- { "<cr>", "<Plug>(bullets-newline)", mode = { "i" }, desc = printf("Bullets Newline in insert mode"), buffer = 0 }, -- FIX:  it has conflict with blink
               { "<c-cr>", "<cr>", mode = { "i" }, desc = printf("Normal Newline in insert mode"), buffer = 0 },
               { "o", "<Plug>(bullets-newline)", mode = { "n" }, desc = printf("Newline in normal mode"), buffer = 0 },
 

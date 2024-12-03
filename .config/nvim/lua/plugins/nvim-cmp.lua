@@ -1,10 +1,7 @@
--- NOTE: disabled to use blink.cmp
--- dont remove this code
-
 return {
   {
     "hrsh7th/nvim-cmp",
-    enabled = false,
+    -- enabled = false,
     dependencies = {
       "hrsh7th/cmp-emoji",
       "hrsh7th/cmp-calc",
@@ -58,8 +55,10 @@ return {
           select = false,
         }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 
-        -- add tab and shift tab to navigate the autocompleteion
-        -- this tab and shift tab can also works for lausnip placeholder jumping, but 'esc' is needed to close the cmp menu while editing code.
+        -- add tab and shift tab to navigate the autocompleteion.
+        -- this tab and shift tab can also works for lausnip placeholder jumping.
+        -- but 'esc' is needed to close the cmp menu while editing code.
+        -- which is easily fixed by kanata or karabiner (macos), that change caps lock to esc.
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
