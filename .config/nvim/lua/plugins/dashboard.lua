@@ -1,3 +1,5 @@
+-- TODO: move the shorcut to snacks's dashboard
+
 local printf = require("plugins.util.printf").printf
 
 local logo = [[
@@ -37,10 +39,62 @@ end
 -- 	Last set from ~/.local/share/nvim/lazy/dashboard-nvim/lua/dashboard/init.lua line 82
 --   signcolumn=no
 -- 	Last set from ~/.local/share/nvim/lazy/dashboard-nvim/lua/dashboard/init.lua line 82
+
+local obsidian_path = "~/jho-notes"
+
+local os_util = require("plugins.util.check-os")
+local os_name = os_util.get_os_name()
+
+if os_name == os_util.OSX then
+  obsidian_path = "~/My Drive/obsidian-vault"
+end
+
+-- add new dashboard item obsidian_todos.
+local daily_works = {
+  action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath(vim.env.HOME)})",
+  -- action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('~/jho-notes')})",
+  -- action = string.format([[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("%s/daily/")]], obsidian_path),
+  desc = printf("Daily Work Notes"),
+  icon = " ",
+  key = "t",
+}
+
 return {
   {
+    "folke/snacks.nvim",
+    opts = {
+      dashboard = {
+        preset = {
+          header = [[
+          ██╗      █████╗ ███████╗██╗   ██╗██╗   ██╗██╗███╗   ███╗          Z
+          ██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝██║   ██║██║████╗ ████║      Z    
+          ██║     ███████║  ███╔╝  ╚████╔╝ ██║   ██║██║██╔████╔██║   z       
+          ██║     ██╔══██║ ███╔╝    ╚██╔╝  ╚██╗ ██╔╝██║██║╚██╔╝██║ z         
+          ███████╗██║  ██║███████╗   ██║    ╚████╔╝ ██║██║ ╚═╝ ██║           
+          ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝           
+   ]],
+          -- stylua: ignore
+          ---@type snacks.dashboard.Item[]
+          keys = {
+            daily_works, -- FIX: buggy.
+            { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+            -- { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+            { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+            -- { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+            { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+            { icon = " ", key = "s", desc = "Restore Session", section = "session" },
+            -- { icon = " ", key = "x", desc = "Lazy Extras", action = ":LazyExtras" },
+            { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
+            { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+          },
+        },
+      },
+    },
+  },
+
+  {
     "nvimdev/dashboard-nvim",
-    -- enabled = false,
+    enabled = false,
     opts = function(_, opts)
       -- NOTE: create the braille at https://asciiart.club/
       -- https://superemotes.com/img2ascii#google_vignette -- just copy the text.
@@ -102,12 +156,15 @@ return {
       -- table.insert(opts.config.center, 11, lazyvim_config)
     end,
   },
+
   {
     "folke/which-key.nvim",
     opts = function(_, _)
       local wk = require("which-key")
       local mapping = {
-        { "<leader>D", "<cmd>Dashboard<cr>", icon = "󰨇 ", group = printf("Dashboard"), mode = "n" },
+        -- TODO: add snack's dashboard to which-key.
+        -- { "<leader>D", "<cmd>Dashboard<cr>", icon = "󰨇 ", group = printf("Dashboard"), mode = "n" },
+        { "<leader>D", "<cmd>lua Snacks.dashboard()<cr>", icon = "󰨇 ", group = printf("Dashboard"), mode = "n" },
       }
       wk.add(mapping)
     end,
@@ -167,4 +224,3 @@ return {
 -- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠉⠁⣶⣶⣶⣶⣶⣶⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣶⣶⡆⢰⣶⣶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 -- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠛⠛⠛⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠿⠿⠃⠸⠿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 -- ]]
-

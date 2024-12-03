@@ -43,6 +43,9 @@ return {
           "lazyterm",
           "nvimtree",
           -- "markdown", -- frontmatter to behave strangely, but it is needed to make todo checkbox to have indent line.
+          "snacks_notif",
+          "snacks_terminal",
+          "snacks_win",
         },
       },
     },

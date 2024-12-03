@@ -4,8 +4,16 @@
 
 local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
-
 local go_keymaps = augroup("go_keymaps", {})
+
+local format_sync_grp = augroup("GoReminderPersonal", {})
+autocmd("BufWritePre", {
+  pattern = "*.go",
+  callback = function()
+    vim.notify("# Have you:\n- run GoTest?\n- run GoLint?\n- checked todo 'FIX:'?", "info", { title = "go.nvim" })
+  end,
+  group = format_sync_grp,
+})
 
 return {
   {
@@ -184,29 +192,6 @@ return {
     end,
   },
 
-  {
-    "rcarriga/nvim-notify",
-    opts = function(_, _)
-      -- create a notification when file is saved.
-      local format_sync_grp = augroup("GoReminderPersonal", {})
-      autocmd("BufWritePre", {
-        pattern = "*.go",
-        callback = function()
-          local notify = require("notify")
-
-          notify("# Have you:\n- run GoTest?\n- run GoLint?\n- checked todo 'FIX:'?", "info", {
-            title = "go.nvim",
-            on_open = function(win)
-              local buf = vim.api.nvim_win_get_buf(win)
-              vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
-            end,
-          })
-        end,
-        group = format_sync_grp,
-      })
-    end,
-  },
-
   -- correctly setup mason lsp / dap extensions
   {
     "williamboman/mason.nvim",
@@ -248,7 +233,7 @@ return {
       if type(opts.sources) == "table" then
         local nls = require("null-ls")
         vim.list_extend(opts.sources, {
-          -- nls.builtins.code_actions.gomodifytags, -- FIX: not working. use go.nvim instead
+          -- nls.builtins.code_actions.gomodifytags, -- not working. use go.nvim instead
           nls.builtins.code_actions.impl,
           -- nls.builtins.formatting.gofumpt,
           nls.builtins.formatting.gofmt,

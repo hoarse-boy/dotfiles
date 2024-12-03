@@ -28,7 +28,7 @@ return {
             new_config.settings.json.schemas = new_config.settings.json.schemas or {}
             vim.list_extend(new_config.settings.json.schemas, require("schemastore").json.schemas())
           end,
-          -- cmd = {"vscode-css-language-server", "--stdio"}, -- FIX: still not working. it shows strange error in diagnostic.
+          -- cmd = {"vscode-css-language-server", "--stdio"}, -- still not working. it shows strange error in diagnostic. -- TODO: what is this?
           settings = {
             json = {
               

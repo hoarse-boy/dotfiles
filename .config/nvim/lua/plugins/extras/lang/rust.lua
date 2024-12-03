@@ -65,7 +65,6 @@ return {
             }
 
             wk.add(mappings)
-            -- wk.register(mappings) -- FIX:
           end)
         end,
       })

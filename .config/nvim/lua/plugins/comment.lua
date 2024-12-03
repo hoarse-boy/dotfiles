@@ -30,7 +30,6 @@ return {
       ---@type string|function
       ignore = "^$",
 
-      -- FIX: commented this
       ---LHS of toggle mappings in NORMAL mode
       -- toggler = {
       --   ---Line-comment toggle keymap
@@ -44,14 +43,13 @@ return {
       --   -- block = "gbc",
       -- },
 
-      -- FIX: change this
       ---LHS of operator-pending mappings in NORMAL and VISUAL mode
       -- opleader = {
-        -- ---Line-comment keymap
-        -- line = "gC",
-        -- -- line = "gc",
-        -- ---Block-comment keymap
-        -- block = "gb",
+      -- ---Line-comment keymap
+      -- line = "gC",
+      -- -- line = "gc",
+      -- ---Block-comment keymap
+      -- block = "gb",
       -- },
 
       -- ---LHS of extra mappings
@@ -70,7 +68,7 @@ return {
       ---Enable keybindings
       ---NOTE: If given `false` then the plugin won't create any mappings
 
-      mappings = false, -- FIX: 
+      mappings = false,
       -- mappings = {
       --   ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
       --   basic = true,

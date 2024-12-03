@@ -1,7 +1,10 @@
 local printf = require("plugins.util.printf").printf
 
+-- NOTE: disabled this as snacks terminal has default edgy like style without additional config like below. and also i dont use other edgy's feature.
+-- dont delete the code yet.
 return {
   "folke/edgy.nvim",
+  enabled = false,
   event = "VeryLazy",
   keys = {
     {

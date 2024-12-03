@@ -66,7 +66,6 @@ return {
       vim.g.bullets_outline_levels = { "num", "abc", "std", "-", "+" } -- Custom bullet levels
       vim.g.bullets_enable_in_empty_buffers = 0 -- default = 1
       vim.g.bullets_set_mappings = 0 -- disable default mappings not working on nvim. need to disable the keymaps manually.
-      -- FIX: check linkarzu continue outline vim in youtube
 
       vim.api.nvim_create_autocmd("FileType", {
         group = vim.api.nvim_create_augroup("RemoveBulletsMapping", { clear = true }),
@@ -186,14 +185,9 @@ return {
               { "<leader>lD", function() telekasten.delete_current_file() end, desc = printf("Delete current file"), buffer = 0 }, -- FIX: not working
               { "<leader>lI", function() markdown_func.delete_image_file() end, desc = printf("Delete image file"), buffer = 0 }, -- FIX: notworking
 
-              -- FIX:  delete all of these
-              -- { "<leader>lw", group = printf("Wrap Markdown Code Block"), icon = "󰍔", mode = "v", buffer = 0 },
-              -- { "<leader>lwj", function() util.wrap_markdown_code_block("json") end, mode = "v", desc = printf("JSON Code Block"), buffer = 0 }, -- FIX: remove this and mini.surround. use https://github.com/kylechui/nvim-surround instead and use the surround function ? https://github.com/kylechui/nvim-surround/discussions/53 -- FIX:
-              -- { "<leader>lwe", function() util.wrap_markdown_code_block("") end, mode = "v", desc = printf("empty Code Block"), buffer = 0 }, -- FIX: remove this and mini.surround. use https://github.com/kylechui/nvim-surround instead and use the surround function ? https://github.com/kylechui/nvim-surround/discussions/53 -- FIX:
-
               -- formatter
               { "<leader>lj", ":!prettier --parser json<CR>",mode = "v", desc = printf("Format JSON code"), buffer = 0 },
-              -- { "<leader>lj", function() util.format_json_selection() end,mode = "v", desc = printf("Format JSON code"), buffer = 0 },
+              -- { "<leader>lj", function() util.format_json_selection() end,mode = "v", desc = printf("Format JSON code"), buffer = 0 }, -- FIX: not working
               -- stylua: ignore end
             }
 
@@ -519,23 +513,4 @@ return {
       })
     end,
   },
-
-  -- { -- FIX: rmeove this.
-  --   "nvimtools/none-ls.nvim",
-  --   optional = true,
-  --   opts = function(_, opts)
-  --     if type(opts.sources) == "table" then
-  --       local null_ls = require("null-ls")
-
-  --       null_ls.setup({
-  --         sources = {
-  --           null_ls.builtins.formatting.prettier.with({
-  --             extra_args = { "--parser", "json" },
-  --             filetypes = { "markdown" }, -- Enable in Markdown files
-  --           }),
-  --         },
-  --       })
-  --     end
-  --   end,
-  -- },
 }
