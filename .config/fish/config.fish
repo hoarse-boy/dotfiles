@@ -39,7 +39,7 @@ abbr cfga 'cfg add -u'
 abbr cfgd 'cfg diff' # make sure ~/.gitconfig has the correct config to use delta. check ~/.gitconfig.template
 abbr cfgA 'cfg add .' # add new files inside dirs. for example add new file in nvim dir. carefull as this can add all files in the dir.
 abbr cfgr 'cfg restore' # to remove modified git files.
-abbr cfgP 'cfg push'
+abbr cfgps 'cfg push'
 abbr cfgp 'cfg pull'
 abbr cfgc "GIT_DIR=$HOME/dotfiles GIT_WORK_TREE=$HOME cz c" # commit using commitizen.
 
