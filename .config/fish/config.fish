@@ -53,6 +53,9 @@ abbr nv 'neovide --fork --wayland_app_id neovide' # no no-multigrid has better a
 # abbr nv 'neovide --no-multigrid --fork --wayland_app_id neovide'
 abbr lazy "cd ~/.local/share/nvim/lazy/LazyVim/ && $editor"
 
+# ghostty
+abbr ssh 'TERM=xterm-256color ssh ' # need the env TERM for ghostty to work as the delete button is not working.
+
 # kitty
 abbr kt 'kitten ssh'
 

@@ -8,7 +8,7 @@ return {
     -- disable notify.
 
     ---@type false | "classic" | "modern" | "helix"
-    opts.preset = "modern"
+    --    opts.preset = "modern" -- FIX: 
     opts.notify = false
 
     opts.win = {
@@ -49,4 +49,3 @@ return {
     wk.add(mapping)
   end,
 }
-

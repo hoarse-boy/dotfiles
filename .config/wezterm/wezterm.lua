@@ -5,9 +5,9 @@ local is_macos = wezterm.target_triple == "x86_64-apple-darwin" or wezterm.targe
 
 local spawn_tab = { key = "t", mods = "CMD", action = act.SpawnTab("CurrentPaneDomain") }
 local font_size = 12.0
-local window_background_opacity = 0.9
+local window_background_opacity = 0.91
 if is_macos then
-	font_size = 15.0
+	font_size = 16.5
 else
 	window_background_opacity = 0.87 -- for wayland
 	spawn_tab = { key = "t", mods = "CMD", action = wezterm.action.Nop }
@@ -50,10 +50,15 @@ return {
 	-- and also, if i want to quicly run or open some comamnds and exit.
 	-- default_gui_startup_args = { "connect", "unix" },
 	-- MARKED: remove this comments as i have used tmux.
+
 	-- term = "wezterm", -- NOTE: undercurl / to make nvim have single color underline => https://wezfurlong.org/wezterm/config/lua/config/term.html?h=undercur
+	term = "xterm-kitty", -- FIX: 
+	-- tempfile=$(mktemp) && curl -o "$tempfile" https://raw.githubusercontent.com/kovidgoyal/kitty/master/terminfo/kitty.terminfo && tic -x -o ~/.terminfo "$tempfile" && rm "$tempfile"
+
 	adjust_window_size_when_changing_font_size = false,
 	audible_bell = "Disabled",
-	underline_thickness = 0,
+	underline_thickness = 2,
+	underline_position = -7,
 	exit_behavior = "Close",
 	max_fps = 75,
 	font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Medium", stretch = "Normal", style = "Normal" }),

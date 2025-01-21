@@ -1,5 +1,36 @@
 -- TODO: create whichky to show list of binding for nvim-surround
 
+local surround_add_msg = [[
+
+# add surround
+
+'yziw*' new surround in word
+
+or
+
+'yza**' new surround outside current surround
+
+mode: normal
+
+---
+
+'Z*'
+
+mode: visual
+
+---
+
+## special add surround
+
+'yzz*' new surround in line
+
+or
+
+'yZZ*' new surround new line (currently not working)
+
+mode: normal
+]]
+
 return {
   {
     "kylechui/nvim-surround",
@@ -123,46 +154,35 @@ return {
     opts = function(_, _)
       local wk = require("which-key")
       local printf = require("plugins.util.printf").printf
-      local autocmd = vim.api.nvim_create_autocmd
-      local augroup = vim.api.nvim_create_augroup
-      local surrounds_nvim = augroup("surrounds_nvim", {})
 
-      autocmd("Filetype", {
-        group = surrounds_nvim,
-        pattern = "*", -- * for all filetypes
-        callback = function()
-          vim.schedule(function()
-            local mapping = {
-              -- uncomment to use examples below. -- NOTE:  is needed to not make it merge with other keymaps when opening other filetypes.
-              -- { "<leader>k", icon = "", group = printf("nvim-surround"), mode = { "v", "n" }, buffer = 0 }, -- group key with prefix like '+'
-              { "<leader>S", icon = "", group = printf("Surround Keys Cheatcodes"), mode = { "v", "n" } },
+      local surround_nvim_title_msg = "surround-nvim"
 
-              -- stylua: ignore start
-              { "<leader>Sc", "zc", desc = printf("Code Block (input)"), mode = "v" }, -- FIX:
-              { "<leader>Sa", "", desc = printf("Surround add"), mode = "n", buffer = 0 }, -- FIX:
-              { "<leader>Sb", function() print("hello") end, desc = "Foobar", buffer = 0 },
+      local mapping = {
+        { "<leader>os", icon = "", group = printf("Surround Keys Cheatcodes"), mode = "n" },
 
-              -- FIX: add the following as whiechkey.
-              -- {
-              --   insert = "<C-g>z",
-              --   insert_line = "<C-g>Z",
-              --   normal = "yz",
-              --   normal_cur = "yzz",
-              --   normal_line = "yZ",
-              --   normal_cur_line = "yZZ",
-              --   visual = "z",
-              --   visual_line = "gZ",
-              --   delete = "dz",
-              --   change = "cz",
-              --   change_line = "cZ",
-              -- }
+        -- stylua: ignore start
+        { "<leader>osC",
+          function() vim.notify("\n# add code block\n\n'zc'\nmode: v-line", vim.log.levels.INFO, { title = surround_nvim_title_msg })
+          end, desc = printf("Code Block (v-line mode)"), mode = "n"
+        },
 
-              -- stylua: ignore end
-            }
-            wk.add(mapping)
-          end)
-        end,
-      })
+        { "<leader>osc",
+          function() vim.notify("\n# change surround\n\n'cz**'\nmode: normal\n\nfirst * is target\nsecond * is replacement", vim.log.levels.INFO, { title = surround_nvim_title_msg })
+          end, desc = printf("Change Surround"), mode = "n"
+        },
+
+        { "<leader>osa",
+          function() vim.notify(surround_add_msg, vim.log.levels.INFO, { title = surround_nvim_title_msg })
+          end, desc = printf("Add Surround (most commond)"), mode = "n"
+        },
+
+        { "<leader>osd",
+          function() vim.notify("\n# delete surround\n\n'dz*'\nmode: normal\n", vim.log.levels.INFO, { title = surround_nvim_title_msg })
+          end, desc = printf("Delete Surround"), mode = "n"
+        },
+        -- stylua: ignore end
+      }
+      wk.add(mapping)
     end,
   },
 }

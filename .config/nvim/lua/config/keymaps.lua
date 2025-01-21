@@ -12,6 +12,7 @@ local map_opt = { noremap = true, silent = true }
 local printf = require("plugins.util.printf").printf
 
 del("n", "<leader>l") -- disable keymap l for lazyvim as it will be used for other lsp keymaps.
+del("n", "<leader>n") -- disable lazyvim's default keymap n that open notification history.
 
 -- -- TODO: visual x doesnt put to last yank?
 
@@ -60,6 +61,7 @@ set("n", "<leader>sx", require("telescope.builtin").resume, { noremap = true, si
 set("n", "<leader>L", "<cmd>:Lazy<cr>", { desc = printf("Lazy") }) -- use L instead of l
 
 -- comments (why uses <Plug> = to avoid go to normal mode)
+ -- NOTE: this mapping must be first disabled in the plugin config. in this case it was either telescope or fzf.
 set("v", "<leader>/", "<Plug>(comment_toggle_linewise_visual)", { desc = printf("Comment Toggle Linewise (Visual)") })
 set("n", "<leader>/", "<Plug>(comment_toggle_linewise_current)", { desc = printf("Comment Toggle Current Line") })
 
@@ -96,4 +98,5 @@ if os_name == os_util.LINUX then
 end
 
 -- TODO: move to other place?
-set("n", "<leader>ol", '<cmd>lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/.local/share/nvim/lazy/LazyVim/")<cr>', { desc = printf("Open Lazyvim Config") })
+set("n", "<leader>ol", "<cmd>lua require'fzf-lua'.files({ cwd = vim.fn.expand('~/.local/share/nvim/lazy/LazyVim/') })<cr>", { desc = printf("Open Lazyvim Config") }) -- fzf version
+-- set("n", "<leader>ol", '<cmd>lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/.local/share/nvim/lazy/LazyVim/")<cr>', { desc = printf("Open Lazyvim Config") })

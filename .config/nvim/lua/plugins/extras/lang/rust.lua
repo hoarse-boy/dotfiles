@@ -8,7 +8,7 @@ local rust_keymaps = augroup("rust_keymaps", {})
 return {
   -- Extend auto completion
   {
-    "hrsh7th/nvim-cmp",
+    "hrsh7th/nvim-cmp", -- TODO: add support for blink.cmp
     dependencies = {
       {
         "Saecki/crates.nvim",

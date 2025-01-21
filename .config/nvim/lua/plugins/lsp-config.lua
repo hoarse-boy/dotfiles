@@ -81,11 +81,6 @@ return {
       vim.diagnostic.config({
         float = { border = "rounded" },
       })
-
-      -- require("lspconfig").sqlls.setup({})
-      --
-
-      -- require("lspconfig").sqls.setup({}) -- FIX: if works move to different file and add mason install sqls
     end,
   },
 
@@ -113,7 +108,7 @@ return {
         callback = function()
           vim.schedule(function()
             local mapping = {
-              { "<leader>cs", "<cmd>LspStart<CR>", desc = printf("Start Lsp"), mode = "n", icon = "" }, -- FIX: sometimes it is not showing. change to use vim schedule. test again.
+              { "<leader>cs", "<cmd>LspStart<CR>", desc = printf("Start Lsp"), mode = "n", icon = "" },
               { "<leader>cR", "<cmd>LspRestart<CR>", desc = printf("Restart Lsp"), mode = "n", icon = "󰜉" },
             }
             wk.add(mapping)

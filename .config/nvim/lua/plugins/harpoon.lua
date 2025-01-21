@@ -5,9 +5,16 @@ return {
     "theprimeagen/harpoon",
     event = "VeryLazy",
     keys = {
-      { "<leader>ha", "<cmd>lua require('harpoon.mark').add_file()<cr>", desc = printf("Mark a File") },
+      {
+        "<leader>ha",
+        function()
+          vim.cmd("lua require('harpoon.mark').add_file()")
+          vim.notify("add file to harpoon", vim.log.levels.INFO, { title = "harpoon" })
+        end,
+        desc = printf("Mark a File"),
+      },
       { "<leader>hT", ":Telescope harpoon marks<cr>", desc = printf("Open Telescope Harpoon") },
-      { "<leader>ht", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>", desc = printf("Open Quick Menu") }, -- NOTE: also for some golang repo which has many go.mod in a single git file it will not be able to show the marked files
+      { "<leader>ht", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>", desc = printf("Open Quick Menu") }, -- NOTE: also for some golang repo which has many go.mod in a single git file it will not be able to show the harpooned files
       -- { "<leader>hn", "<cmd>lua require('harpoon.ui').nav_next()<cr>", desc = printf"Go to next" },
       -- { "<leader>hp", "<cmd>lua require('harpoon.ui').nav_prev()<cr>", desc = printf"Go to previous" },
     },
@@ -52,14 +59,13 @@ return {
   },
 }
 
--- FIX: harpoon2 still buggy.
--- when opening the file in harpoon list it will not append to the same buffer. opening file using neo-tree will append the file into buffer list.
--- when opening harpoon list and the current buffer is open it will go to that position of the same file name in harppon list. which harpoon2 cannot do atm.
+-- -- TODO: move to harpoon2 if it is fixed.
+-- -- when opening the file in harpoon list it will not append to the same buffer. opening file using neo-tree will append the file into buffer list.
+-- -- when opening harpoon list and the current buffer is open it will go to that position of the same file name in harppon list. which harpoon2 cannot do atm.
 -- return {
 --   "theprimeagen/harpoon",
 --   event = "VeryLazy",
 --   branch = "harpoon2", -- will be merge to master in upcoming months.
---   commit = "18bf9fbab6e93b07919e060a817c9b94adb710a4", -- FIX: harpoon not working.
 --   dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
 
 --   config = function(_, opts)
@@ -68,21 +74,19 @@ return {
 --     wk.setup(opts)
 --     local keymaps = {
 --       mode = { "n" },
---       ["<leader>h"] = { name = "+harpoon" },
+--       { "<leader>h", icon = "󰓥", group = printf("harpoon"), mode = "n" }, -- group key with prefix like '+'
 --     }
---     wk.register(keymaps, opts)
+--     wk.add(keymaps, opts)
 
 --     local harpoon = require("harpoon")
 
 --     -- REQUIRED
 --     harpoon:setup({})
 
---     local notify = require("notify")
-
 --     vim.keymap.set("n", "<leader>ha", function()
 --       harpoon:list():append()
---       notify("append a file to harpoon list", "info", { title = "Harpoon" })
---     end, { desc = printf"Append File to Harpoon List" })
+--       print("append a file to harpoon list", "info", { title = "Harpoon" })
+--     end, { desc = printf("Append File to Harpoon List") })
 
 --     -- stylua: ignore
 --     vim.keymap.set("n", "<leader>ht", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = printf"Toggle Harpoon List" })

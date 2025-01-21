@@ -1,8 +1,8 @@
 -- all of my custom markdown function goes here.
 local M = {}
 
-local actions = require("telescope.actions")
-local builtin = require("telescope.builtin")
+-- local builtin = require("telescope.builtin")  -- NOTE: dont require like this. it causes the plugin to be called at the start and removing any lazy loading.
+
 local os_util = require("plugins.util.check-os")
 local os_name = os_util.get_os_name()
 local teles_find = require("plugins.util.teles-find")
@@ -10,7 +10,7 @@ local teles_find = require("plugins.util.teles-find")
 function M.search_moc_files(dir)
   teles_find.ChangeDir(dir)
 
-  builtin.find_files({
+  require("telescope.builtin").find_files({
     prompt_title = "Search MOC Files",
     find_command = { "rg", "--files", "--glob", "*moc*" },
   })

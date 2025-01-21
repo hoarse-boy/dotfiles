@@ -11,7 +11,6 @@ return {
   {
     "nvim-tree/nvim-tree.lua",
     -- use this to fix the bug, if entering the dashboard and click s to load session. nvim will be unable to open the nvim-tree. don't use cmd or lazy = true.
-    -- FIX: there is one time NvimTreeToggle not working after loading session.
     event = "VeryLazy",
     -- lazy = false, -- NOTE: if the bug persist, uncomment this and comment VeryLazy event.
     -- enabled = false, -- disabled plugin
@@ -407,21 +406,6 @@ return {
     end,
   },
 
-  -- FIX: still not working. both bufferline code above works. but not for lualine.
-  -- {
-  --   "nvim-lualine/lualine.nvim",
-  --   -- opts = function(_, opts)
-  --   --   -- require("table").insert(opts.sections.lualine_x, "😄")
-  --   --   opts.sections.lualine_a = {}
-  --   -- end,
-  --   -- config = function () -- FIX: this will overwrite like usual.
-  --   --
-  --   --   require("lualine").setup({
-  --   --   sections = {
-  --   --     lualine_a = { },
-  --   --   }})
-  --   -- end
-  -- },
   -- {
   --   "nvim-lualine/lualine.nvim",
   --   opts = function(_, opts)

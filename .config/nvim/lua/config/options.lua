@@ -8,8 +8,6 @@ local cmd = vim.cmd
 opt.fillchars = { eob = " " } -- NOTE: removes trailing '~' in nvim
 
 cmd.highlight("CursorLine guibg=#131319") -- CursorLine    xxx guibg=#2a2b3c
--- cmd.highlight("CursorLine guibg=#25252c") -- CursorLine    xxx guibg=#2a2b3c
--- cmd.highlight("CursorLine guibg=#535574") -- CursorLine    xxx guibg=#2a2b3c
 
 require("config.neovide").setup()
 
@@ -46,3 +44,8 @@ local os_name = os_util.get_os_name()
 if os_name == os_util.LINUX then
   vim.opt.directory = "/tmp/nvim/swap//" -- NOTE: change dir as the .local/share/nvim/swap is not working on arch linux. macos works fine.
 end
+
+vim.g.lazyvim_cmp = "nvim-cmp" -- lazyvim 14.* reguired this if nvim-cmp is used, as blink.cmp is the default.
+
+-- vim.g.snacks_animate = false -- disable animations
+-- vim.g.snacks_animate_scroll = false -- disable scroll animations

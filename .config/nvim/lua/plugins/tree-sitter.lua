@@ -75,14 +75,14 @@ return {
             -- Separator between context and content. Should be a single character string, like '-'.
             -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
             -- separator = "‾",
-            separator = "─",
-            -- separator = nil,
+            -- separator = "─",
+            separator = nil,
             zindex = 20, -- The Z-index of the context window
             on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
           })
 
-          vim.cmd.highlight("TreesitterContextSeparator guifg=#414d59")
-          vim.cmd.highlight("TreesitterContextBottom guibg=NONE guifg=NONE gui=NONE") -- NOTE: to remove the underline which is not working in tmux. causing colored underline that matches the string.
+          vim.cmd.highlight("TreesitterContextBottom cterm=underline gui=underline guisp=#414d59")
+          -- vim.cmd.highlight("TreesitterContextBottom guibg=NONE guifg=NONE gui=NONE") -- NOTE: to remove the underline which is not working in tmux. causing colored underline that matches the string.
         end,
 
         keys = {

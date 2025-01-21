@@ -18,7 +18,70 @@ return {
   {
     "renerocksai/telekasten.nvim",
     event = "VeryLazy",
-    dependencies = { "nvim-telescope/telescope.nvim" },
+    dependencies = {
+      {
+        "nvim-telescope/telescope.nvim",
+        opts = function()
+          local actions = require("telescope.actions")
+
+          local open_with_trouble = function(...)
+            return require("trouble.sources.telescope").open(...)
+          end
+          local find_files_no_ignore = function()
+            local action_state = require("telescope.actions.state")
+            local line = action_state.get_current_line()
+            LazyVim.pick("find_files", { no_ignore = true, default_text = line })()
+          end
+          local find_files_with_hidden = function()
+            local action_state = require("telescope.actions.state")
+            local line = action_state.get_current_line()
+            LazyVim.pick("find_files", { hidden = true, default_text = line })()
+          end
+
+          return {
+            defaults = {
+              file_ignore_patterns = { "node_modules", "vendor", "proto/*", "**/*.pb.go" },
+              prompt_prefix = " ",
+              selection_caret = " ",
+              -- open files in the first window that is an actual file.
+              -- use the current window if no other window is available.
+              get_selection_window = function()
+                local wins = vim.api.nvim_list_wins()
+                table.insert(wins, 1, vim.api.nvim_get_current_win())
+                for _, win in ipairs(wins) do
+                  local buf = vim.api.nvim_win_get_buf(win)
+                  if vim.bo[buf].buftype == "" then
+                    return win
+                  end
+                end
+                return 0
+              end,
+              mappings = {
+                i = {
+                  ["<c-t>"] = open_with_trouble,
+                  ["<a-t>"] = open_with_trouble,
+                  ["<a-i>"] = find_files_no_ignore,
+                  ["<a-h>"] = find_files_with_hidden,
+                  ["<C-Down>"] = actions.cycle_history_next,
+                  ["<C-Up>"] = actions.cycle_history_prev,
+                  ["<C-f>"] = actions.preview_scrolling_down,
+                  ["<C-b>"] = actions.preview_scrolling_up,
+                  ["<C-v>"] = actions.nop, -- to disable the default action of <C-v> in telescope which is open v split and change to paste using <C-s-v>
+                  ["<C-k>"] = actions.cycle_history_next,
+                  ["<C-j>"] = actions.cycle_history_prev,
+                  ["<esc>"] = actions.close,
+                },
+                n = {
+                  ["q"] = actions.close,
+                  ["<esc>"] = actions.close,
+                },
+              },
+            },
+          }
+        end,
+      },
+      "nvim-telekasten/calendar-vim",
+    },
     -- enabled = false,
     config = function()
       -- NOTE: naming the file with '-' is preffered but as the function cannot be hooked or updated, it will be as it is.
@@ -77,14 +140,13 @@ return {
 
             -- remove bullets.vim keymaps. regular nvim del key not working.
             local bufnr = vim.api.nvim_get_current_buf()
-            pcall(vim.api.nvim_buf_del_keymap, bufnr, "n", "<leader>x") -- Remove toggle checkbox
+            vim.api.nvim_buf_del_keymap(bufnr, "n", "<leader>x") -- Remove toggle checkbox
 
             -- remove bullets.vim indenting which is buggy. just delete them, as overwriting is not working.
-            pcall(vim.api.nvim_buf_del_keymap, bufnr, "v", "<")
-            pcall(vim.api.nvim_buf_del_keymap, bufnr, "v", ">")
+            vim.api.nvim_buf_del_keymap(bufnr, "v", "<")
+            vim.api.nvim_buf_del_keymap(bufnr, "v", ">")
 
-            pcall(vim.keymap.set, "n", "<CR>", "<cmd>pu _<cr>") -- overwrite enter -- FIX: explain better.
-            -- pcall(vim.keymap.set, "i", "<CR>", "<Plug>(bullets-newline)") -- overwrite enter -- FIX: explain better.
+            vim.keymap.set("n", "<CR>", "<cmd>pu _<cr>") -- overwrite enter in normal mode to not follow bullets.vim newline indenting
           end)
         end,
       })
@@ -101,41 +163,32 @@ return {
       local mapping = {
         { "<leader>n", icon = "󱞁", group = printf("notes"), mode = "n" }, -- group key with prefix like '+'
 
-        -- FIX: create duplicate keymaps for dashboard. put dashboard here?
         -- stylua: ignore start
+        -- find notes
+        { "<leader>nn", function() telekasten.find_notes() end, desc = printf("Find Notes"), mode = "n" },
+        { "<leader>ns", function() telekasten.search_notes() end, desc = printf("Search Notes by Keyword"), mode = "n" },
         { "<leader>nm", function() markdown_func.search_moc_files(my_notes_dir) end, desc = printf("Find MOC files"), mode = "n" },
 
-        { "<leader>nn", function() telekasten.new_note() end, desc = printf("Create new note"), mode = "n" },
+        -- create notes
+        { "<leader>nc", function() telekasten.new_note() end, desc = printf("Create new note"), mode = "n" },
         { "<leader>nt", function() telekasten.new_templated_note() end, desc = printf("Create new templated note"), mode = "n" }, -- TODO: request or create PR to have templated notes to have other option of template as params
 
-        { "<leader>nd", function() telekasten.goto_today() end, desc = printf("Open daily note"), mode = "n" },
-        { "<leader>nD", function() telekasten.new_daily_note() end, desc = printf("Create new daily note"), mode = "n" },
+        -- weekly and daily notes
+        { "<leader>nd", function() telekasten.goto_today() end, desc = printf("Open today note"), mode = "n" }, -- will also create weekly note if not exist
         { "<leader>nw", function() telekasten.goto_thisweek() end, desc = printf("Open weekly note"), mode = "n" }, -- will also create weekly note if not exist
-        -- FIX: add yesterday for daily
-        -- add tommorowo daily todo
-        -- add personal todo MOC
-        -- update personal todo template that connect to that moc
-        -- create moc template
 
+        -- others
         { "<leader>nT", function() telekasten.show_tags() end, desc = printf("Search notes by tag"), mode = "n" },
 
-        -- FIX: 
-        { "<leader>nf", icon = "󱞁", group = printf("find notes"), mode = "n" }, -- group key with prefix like '+'
-        { "<leader>nff", function() telekasten.find_notes() end, desc = printf("Find notes"), mode = "n" },
-        { "<leader>nfs", function() telekasten.search_notes() end, desc = printf("Search notes by keyword"), mode = "n" },
+        -- other note searching
+        -- FIX: the functions are not working.
+        { "<leader>nf", icon = "󱞁", group = printf("Search Notes"), mode = "n" }, -- group key with prefix like '+'
         { "<leader>nfc", function() markdown_func.search_front_matter(nil, "true", my_notes_dir) end, desc = printf("Search completed work notes"), mode = "n" },
         { "<leader>nfp", function() markdown_func.search_front_matter(nil, "false", my_notes_dir) end, desc = printf("Search pending work notes"), mode = "n" },
         { "<leader>nfw", function() markdown_func.search_front_matter(nil, nil, my_notes_dir) end, desc = printf("Search all work notes"), mode = "n" },
-        --
         -- stylua: ignore end
       }
       wk.add(mapping)
-
-      -- FIX: check this
-      -- set("n", "<leader>nm", function() markdown_func.search_moc_files(my_notes_dir) end, { buffer = true, desc = printf("Find MOC files") }) -- FIX: check this. must show up not in md file.
-      -- set("n", "<leader>nn", function() telekasten.new_note() end, { buffer = true, desc = printf("Create new note") }) -- FIX: find with template. also it will give space in file name. use my custom bash?
-      -- open all notes
-      -- open and search inside of notes.
 
       autocmd("Filetype", {
         group = markdown_keymaps,
@@ -156,7 +209,7 @@ return {
 
               -- bullets manipulation
               { "gN", "<Plug>(bullets-renumber)", mode = { "n", "v" }, desc = printf("Renumber Bullets"), buffer = 0 },
-              -- { "<cr>", "<Plug>(bullets-newline)", mode = { "i" }, desc = printf("Bullets Newline in insert mode"), buffer = 0 }, -- FIX:  it has conflict with blink
+              { "<cr>", "<Plug>(bullets-newline)", mode = { "i" }, desc = printf("Bullets Newline in insert mode"), buffer = 0 }, -- NOTE: it conflict with blink
               { "<c-cr>", "<cr>", mode = { "i" }, desc = printf("Normal Newline in insert mode"), buffer = 0 },
               { "o", "<Plug>(bullets-newline)", mode = { "n" }, desc = printf("Newline in normal mode"), buffer = 0 },
 
@@ -179,17 +232,16 @@ return {
               -- set("n", "<leader>lt", function() telekasten.toggle_todo() end, buffer = 0, desc = printf("Toggle todo")) -- use bullet.vim's
 
               -- others
-              { "<leader>l?", function() print("test") end, desc = printf("Other Markdown Keymaps"), buffer = 0 }, -- FIX: add a print function to print the keymaps
               { "<leader>lc", "<cmd>TOC<cr>", desc = printf("Generate Table of Contents"), buffer = 0 },
+              { "<leader>lC", "<cmd>Telekasten show_calendar<cr>", desc = printf("Show Calender"), buffer = 0 },
               { "<leader>ld", function() markdown_func.toggle_is_done_in_buffer() end, desc = printf("Toggle is_done in buffer"), buffer = 0 },
               { "<leader>lp", "<cmd>MarkdownPreviewToggle<cr>", mode = "n", desc = printf("Markdown Preview"), buffer = 0 },
               { "<leader>ld", function() markdown_func.toggle_is_done_in_buffer() end, mode = "n", desc = printf("Toggle is_done in buffer"), buffer = 0 },
-              { "<leader>lD", function() telekasten.delete_current_file() end, desc = printf("Delete current file"), buffer = 0 }, -- FIX: not working
+              { "<leader>lD", function() telekasten.delete_current_file() end, desc = printf("Delete current file"), buffer = 0 }, -- FIX: not working check linkarsu code
               { "<leader>lI", function() markdown_func.delete_image_file() end, desc = printf("Delete image file"), buffer = 0 }, -- FIX: notworking
 
               -- formatter
-              { "<leader>lj", ":!prettier --parser json<CR>",mode = "v", desc = printf("Format JSON code"), buffer = 0 },
-              -- { "<leader>lj", function() util.format_json_selection() end,mode = "v", desc = printf("Format JSON code"), buffer = 0 }, -- FIX: not working
+              { "<leader>lj", ":!prettier --parser json<CR>",mode = "v", desc = printf("Format JSON code"), buffer = 0 }, -- TODO: find a better one
               -- stylua: ignore end
             }
 
@@ -454,18 +506,13 @@ return {
     end,
   },
 
+  -- generate table of contents
   {
     "richardbizik/nvim-toc",
     event = "VeryLazy",
     config = function()
       require("nvim-toc").setup({})
     end,
-  },
-
-  {
-    "nvim-telekasten/calendar-vim",
-    event = "VeryLazy",
-    -- enabled = false, -- disabled plugin
   },
 
   -- disable markdown-oxide. uses telekasten.nvim for navigation. oxide is way faster though.
@@ -499,6 +546,7 @@ return {
       require("lspconfig").markdown_oxide.setup({})
     end,
   },
+
   -- Setup completion with nvim-cmp for markdown LSP
   {
     "hrsh7th/nvim-cmp",
@@ -515,4 +563,6 @@ return {
       })
     end,
   },
+
+  -- TODO: add support for blink.cmp just like nvim-cmp above
 }

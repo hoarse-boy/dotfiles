@@ -46,15 +46,6 @@ snippet lazy_keymap "lazy keymap"
 		{ "${1:keymap ex => <leader>cR}", "<cmd>${2:cmd}<cr>", desc = "${3:description}" },
 	}
 
-snippet notify "generate notify with treesitter highlight"
-	notify("${1:Message}", "${2:Notifation Type: info, warn, debug, or error}", {
-		title = "${3:Title}",
-		on_open = function(win)
-			local buf = vim.api.nvim_win_get_buf(win)
-			vim.api.nvim_buf_set_option(buf, "filetype", "${4:ex. markdown}")
-		end,
-	})
-
 snippet add_lazy_plugin "generate lazy.nvim plugin table with return"
   local printf = require("plugins.util.printf").printf
 	return {
@@ -130,19 +121,6 @@ snippet create_notify "generate notify with treesitter highlight"
 		end,
 	})
 
-snippet create_notify_with_highlight "generate notify with treesitter highlight"
-	notify("${1:Message}", "${2:Notifation Type: info, warn, debug, or error}", {
-		title = "${3:Title}",
-		on_open = function(win)
-			local buf = vim.api.nvim_win_get_buf(win)
-			vim.api.nvim_buf_set_option(buf, "filetype", "${4:ex. markdown}")
-		end,
-		render = function(bufnr)
-			local buf = vim.api.nvim_win_get_buf(bufnr)
-			vim.api.nvim_buf_set_option(buf, "filetype", "${5:ex. markdown}")
-		end,
-	})
-
 snippet create_os_check "generate os check"
   local os_util = require("plugins.util.check-os")
   local os_name = os_util.get_os_name()
@@ -151,4 +129,7 @@ snippet create_os_check "generate os check"
     ${1:logic}
   end
 
-
+snippet vim_notify "vim notify (snack's notifier)"
+  -- vim.notify("# Have you:\n- run GoTest?\n- run GoLint?\n- checked todo 'FIX:'?", "info", { title = "go.nvim" }) -- FIX: example
+  -- change vim.log.levels.INFO to any desired level. check the rest of the enums in 'level'
+  vim.notify("${1:msg}", vim.log.levels.INFO, { title = "${3:title}" })

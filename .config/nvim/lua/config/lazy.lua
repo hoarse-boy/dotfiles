@@ -22,13 +22,13 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lsp.none-ls" },
     { import = "lazyvim.plugins.extras.lang.helm" },
     { import = "lazyvim.plugins.extras.lang.php" },
-    { import = "lazyvim.plugins.extras.editor.telescope" },
     { import = "lazyvim.plugins.extras.lang.python" },
     { import = "lazyvim.plugins.extras.coding.mini-surround" },
     { import = "lazyvim.plugins.extras.coding.luasnip" },
     { import = "lazyvim.plugins.extras.dap.nlua" },
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.util.mini-hipatterns" }, -- highlight patterns, including tailwind.
+
     -- { import = "lazyvim.plugins.extras.lang.rust" }, -- TODO: check this plugin, and if it better, add which key instead of making my own.
     -- { import = "lazyvim.plugins.extras.lsp.neoconf" }   ,
     -- { import = "lazyvim.plugins.extras.editor.inc-rename" }, -- NOTE: dont use this as the rename cannot use vim normal mode.
@@ -44,8 +44,15 @@ require("lazy").setup({
     -- { import = "plugins.extras.lang.json" },
     -- { import = "plugins.extras.lang.php" }, -- NOTE: causing lspconfig to load at startup, causing performance issue (50ms delay).
 
+    -- import editor plugins
+    -- { import = "plugins.extras.editor.telescope" }, -- default will be fzf-lua. uncomment this to use fzf-lua.
+
     -- import all of my coding plugins.
     { import = "plugins.extras.coding.supermaven" }, --supermaven is a better codeium alternative.
+
+    -- enabled nvim-cmp. uncomment this if uses blink.cmp.
+    { import = "lazyvim.plugins.extras.coding.nvim-cmp" },
+    { import = "plugins.extras.coding.nvim-cmp" },
 
     -- import dap plugins
     { import = "plugins.extras.dap.dap" },

@@ -22,7 +22,7 @@ local filetype_formats = {
   python = "# %s",
   mojo = "# %s",
   html = "<!-- %s -->",
-  markdown = "<!-- %s -->",
+  markdown = "<!-- %s --> priority", -- value with `priority` as it mostly used in my markdown notes.
   lua = "-- %s",
   css = "/* %s */",
 }

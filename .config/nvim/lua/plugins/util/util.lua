@@ -105,4 +105,33 @@ function util.wrap_markdown_code_block(filetype)
   end
 end -- FIX: remove?
 
+-- modify existing dashboard shortcut in config.center. the one showing when launching nvim.
+--- @param dashboard_keys_table table: The dashboard keys table.
+--- @param current_keymap string: The current keymap.
+--- @param new_action string | function: The new action.
+--- @param new_desc string: The new description.
+function util.update_dashboard_shortcut(dashboard_keys_table, current_keymap, new_action, new_desc)
+  -- for _, item in ipairs(opts.config.center) do -- this is used if the dashboard plugin is dashboard.nvim
+  for _, item in ipairs(dashboard_keys_table) do
+    if item.key == current_keymap then
+      item.action = new_action
+      item.desc = new_desc
+    end
+  end
+end
+
+--- Removes an item from the dashboard keys table.
+--- the value of `dashboard_keys_table` is dynamic according to the dashboard plugin used.
+--- example for snacks's dashboard the keys table is `opts.dashboard.preset.keys`.
+--- @param dashboard_keys_table table: The dashboard keys table.
+--- @param key_to_remove string: The key to remove from the dashboard keys table.
+function util.remove_dashboard_item(dashboard_keys_table, key_to_remove)
+  for index, item in ipairs(dashboard_keys_table) do
+    if item.key == key_to_remove then
+      table.remove(dashboard_keys_table, index)
+      break
+    end
+  end
+end
+
 return util

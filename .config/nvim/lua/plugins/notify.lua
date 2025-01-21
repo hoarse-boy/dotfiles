@@ -1,18 +1,6 @@
--- TODO: remove this and use snacks's notify
+-- NOTE: use snack's notifier
 
-return {
-  {
-    "folke/which-key.nvim", -- TODO: move this to snacks notifier
-    opts = function(_, _)
-      local wk = require("which-key")
-      local printf = require("plugins.util.printf").printf
-      local mapping = {
-        { "<leader>uH", "<cmd>lua Snacks.notifier.show_history()<cr>", desc = printf("Show Notifier History"), mode = "n" },
-      }
-      wk.add(mapping)
-    end,
-  },
-}
+return {}
 
 -- return {
 --   "rcarriga/nvim-notify",
@@ -29,7 +17,6 @@ return {
 --   },
 --   opts = function(_, _)
 --     local default_notify = vim.notify
---  -- FIX:
 --     vim.notify = function(msg, ...)
 --       -- Check if the message is related to swap files
 --       if msg:match("ATTENTION") or msg:match("swap") then
