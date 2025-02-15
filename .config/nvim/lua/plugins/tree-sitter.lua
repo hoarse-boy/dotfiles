@@ -5,7 +5,38 @@ return {
     "nvim-treesitter/nvim-treesitter",
     -- commit = "865483f8d1c6e263a1a9efd46f84e78ec5fa31d4",
     dependencies = {
-      { "p00f/nvim-ts-rainbow" }, -- the original rainbow still works fine
+      -- rainbow-delimiters. p00f/nvim-ts-rainbow is buggy and archive along time ago.
+      {
+        "HiPhish/rainbow-delimiters.nvim",
+        enabled = false,
+        event = "VeryLazy",
+        config = function()
+          local rainbow_delimiters = require("rainbow-delimiters")
+
+          vim.g.rainbow_delimiters = {
+            strategy = {
+              [""] = rainbow_delimiters.strategy["global"],
+              vim = rainbow_delimiters.strategy["local"],
+            },
+            query = {
+              [""] = "rainbow-delimiters",
+              lua = "rainbow-blocks",
+            },
+            priority = {
+              [""] = 110,
+            },
+            highlight = {
+              "RainbowDelimiterRed",
+              "RainbowDelimiterYellow",
+              "RainbowDelimiterBlue",
+              "RainbowDelimiterOrange",
+              "RainbowDelimiterGreen",
+              "RainbowDelimiterViolet",
+              "RainbowDelimiterCyan",
+            },
+          }
+        end,
+      },
 
       -- treesitter playground
       {
@@ -115,7 +146,8 @@ return {
       },
 
       rainbow = {
-        enable = true,
+        -- Disable for certain filetypes (e.g., snippets or preview buffers)
+        enable = false, -- this makes nvim scissor to be unable to edit snippets
         -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
         extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
         max_file_lines = nil, -- Do not enable for files with more than n lines, int

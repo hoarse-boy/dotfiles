@@ -1,3 +1,5 @@
+-- NOTE: depracated. use blink.cmp instead. dont remove this code.
+
 return {
   {
     "saghen/blink.cmp",
@@ -8,8 +10,8 @@ return {
     "hrsh7th/nvim-cmp",
     enabled = true, -- NOTE: required after lazyvim 14.*
     dependencies = {
-      "hrsh7th/cmp-emoji",
-      "hrsh7th/cmp-calc",
+      -- "hrsh7th/cmp-emoji",
+      -- "hrsh7th/cmp-calc",
     },
 
     ---@param opts cmp.ConfigSchema
@@ -42,9 +44,9 @@ return {
         { name = "luasnip" },
         { name = "nvim_lsp" },
         { name = "buffer" },
-        { name = "calc" },
-        { name = "emoji" },
         { name = "path" },
+        -- { name = "calc" },
+        -- { name = "emoji" },
       })
 
       -- NOTE: this will fix gopls strange behavior in which it will go to the middle of cmp suggestions instead of the first in line

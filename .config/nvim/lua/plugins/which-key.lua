@@ -8,7 +8,7 @@ return {
     -- disable notify.
 
     ---@type false | "classic" | "modern" | "helix"
-    --    opts.preset = "modern" -- FIX: 
+    --    opts.preset = "modern" -- FIX:
     opts.notify = false
 
     opts.win = {
@@ -39,13 +39,18 @@ return {
       { "<leader>:", icon = "󰋚", group = "Command History", mode = "n" }, -- NOTE: just add a symbol, not a new custom keymap.
       -- { "<leader>k", icon = "", group = printf("My Keybinds Cheatcodes"), mode = "n" },
       { "<leader>K", icon = "", group = "Keywordprg", mode = "n", hidden = true },
-      { "<leader>o", icon = "", group = printf("others"), mode = "n" },
-      { "<leader>bR", "<cmd>recover<cr>", desc = printf("Recover Buffer"), mode = "n" }, -- FIX:
+      { "<leader>o", icon = "", group = printf("others"), mode = { "v", "n" } },
+      -- { "<leader>bR", "<cmd>recover<cr>", desc = printf("Recover Buffer"), mode = "n" }, 
 
-      -- stylua: ignore
+      -- stylua: ignore start
       { "<leader>bD", function() util.delete_swap_folder() end, desc = printf("delete swapfile folder"), mode = "n", },
+      { "<leader>bv", function() util.check_or_create_launch_json() end, desc = printf("Create or Open launch.json"), mode = "n", },
+      -- stylua: ignore end
+
     }
 
     wk.add(mapping)
   end,
 }
+
+

@@ -66,40 +66,6 @@ snippet add_lazy_plugin "generate lazy.nvim plugin table with return"
 		end,
 	}
 
-snippet add_which_key "generate which-key plugin"
-	{
-		"folke/which-key.nvim",
-		opts = function(_, _)
-			local wk = require("which-key")
-			local printf = require("plugins.util.printf").printf
-      local autocmd = vim.api.nvim_create_autocmd
-      local augroup = vim.api.nvim_create_augroup
-      local ${1:some_keymap_group} = augroup("${1:some_keymap_group}", {})
-
-      autocmd("Filetype", {
-        group = ${1:some_keymap_group},
-        pattern = "${2:filetype}", -- * for all filetypes
-        callback = function()
-          vim.schedule(function()
-            local mapping = {
-              -- FIX: remove this comment after creating keymaps.
-              -- uncomment to use examples below.
-              -- NOTE: buffer = 0 is needed to not make it merge with other keymaps when opening other filetypes.
-              -- this will create local keymaps for that specific filetype.
-              -- FIX: remove the auto cmd and buffer = 0 if used for all filetypes. 
-              -- check the filetype again if it is not working.
-              -- { "<leader>h", icon = "󰓥", group = printf("harpoon"), mode = "n", buffer = 0 }, -- group key with prefix like '+'
-              -- { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = printf"Find File", mode = "n", icon = "󰜉", buffer = 0 },
-              -- { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = printf"Find File", mode = "n", icon = "󰜉" },
-              -- { "<leader>fb", function() print("hello") end, desc = "Foobar", buffer = 0 },
-            }
-            wk.add(mapping)
-          end)
-        end,
-      })
-    end,
-  },
-
 snippet log_table_create "generate func to log a table usefull for debugging, use snippet log_table to call it"
 	local function log_table(tbl, message)
 		local inspected = vim.inspect(tbl)

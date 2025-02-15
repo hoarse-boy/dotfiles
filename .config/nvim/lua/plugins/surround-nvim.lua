@@ -71,19 +71,10 @@ return {
                 { "**" },
               }
             end,
-            find = "%*%*(.-)%*%*", -- FIX: not working
-            delete = "%*%*(.-)%*%*", -- FIX: not working
+            find = "%*%*(.-)%*%*", -- NOTE: not working
+            delete = "%*%*(.-)%*%*",
           },
-          -- ["tp"] = {
-          --   add = function()
-          --     return {
-          --       { "<p>" },
-          --       { "</p>" },
-          --     }
-          --   end,
-          --   find = "%*%*(.-)%*%*", -- FIX: not working
-          --   delete = "%*%*(.-)%*%*", -- FIX: not working
-          -- },
+
           -- TODO: add more for markdown.
           ["l"] = {
             add = function()
@@ -106,6 +97,7 @@ return {
               end,
             },
           },
+
           ["c"] = {
             add = function()
               local lang = config.get_input("Enter code language (e.g., json): ")
@@ -114,6 +106,7 @@ return {
                 { "\n```" },
               }
             end,
+
             -- -- TODO: find out how to use the other like find etc. check this link for lua pattern https://www.lua.org/manual/5.4/manual.html#6.4.1
             -- -- also the "l" above is working and can be used as a reference.
             -- find = function()
@@ -158,25 +151,25 @@ return {
       local surround_nvim_title_msg = "surround-nvim"
 
       local mapping = {
-        { "<leader>os", icon = "", group = printf("Surround Keys Cheatcodes"), mode = "n" },
+        { "<leader>oS", icon = "", group = printf("Surround Keys Cheatcodes"), mode = "n" },
 
         -- stylua: ignore start
-        { "<leader>osC",
+        { "<leader>oSC",
           function() vim.notify("\n# add code block\n\n'zc'\nmode: v-line", vim.log.levels.INFO, { title = surround_nvim_title_msg })
           end, desc = printf("Code Block (v-line mode)"), mode = "n"
         },
 
-        { "<leader>osc",
+        { "<leader>oSc",
           function() vim.notify("\n# change surround\n\n'cz**'\nmode: normal\n\nfirst * is target\nsecond * is replacement", vim.log.levels.INFO, { title = surround_nvim_title_msg })
           end, desc = printf("Change Surround"), mode = "n"
         },
 
-        { "<leader>osa",
+        { "<leader>oSa",
           function() vim.notify(surround_add_msg, vim.log.levels.INFO, { title = surround_nvim_title_msg })
           end, desc = printf("Add Surround (most commond)"), mode = "n"
         },
 
-        { "<leader>osd",
+        { "<leader>oSd",
           function() vim.notify("\n# delete surround\n\n'dz*'\nmode: normal\n", vim.log.levels.INFO, { title = surround_nvim_title_msg })
           end, desc = printf("Delete Surround"), mode = "n"
         },

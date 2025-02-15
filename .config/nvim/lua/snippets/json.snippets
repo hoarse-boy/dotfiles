@@ -35,3 +35,21 @@ snippet go-json-debug "create launch.json for go debugging"
 		]
 	}
 
+snippet deno-json-debug "create launch.json for deno"
+  {
+    "version": "0.2.0",
+    "configurations": [
+      {
+				"name": "${1}",
+        "type": "node",
+        "request": "launch",
+        "cwd": "${workspaceFolder}",
+        "runtimeExecutable": "deno",
+        "runtimeArgs": ["run", "--inspect-brk", "-A", "${file}"],
+        "attachSimplePort": 9229
+				"env": {
+					"${2}": "${3}"
+				}
+      }
+    ]
+  }

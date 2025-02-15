@@ -9,10 +9,10 @@ local my_notes_dir = "~/jho-notes"
 -- local os_util = require("plugins.util.check-os")
 -- local os_name = os_util.get_os_name()
 
-local enabled = true
-if vim.g.neovide then
-  enabled = false -- neovide has no kitty image protocol support.
-end
+-- local enabled = true
+-- if vim.g.neovide then
+--   enabled = false -- neovide has no kitty image protocol support.
+-- end
 
 return {
   {
@@ -80,7 +80,7 @@ return {
           }
         end,
       },
-      "nvim-telekasten/calendar-vim",
+      -- "nvim-telekasten/calendar-vim", -- -- NOTE: disabling this. it makes the <leader>ca to be written and cannot be seen in keymaps searching.
     },
     -- enabled = false,
     config = function()
@@ -135,19 +135,19 @@ return {
         -- pattern = "*", -- Or specify a filetype like 'markdown' if needed
         pattern = "markdown", -- Or specify a filetype like 'markdown' if needed
         callback = function()
-          vim.schedule(function()
-            -- vim.wo.wrap = false
+          -- vim.schedule(function()
+          -- vim.wo.wrap = false
 
-            -- remove bullets.vim keymaps. regular nvim del key not working.
-            local bufnr = vim.api.nvim_get_current_buf()
-            vim.api.nvim_buf_del_keymap(bufnr, "n", "<leader>x") -- Remove toggle checkbox
+          -- remove bullets.vim keymaps. regular nvim del key not working.
+          local bufnr = vim.api.nvim_get_current_buf()
+          vim.api.nvim_buf_del_keymap(bufnr, "n", "<leader>x") -- Remove toggle checkbox
 
-            -- remove bullets.vim indenting which is buggy. just delete them, as overwriting is not working.
-            vim.api.nvim_buf_del_keymap(bufnr, "v", "<")
-            vim.api.nvim_buf_del_keymap(bufnr, "v", ">")
+          -- remove bullets.vim indenting which is buggy. just delete them, as overwriting is not working.
+          vim.api.nvim_buf_del_keymap(bufnr, "v", "<")
+          vim.api.nvim_buf_del_keymap(bufnr, "v", ">")
 
-            vim.keymap.set("n", "<CR>", "<cmd>pu _<cr>") -- overwrite enter in normal mode to not follow bullets.vim newline indenting
-          end)
+          vim.keymap.set("n", "<CR>", "<cmd>pu _<cr>") -- overwrite enter in normal mode to not follow bullets.vim newline indenting
+          -- end)
         end,
       })
     end,
@@ -161,31 +161,35 @@ return {
 
       local wk = require("which-key")
       local mapping = {
+        -- stylua: ignore start
         { "<leader>n", icon = "󱞁", group = printf("notes"), mode = "n" }, -- group key with prefix like '+'
 
-        -- stylua: ignore start
         -- find notes
-        { "<leader>nn", function() telekasten.find_notes() end, desc = printf("Find Notes"), mode = "n" },
-        { "<leader>ns", function() telekasten.search_notes() end, desc = printf("Search Notes by Keyword"), mode = "n" },
-        { "<leader>nm", function() markdown_func.search_moc_files(my_notes_dir) end, desc = printf("Find MOC files"), mode = "n" },
+        { "<leader>nf", function () require("plugins.util.find-files").change_dir_and_find_files(my_notes_dir) end, desc = printf("Find Notes"), mode = "n" },
+        { "<leader>ns", function () require("plugins.util.find-files").change_dir_and_live_grep(my_notes_dir) end, desc = printf("Search Notes by Keyword"), mode = "n" },
+        -- { "<leader>nn", function() telekasten.find_notes() end, desc = printf("Find Notes"), mode = "n" }, -- telekasten build in func but only uses telescope
+        -- { "<leader>ns", function() telekasten.search_notes() end, desc = printf("Search Notes by Keyword"), mode = "n" }, -- telekasten build in func but only uses telescope
+
+        { "<leader>nm", function() markdown_func.search_markdown("#moc", "Find MOC Files") end, desc = printf("Find MOC files"), mode = "n" },
+        { "<leader>np", function() markdown_func.search_markdown("is_done: false", "Search Pending Work Notes") end, desc = printf("Search pending work notes"), mode = "n" },
+
+        { "<leader>nT", function () require("plugins.util.find-files").open_a_file("personal-todo-moc.md", my_notes_dir) end, desc = printf("Open Personal Todo"), mode = "n" },
+        { "<leader>nq", function () require("plugins.util.find-files").open_a_file("quick-note.md", my_notes_dir) end, desc = printf("Open Quick Note"), mode = "n" },
 
         -- create notes
         { "<leader>nc", function() telekasten.new_note() end, desc = printf("Create new note"), mode = "n" },
         { "<leader>nt", function() telekasten.new_templated_note() end, desc = printf("Create new templated note"), mode = "n" }, -- TODO: request or create PR to have templated notes to have other option of template as params
 
-        -- weekly and daily notes
+        -- weekly and daily notes.
         { "<leader>nd", function() telekasten.goto_today() end, desc = printf("Open today note"), mode = "n" }, -- will also create weekly note if not exist
         { "<leader>nw", function() telekasten.goto_thisweek() end, desc = printf("Open weekly note"), mode = "n" }, -- will also create weekly note if not exist
 
-        -- others
-        { "<leader>nT", function() telekasten.show_tags() end, desc = printf("Search notes by tag"), mode = "n" },
+        -- other rarely used note searching
+        { "<leader>nF", icon = "󱞁", group = printf("Search Notes"), mode = "n" }, -- group key with prefix like '+'
+        { "<leader>nFt", function() telekasten.show_tags() end, desc = printf("Search notes by tag"), mode = "n" },
+        { "<leader>nFc", function() markdown_func.search_markdown("is_done: true", "Search Pending Work Notes") end, desc = printf("Search completed work notes"), mode = "n" },
+        { "<leader>nFw", function() markdown_func.search_markdown("#work_task", "Search All Work Notes") end, desc = printf("Search All Work Notes"), mode = "n" },
 
-        -- other note searching
-        -- FIX: the functions are not working.
-        { "<leader>nf", icon = "󱞁", group = printf("Search Notes"), mode = "n" }, -- group key with prefix like '+'
-        { "<leader>nfc", function() markdown_func.search_front_matter(nil, "true", my_notes_dir) end, desc = printf("Search completed work notes"), mode = "n" },
-        { "<leader>nfp", function() markdown_func.search_front_matter(nil, "false", my_notes_dir) end, desc = printf("Search pending work notes"), mode = "n" },
-        { "<leader>nfw", function() markdown_func.search_front_matter(nil, nil, my_notes_dir) end, desc = printf("Search all work notes"), mode = "n" },
         -- stylua: ignore end
       }
       wk.add(mapping)
@@ -195,11 +199,10 @@ return {
         pattern = { "md", "markdown" }, -- README.md will have buggy keymaps. find the fix or rename it other than README.md
         callback = function()
           vim.schedule(function()
-            local util = require("plugins.util.util")
+            -- local util = require("plugins.util.util")
 
             local l_mapping = {
               -- stylua: ignore start
-              { "<leader>l", group = printf("lsp (markdown)"), icon = "󰍔", mode = { "v", "n" }, buffer = 0 },
 
               -- checkbox
               { "gt", function() markdown_func.check_or_add_checkbox(true) end, mode = { "n", "v" }, desc = printf("Add Checkbox and Insert Mode"), buffer = 0 },
@@ -219,11 +222,14 @@ return {
               -- { ">", "<Plug>(bullets-demote)", mode = { "v" }, desc = printf("Demote Bullet"), buffer = 0 },
               -- { "<", "<Plug>(bullets-promote)", mode = { "v" }, desc = printf("Promote Bullet"), buffer = 0 },
 
+              { "<leader>l", group = printf("lsp (markdown)"), icon = "󰍔", mode = { "v", "n" }, buffer = 0 },
+
               -- telekasten navigation. enables lb and ll as oxide is needed. telekasten has some weird behavour, such as copying the name of the backlink when trasversing.
               -- {"gr", function() telekasten.show_backlinks() end,  mode = "n", desc = printf("Show backlinks") },
               -- {"gd", function() telekasten.follow_link() end,  mode = "n", desc = printf("Follow link under cursor") },
               {"<leader>lb", function() telekasten.show_backlinks() end,  mode = "n", desc = printf("Show backlinks"), buffer = 0 },
               {"<leader>ll", function() telekasten.follow_link() end,  mode = "n", desc = printf("Follow link under cursor"), buffer = 0 },
+              {"<leader>lr", function() telekasten.rename_note() end,  mode = "n", desc = printf("Telekasten Rename Note (and its Backlink)"), buffer = 0 },
 
               {"<leader>lL", function() telekasten.insert_link() end, mode = "n", desc = printf("Insert link to note"), buffer = 0 }, -- can open image and link in browser.
               {"<leader>lc", function() telekasten.show_calendar() end, mode = "n", desc = printf("Show calendar"), buffer = 0 },
@@ -266,6 +272,7 @@ return {
 
   {
     "MeanderingProgrammer/render-markdown.nvim",
+    tag = "v7.7.0", -- NOTE: use this tag as the latest has some bug. it will return an error if resume the nvim session super fast.
     event = "VeryLazy",
     -- enabled = false,
     opts = function(_, opts)
@@ -383,8 +390,25 @@ return {
         use_absolute_path = false, ---@type boolean
         relative_to_current_file = true, ---@type boolean
         dir_path = "assets", ---@type string | fun(): string  NOTE: image.nvim failed to show image if the folder created has space.
-        prompt_for_file_name = false, ---@type boolean
-        file_name = "%Y-%m-%d-at-%H-%M-%S", ---@type string
+        prompt_for_file_name = false, ---@type boolean -- this prompt is kinda buggy. will use below function instead.
+        file_name = function()
+          -- Get the current date and time in the format YYYY-MM-DD-HH-MM-SS
+          local date_suffix = os.date("%Y-%m-%d-%H-%M-%S")
+
+          -- Prompt the user for the image name
+          local image_name = vim.fn.input("Enter image name (or leave blank for 'image'): ")
+
+          -- If the input is empty, use 'image' as the placeholder
+          if image_name == "" then
+            image_name = "image"
+          else
+            -- Replace spaces with '-'
+            image_name = image_name:gsub(" ", "-")
+          end
+
+          -- Combine the image name with the date suffix
+          return image_name .. "-" .. date_suffix
+        end,
 
         extension = "avif", ---@type string
         process_cmd = "convert - -quality 75 avif:-", ---@type string
@@ -427,83 +451,10 @@ return {
           --
           -- -- This will dynamically configure the alternative text to show the
           -- -- same that you configured as the "file_name" above
-          template = "![$FILE_NAME]($FILE_PATH)", ---@type string
+          template = "![$FILE_NAME](./$FILE_PATH)", ---@type string --  must use ./ to make it work with cmp engine
         },
       },
     },
-  },
-
-  {
-    "3rd/image.nvim",
-    enabled = enabled,
-    event = "VeryLazy",
-    config = function()
-      -- Get the user's home directory dynamically
-      local home = vim.fn.expand("$HOME")
-
-      -- Set LuaRocks paths dynamically. if set in shell, this code are not needed.
-      package.path = package.path .. ";" .. home .. "/.luarocks/share/lua/5.1/?.lua;" .. home .. "/.luarocks/share/lua/5.1/?/init.lua"
-      package.cpath = package.cpath .. ";" .. home .. "/.luarocks/lib/lua/5.1/?.so"
-
-      -- Verify that magick is loaded correctly
-      local success, _ = pcall(require, "magick")
-      if not success then
-        print("Failed to load magick module. Check Lua paths.")
-      end
-
-      require("image").setup({
-        backend = "kitty",
-        kitty_method = "normal",
-        integrations = {
-          -- Notice these are the settings for markdown files
-          markdown = {
-            enabled = true,
-            clear_in_insert_mode = false,
-            -- Set this to false if you don't want to render images coming from
-            -- a URL
-            download_remote_images = true,
-            -- Change this if you would only like to render the image where the
-            -- cursor is at
-            -- I set this to true, because if the file has way too many images
-            -- it will be laggy and will take time for the initial load
-            only_render_image_at_cursor = true,
-            -- markdown extensions (ie. quarto) can go here
-            filetypes = { "markdown", "vimwiki" },
-          },
-          html = {
-            enabled = true,
-          },
-          css = {
-            enabled = true,
-          },
-        },
-        max_width = nil,
-        max_height = nil,
-        max_width_window_percentage = nil,
-
-        -- This is what I changed to make my images look smaller, like a
-        -- thumbnail, the default value is 50
-        -- max_height_window_percentage = 20,
-        max_height_window_percentage = 80,
-
-        -- toggles images when windows are overlapped
-        window_overlap_clear_enabled = false,
-        window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
-
-        -- auto show/hide images when the editor gains/looses focus
-        editor_only_render_when_focused = true,
-
-        -- auto show/hide images in the correct tmux window
-        -- In the tmux.conf add `set -g visual-activity off`
-        tmux_show_only_in_active_window = true,
-
-        -- render image files as images when opened
-        -- NOTE: wezterm will have buggy webp files in certain cases. it happens when the image's directory is in a complex location.
-        -- in case of current directory of all md files in root and a single image dir, it will not have a problem.
-        -- latest finding, the webp image not working again. use avif instead.
-        hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif" },
-      })
-    end,
   },
 
   -- generate table of contents
@@ -565,4 +516,80 @@ return {
   },
 
   -- TODO: add support for blink.cmp just like nvim-cmp above
+
+  -- -- incorrect configuration can cause delay when closing nvim. this make nvim in tmux to be super slow and buggy.
+  -- -- use the `iamcco/markdown-preview.nvim` instead.
+  -- -- don't remove this code.
+  -- {
+  --   "3rd/image.nvim",
+  --   enabled = false,
+  --   -- enabled = enabled,
+  --   -- commit = "5f8fceca2d1be96a45b81de21c2f98bf6084fb34", -- this commits make it a little bit faster.
+  --   ft = { "markdown" }, -- NOTE: to not make nvim slower when quiting.
+  --   config = function()
+  --     -- Set LuaRocks paths dynamically. if set in shell, this code are not needed.
+  --     -- local home = vim.fn.expand("$HOME")
+  --     -- package.path = package.path .. ";" .. home .. "/.luarocks/share/lua/5.1/?.lua;" .. home .. "/.luarocks/share/lua/5.1/?/init.lua"
+  --     -- package.cpath = package.cpath .. ";" .. home .. "/.luarocks/lib/lua/5.1/?.so"
+
+  --     -- Verify that magick is loaded correctly
+  --     local success, _ = pcall(require, "magick")
+  --     if not success then
+  --       print("Failed to load magick module. Check Lua paths.")
+  --     end
+
+  --     require("image").setup({
+  --       backend = "kitty",
+  --       kitty_method = "normal",
+  --       integrations = {
+  --         -- Notice these are the settings for markdown files
+  --         markdown = {
+  --           enabled = true,
+  --           clear_in_insert_mode = false,
+  --           -- Set this to false if you don't want to render images coming from
+  --           -- a URL
+  --           download_remote_images = true,
+  --           -- Change this if you would only like to render the image where the
+  --           -- cursor is at
+  --           -- I set this to true, because if the file has way too many images
+  --           -- it will be laggy and will take time for the initial load
+  --           only_render_image_at_cursor = true,
+  --           -- markdown extensions (ie. quarto) can go here
+  --           filetypes = { "markdown", "vimwiki" },
+  --         },
+  --         html = {
+  --           enabled = true,
+  --         },
+  --         css = {
+  --           enabled = true,
+  --         },
+  --       },
+  --       max_width = nil,
+  --       max_height = nil,
+  --       max_width_window_percentage = nil,
+
+  --       -- This is what I changed to make my images look smaller, like a
+  --       -- thumbnail, the default value is 50
+  --       -- max_height_window_percentage = 20,
+  --       max_height_window_percentage = 80,
+
+  --       -- toggles images when windows are overlapped
+  --       window_overlap_clear_enabled = false,
+  --       window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+
+  --       -- auto show/hide images when the editor gains/looses focus
+  --       editor_only_render_when_focused = true,
+
+  --       -- auto show/hide images in the correct tmux window
+  --       -- In the tmux.conf add `set -g visual-activity off`
+  --       tmux_show_only_in_active_window = true,
+
+  --       -- render image files as images when opened
+  --       -- NOTE: wezterm will have buggy webp files in certain cases. it happens when the image's directory is in a complex location.
+  --       -- in case of current directory of all md files in root and a single image dir, it will not have a problem.
+  --       -- latest finding, the webp image not working again. use avif instead.
+  --       hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif" },
+  --     })
+  --   end,
+  -- },
 }

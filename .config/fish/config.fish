@@ -4,6 +4,8 @@ if status is-interactive
     starship init fish | source
 end
 
+load_os_cmds
+
 zoxide init fish | source
 
 # makes the cursor change shape when in vim insert mode and normal mode
@@ -13,26 +15,20 @@ set fish_cursor_insert line
 set fish_cursor_replace_one underscore
 
 # List Directory
-alias ls="lsd"
-alias l="ls -l"
-alias la="ls -a"
-alias lla="ls -la"
-alias lt="ls --tree"
-
-set -l editor "neovide --fork --wayland_app_id neovide" # or "nvim"
-
-# Personal
-alias fastfetch="fastfetch --logo-type kitty"
+abbr ls lsd
+abbr l "lsd -l"
+abbr la "lsd -a"
+abbr lla "lsd -la"
+abbr lt "lsd --tree"
 
 # obsidian dir
-alias oto="cd ~/obsidian-syncthing/todos/ && $editor ."
-alias oin="cd ~/obsidian-syncthing/inbox/ && $editor ."
+# alias oto="cd ~/obsidian-syncthing/todos/ && $editor ."
+# alias oin="cd ~/obsidian-syncthing/inbox/ && $editor ."
 
 # zoxide
 alias cd='z'
 
-# TODO: add others.
-# git
+# git bare
 alias cfg="/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
 abbr cfgs 'cfg status'
 abbr cfga 'cfg add -u'
@@ -49,8 +45,6 @@ abbr sf 'source ~/.config/fish/config.fish'
 # abbreviation
 # nvim
 abbr v nvim
-abbr nv 'neovide --fork --wayland_app_id neovide' # no no-multigrid has better animation but will make the floating window to have dark background.
-# abbr nv 'neovide --no-multigrid --fork --wayland_app_id neovide'
 abbr lazy "cd ~/.local/share/nvim/lazy/LazyVim/ && $editor"
 
 # ghostty
@@ -68,9 +62,7 @@ abbr ta 'tmux attach-session -t'
 abbr tn 'tmux new-session -s'
 
 # other most used commands
-abbr dol 'nohup dolphin . > /dev/null 2>&1 &' # open dolphin for the current dir, quits terminal will not quit dolphin.
 abbr lg lazygit
-abbr pwd 'pwd && pwd | wl-copy'
 
 # TODO: add more for kubernetes
 # kubernetes
@@ -83,9 +75,11 @@ abbr dc docker
 # config abbreviation
 abbr hc "cd ~/.config/hypr && $editor userprefs.conf"
 abbr fc "cd ~/.config/fish && $editor config.fish"
+abbr gc "cd ~/.config/ghostty && $editor config"
 abbr kc "cd ~/.config/kitty && $editor kitty.conf"
 abbr wc "cd ~/.config/wezterm/ && $editor wezterm.lua"
 abbr tc "cd ~/.config/tmux/ && $editor tmux.conf"
+abbr nc "cd ~/.config/nvim/ && $editor lua/config/lazy.lua"
 
 # Handy change dir shortcuts
 abbr .. 'cd ..'
@@ -97,11 +91,6 @@ abbr .3 'cd ../../..'
 abbr .4 'cd ../../../..'
 abbr .5 'cd ../../../../..'
 
-# yay abbr
-abbr ys 'yay -S'
-abbr yr 'yay -R'
-# TODO: yay list packages.
-
 # Always mkdir a path (this doesn't inhibit functionality to make a single dir)
 abbr mkdir 'mkdir -p'
 
@@ -109,8 +98,6 @@ abbr mkdir 'mkdir -p'
 abbr e exit
 abbr c clear
 abbr vc 'code .'
-abbr tree 'tree | wl-copy && tree'
-abbr sy systemctl
 abbr sudo 'sudo -E'
 
 # modify vim mode binding. location at .functions/fish_user_key_bindings.fish

@@ -5,16 +5,6 @@ local M = {}
 
 local os_util = require("plugins.util.check-os")
 local os_name = os_util.get_os_name()
-local teles_find = require("plugins.util.teles-find")
-
-function M.search_moc_files(dir)
-  teles_find.ChangeDir(dir)
-
-  require("telescope.builtin").find_files({
-    prompt_title = "Search MOC Files",
-    find_command = { "rg", "--files", "--glob", "*moc*" },
-  })
-end
 
 -- Example usage:
 -- search_front_matter(nil, "false", "dir")  -- search for all with #work_task and is_done: false
@@ -368,5 +358,75 @@ end
 --     end,
 --   })
 -- end
+
+-- function M.search_undone_markdown()
+--   -- Pre-filter files containing `is_done: false` in the front matter
+--   local handle = io.popen("rg --glob '*.md' --multiline --multiline-dotall -l 'is_done: false[\\s\\S]*---'")
+--   local files = {}
+--   for file in handle:lines() do
+--     table.insert(files, file)
+--   end
+--   handle:close()
+
+--   -- Pass the filtered files to Telescope
+--   require("telescope.builtin").live_grep({
+--     prompt_title = "Search Undone Markdown Files",
+--     default_text = "", -- Empty default text for user input
+--     search_dirs = files, -- Limit search to the pre-filtered files
+--   })
+-- end
+
+-- search certain pattern in markdown files and shows the filtered files in fzf-lua or telescope.
+function M.search_markdown(pattern, prompt)
+  -- Determine the ripgrep command based on the pattern
+  local rg_command
+  if pattern == "is_done: false" then
+    rg_command = "rg --glob '*.md' --multiline --multiline-dotall -l 'is_done: false[\\s\\S]*---'"
+  else
+    rg_command = string.format("rg --glob '*.md' -l '%s'", pattern)
+  end
+
+  -- Pre-filter files using rg
+  local handle = io.popen(rg_command)
+  local files = {}
+  for file in handle:lines() do
+    table.insert(files, file)
+  end
+  handle:close()
+
+  -- If no files were found, notify and exit -- FIX:
+  if #files == 0 then
+    vim.notify("No matching markdown files found", vim.log.levels.WARN)
+    return
+  end
+
+  -- Check if fzf-lua is available
+  local has_fzflua, fzflua = pcall(require, "fzf-lua")
+  if has_fzflua then
+    prompt = string.format("%s> ", prompt or "Search Markdown Files")
+
+    fzflua.fzf_exec(files, {
+      prompt = prompt or "Search Markdown Files> ",
+      previewer = "builtin",
+      actions = {
+        ["default"] = function(selected)
+          if selected and #selected > 0 then
+            vim.cmd("edit " .. vim.fn.fnameescape(selected[1]))
+          end
+        end,
+      },
+      fzf_opts = {
+        ["--preview"] = "bat --style=full --color=always {} 2>/dev/null || cat {}",
+      },
+    })
+  else
+    -- Fallback to Telescope
+    require("telescope.builtin").find_files({
+      prompt_title = prompt or "Search Markdown Files",
+      default_text = "",
+      find_command = { "echo", table.concat(files, "\n") },
+    })
+  end
+end
 
 return M

@@ -45,7 +45,7 @@ if os_name == os_util.LINUX then
   vim.opt.directory = "/tmp/nvim/swap//" -- NOTE: change dir as the .local/share/nvim/swap is not working on arch linux. macos works fine.
 end
 
-vim.g.lazyvim_cmp = "nvim-cmp" -- lazyvim 14.* reguired this if nvim-cmp is used, as blink.cmp is the default.
+-- vim.g.lazyvim_cmp = "nvim-cmp" -- lazyvim 14.* reguired this if nvim-cmp is used, as blink.cmp is the default.
 
 -- vim.g.snacks_animate = false -- disable animations
 -- vim.g.snacks_animate_scroll = false -- disable scroll animations

@@ -1,3 +1,4 @@
+-- general util functions
 local util = {}
 util.WEZTERM = "wezterm"
 util.KITTY = "kitty"
@@ -69,6 +70,7 @@ end
 
 -- FIX: still has sonme bugs. when the cursor is in upper lines
 -- Function to wrap selection with Markdown code block markers
+-- currently use surround nvim custom func. remove this?
 function util.wrap_markdown_code_block(filetype)
   -- -- Get the start and end of the visual selection
   -- local start_row, start_col = unpack(vim.api.nvim_buf_get_mark(0, "<"))
@@ -133,5 +135,50 @@ function util.remove_dashboard_item(dashboard_keys_table, key_to_remove)
     end
   end
 end
+
+ -- FIX: . 
+function util.check_or_create_launch_json()
+   -- Get the current working directory
+   local cwd = vim.fn.getcwd()
+   local launch_path = cwd .. "/.vscode/launch.json"
+
+   -- Check if .vscode/launch.json exists
+   if vim.fn.filereadable(launch_path) == 1 then
+       -- File exists, open it
+       vim.cmd('edit ' .. launch_path)
+       return
+   end
+
+   -- Ask user if they want to create the file
+   local confirm = vim.fn.input(string.format("Create launch.json in %s? (y/n): ", cwd))
+   
+   if confirm:lower() ~= 'y' then
+       print("\nOperation cancelled")
+       return
+   end
+
+   -- Create .vscode directory if it doesn't exist
+   local vscode_dir = cwd .. "/.vscode"
+   if vim.fn.isdirectory(vscode_dir) == 0 then
+       vim.fn.mkdir(vscode_dir, "p")
+   end
+
+   -- Create empty file and open it
+   local file = io.open(launch_path, "w")
+   if file then
+       file:close()
+       vim.cmd('edit ' .. launch_path)
+       print("\nCreated launch.json")
+   else
+       print("\nError: Could not create launch.json")
+   end
+end
+
+-- M.setup = function() -- DEL: DELETE LINES LATER 
+--    vim.api.nvim_create_user_command('LaunchJson', function()
+--        M.check_or_create_launch_json()
+--    end, {})
+-- end
+-- return M -- DEL: DELETE LINES LATER 
 
 return util

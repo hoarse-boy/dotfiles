@@ -1,7 +1,5 @@
 -- TODO: move the shorcut to snacks's dashboard
 
--- FIX: this plugin makes telescope to be called in start causing slow startup. fix it.
-
 local printf = require("plugins.util.printf").printf
 
 local logo = [[
@@ -32,26 +30,6 @@ local my_notes_dir = "~/jho-notes"
 --   obsidian_path = "~/My Drive/obsidian-vault"
 -- end
 
--- local all_notes = {
---   action = string.format(':lua require("plugins.util.teles-find").ChangeDirAndFindFiles("%s")', my_notes_dir),
---   desc = printf("All Notes"),
---   icon = "󱙓 ",
---   key = "n",
--- }
-
--- FIX: find a way to not require this.
--- call telescope using command instead? this should fix the lazy laoding
--- local markdown_func = require("plugins.util.markdown-func")
-
--- local moc_notes = {
---   action = function()
---     markdown_func.search_moc_files(my_notes_dir)
---   end,
---   desc = printf("Find MOC files"),
---   icon = "󰆒 ",
---   key = "m",
--- }
-
 return {
   {
     "folke/snacks.nvim",
@@ -69,16 +47,16 @@ return {
           -- stylua: ignore
           ---@type snacks.dashboard.Item[]
           keys = {
-            -- all_notes,
-            -- moc_notes,
             { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
             { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
-            { icon = " ", key = "c", desc = "Config", action = ':lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/.config/nvim/")' }, -- this is way better than default lazyvim even with new snacks CWD change.
-            -- { icon = " ", key = "c", desc = "Config", action = ":lua require'fzf-lua'.files({ cwd = vim.fn.expand('~/.config/nvim') })" }, 
-            -- { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+            { icon = "󱙓 ", key = "p", desc = "My Personal Notes", action = function () require("plugins.util.find-files").change_dir_and_find_files(my_notes_dir) end },
+            { icon = " ", key = "t", desc = "Personal Todo", action = function () require("plugins.util.find-files").open_a_file("personal-todo-moc.md", my_notes_dir) end },
+            { icon = "󱙔 ", key = "n", desc = "Quick Note", action = function () require("plugins.util.find-files").open_a_file("quick-note.md", my_notes_dir) end },
+            { icon = " ", key = "c", desc = "Config", action = function () require("plugins.util.find-files").change_dir_and_find_files("~/.config/nvim/") end },
             { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
             { icon = " ", key = "s", desc = "Restore Session", section = "session" },
             { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+            -- { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
             -- { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
             -- { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
             -- { icon = " ", key = "x", desc = "Lazy Extras", action = ":LazyExtras" },

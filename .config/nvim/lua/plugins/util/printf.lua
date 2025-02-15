@@ -1,3 +1,4 @@
+-- util function to print to output or any string manipulation
 M = {}
 
 -- generate string for my custom which keymaps.

@@ -38,11 +38,11 @@ return {
       keys[#keys + 1] = { "gl", vim.diagnostic.open_float, desc = printf("Line Diagnostics") }
 
       -- diagnostic
-      local bufer_diagnostic = "<cmd>Telescope diagnostics bufnr=0 theme=get_ivy<cr>"
-      keys[#keys + 1] = { "<leader>cd", bufer_diagnostic, desc = printf("Buffer Diagnostics") }
+      -- local bufer_diagnostic = "<cmd>Telescope diagnostics bufnr=0 theme=get_ivy<cr>"
+      -- keys[#keys + 1] = { "<leader>cd", bufer_diagnostic, desc = printf("Buffer Diagnostics") } -- NOTE: uses default lazyvim in leader s key
 
-      local workspace_diagnostic = "<cmd>Telescope diagnostics<cr>"
-      keys[#keys + 1] = { "<leader>cD", workspace_diagnostic, desc = printf("Workspace Diagnostics") }
+      -- local workspace_diagnostic = "<cmd>Telescope diagnostics<cr>"
+      -- keys[#keys + 1] = { "<leader>cD", workspace_diagnostic, desc = printf("Workspace Diagnostics") } -- NOTE: uses default lazyvim in leader s key
 
       --   keys[#keys + 1] =
       --     { "<leader>ca", vim.lsp.buf.code_action, desc = printf"Code Action", mode = { "n", "v" }, has = "codeAction" }
@@ -87,34 +87,14 @@ return {
   {
     "folke/which-key.nvim",
     opts = function(_, _)
-      local printf = require("plugins.util.printf").printf
       local wk = require("which-key")
-      local mapping = {}
+      local printf = require("plugins.util.printf").printf
+      local mapping = {
+        { "<leader>cL", group = printf("other lsp"), mode = "n" },
+        { "<leader>cLs", "<cmd>LspStart<CR>", desc = printf("Start Lsp"), mode = "n", icon = "" },
+        { "<leader>cLr", "<cmd>LspRestart<CR>", desc = printf("Restart Lsp"), mode = "n", icon = "󰜉" },
+      }
       wk.add(mapping)
-    end,
-  },
-  {
-    "folke/which-key.nvim",
-    opts = function(_, _)
-      local wk = require("which-key")
-      local printf = require("plugins.util.printf").printf
-      local autocmd = vim.api.nvim_create_autocmd
-      local augroup = vim.api.nvim_create_augroup
-      local my_lsp_keymap_group = augroup("my_lsp_keymap_group", {})
-
-      autocmd("Filetype", {
-        group = my_lsp_keymap_group,
-        pattern = "*", -- * for all filetypes
-        callback = function()
-          vim.schedule(function()
-            local mapping = {
-              { "<leader>cs", "<cmd>LspStart<CR>", desc = printf("Start Lsp"), mode = "n", icon = "" },
-              { "<leader>cR", "<cmd>LspRestart<CR>", desc = printf("Restart Lsp"), mode = "n", icon = "󰜉" },
-            }
-            wk.add(mapping)
-          end)
-        end,
-      })
     end,
   },
 }

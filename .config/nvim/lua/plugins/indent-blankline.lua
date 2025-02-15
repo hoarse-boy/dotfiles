@@ -68,7 +68,7 @@ return {
             -- corner_top = "╭",
             -- corner_bottom = "╰",
             horizontal = "─",
-            vertical = char_symbol, -- FIX:
+            vertical = char_symbol,
             -- vertical = "│",
             arrow = ">",
           },

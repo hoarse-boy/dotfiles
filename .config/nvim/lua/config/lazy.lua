@@ -15,7 +15,6 @@ require("lazy").setup({
     -- import any extras modules here from lazyvim.
     { import = "lazyvim.plugins.extras.lang.docker" },
     { import = "lazyvim.plugins.extras.lang.yaml" },
-    { import = "lazyvim.plugins.extras.lang.typescript" },
     { import = "lazyvim.plugins.extras.lang.terraform" },
     { import = "lazyvim.plugins.extras.util.project" },
     { import = "lazyvim.plugins.extras.test.core" },
@@ -28,6 +27,10 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.dap.nlua" },
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.util.mini-hipatterns" }, -- highlight patterns, including tailwind.
+
+    -- deno, node.js, and bun
+    { import = "lazyvim.plugins.extras.lang.typescript" },
+    { import = "plugins.extras.lang.deno" }, -- typescript config is required
 
     -- { import = "lazyvim.plugins.extras.lang.rust" }, -- TODO: check this plugin, and if it better, add which key instead of making my own.
     -- { import = "lazyvim.plugins.extras.lsp.neoconf" }   ,
@@ -50,9 +53,9 @@ require("lazy").setup({
     -- import all of my coding plugins.
     { import = "plugins.extras.coding.supermaven" }, --supermaven is a better codeium alternative.
 
-    -- enabled nvim-cmp. uncomment this if uses blink.cmp.
-    { import = "lazyvim.plugins.extras.coding.nvim-cmp" },
-    { import = "plugins.extras.coding.nvim-cmp" },
+    -- enabled nvim-cmp. uncomment this if uses blink.cmp. make sure to go to option.lua and enable nvim-cmp using global variable.
+    -- { import = "lazyvim.plugins.extras.coding.nvim-cmp" },
+    -- { import = "plugins.extras.coding.nvim-cmp" },
 
     -- import dap plugins
     { import = "plugins.extras.dap.dap" },

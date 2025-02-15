@@ -25,6 +25,7 @@ return {
         "theHamsta/nvim-dap-virtual-text",
         opts = {},
       },
+
       {
         "Joakker/lua-json5",
         event = "VeryLazy",

@@ -5,15 +5,17 @@
       path = ~/.gitconfig_local
 
 [core]
-    pager = delta
+    pager = delta --dark --paging=never
+
+[delta]
+  features = side-by-side
+  line-numbers = true
+  syntax-theme = Monokai Extended
+
 
 [interactive]
     diffFilter = delta --color-only
 
-[delta]
-    features = side-by-side
-    line-numbers = true
-    syntax-theme = Monokai Extended
 
 [delta "diff"]
     syntax-highlighting = true
@@ -24,3 +26,6 @@
 [merge]
     conflictstyle = diff3
     git = delta
+    tool = delta
+
+
