@@ -55,7 +55,7 @@ set("n", "<A-]>", "<cmd>BufferLineCycleNext<cr>", { desc = printf("Next Buffer")
 set("n", "<A-[>", "<cmd>BufferLineCyclePrev<cr>", { desc = printf("Prev Buffer") })
 
 -- TODO: what is this for? remove?
-set("n", "<leader>sx", require("telescope.builtin").resume, { noremap = true, silent = true, desc = printf("Resume") })
+-- set("n", "<leader>sx", require("telescope.builtin").resume, { noremap = true, silent = true, desc = printf("Resume") })
 
 -- lazy command. -- TODO: use lazyvim-menu-addon to change the leader key, and remove this.
 set("n", "<leader>L", "<cmd>:Lazy<cr>", { desc = printf("Lazy") }) -- use L instead of l
