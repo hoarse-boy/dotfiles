@@ -1,5 +1,7 @@
+-- don't remove this code. uses snacks.nvim picker instead.
 return {
   "ibhagwan/fzf-lua",
+  enabled = false,
   cmd = "FzfLua",
   opts = function(_, opts)
     local config = require("fzf-lua.config")

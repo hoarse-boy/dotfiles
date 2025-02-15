@@ -9,11 +9,15 @@ function M.change_dir_and_find_files(directory)
   -- create a keybind to fetch that value from the variable and change the dir to the previous one.
   vim.fn.chdir(directory) -- this is needed to globally change the dir
 
-  local ok, fzflua = pcall(require, "fzf-lua")
-  if ok then
-    fzflua.files()
+  if vim.g.lazyvim_picker == "snacks" then
+    require("snacks.picker").files({ cwd = directory })
   else
-    require("telescope.builtin").find_files()
+    local ok, fzflua = pcall(require, "fzf-lua")
+    if ok then
+      fzflua.files({ cwd = directory })
+    else
+      require("telescope.builtin").find_files({ cwd = directory })
+    end
   end
 end
 
@@ -22,11 +26,15 @@ end
 function M.change_dir_and_live_grep(directory)
   vim.fn.chdir(directory) -- Change the global working directory
 
-  local ok, fzflua = pcall(require, "fzf-lua")
-  if ok then
-    fzflua.live_grep({ cwd = directory })
+  if vim.g.lazyvim_picker == "snacks" then
+    require("snacks.picker").grep({ cwd = directory })
   else
-    require("telescope.builtin").live_grep({ cwd = directory })
+    local ok, fzflua = pcall(require, "fzf-lua")
+    if ok then
+      fzflua.live_grep({ cwd = directory })
+    else
+      require("telescope.builtin").live_grep({ cwd = directory })
+    end
   end
 end
 

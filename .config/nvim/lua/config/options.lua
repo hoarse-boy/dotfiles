@@ -46,6 +46,7 @@ if os_name == os_util.LINUX then
 end
 
 -- vim.g.lazyvim_cmp = "nvim-cmp" -- lazyvim 14.* reguired this if nvim-cmp is used, as blink.cmp is the default.
+vim.g.lazyvim_picker = "snacks" -- use snacks.nvim as the default picker without adding any extra config.
 
 -- vim.g.snacks_animate = false -- disable animations
 -- vim.g.snacks_animate_scroll = false -- disable scroll animations

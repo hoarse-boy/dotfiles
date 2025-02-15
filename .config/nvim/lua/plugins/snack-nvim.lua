@@ -6,6 +6,7 @@ return {
   -- scratch buffer
   {
     "folke/snacks.nvim",
+    event = "VeryLazy",
     opts = {
       scratch = {
         name = "quick-note",
@@ -26,6 +27,31 @@ return {
     keys = {
       -- stylua: ignore
       { "<leader>.",  function() Snacks.scratch() end, desc = printf("Toggle 'quick-note' Buffer") },
+    },
+  },
+
+  -- picker
+  {
+    "folke/snacks.nvim",
+    event = "VeryLazy",
+    opts = {
+      picker = {
+        files = {
+          config = {
+            -- FIX: . not working
+            exclude = { "node_modules", "vendor", "**/*.pb.go" },
+          },
+        },
+        matcher = {
+          frecency = true,
+        },
+        debug = {
+          scores = false, -- show scores in the list. debugging only
+        },
+      },
+    },
+    keys = {
+      -- stylua: ignore
     },
   },
 
