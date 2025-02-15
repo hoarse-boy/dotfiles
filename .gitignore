@@ -1,0 +1,29 @@
+# temporary files
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# logs
+*.log
+
+# system-specific files
+.DS_Store
+Thumbs.db
+
+# ssh and gpg
+.ssh/
+.gnupg/
+
+# local overrides
+local/
+.env
+
+# stow-related
+stow-local-ignore
+
+# macos-specific files
+.config/fish/macos.fish
+.config/ghostty/macos
+.config/kitty/macos.conf
+.config/tmux/tmux.macos.conf

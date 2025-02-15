@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# a shell script to create file in obsidian /todos. which is my personal todos.
+# it will be auto move to /completed-todo dir when `done` is true, else it will just skip it.
+
+# # copy from https://github.com/agalea91/dotfiles/blob/main/bin/on
+obsidianDir="$HOME/obsidian-syncthing/"
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+	obsidianDir="$HOME/Google Drive/My Drive/obsidian-vault/"
+fi
+
+todosDir="${obsidianDir}todos/"
+
+if [ -z "$1" ]; then
+	echo "Error: A file name must be set, e.g., \"the wonderful thing about tiggers\"."
+	exit 1
+fi
+
+# Replace spaces with hyphens for the file name
+file_name=$(echo "$1" | tr ' ' '-')
+formatted_file_name="${file_name}.md"
+file_path="${obsidianDir}todos/${formatted_file_name}"
+
+# Get the current date
+current_date=$(date +"%Y-%m-%d")
+
+# Format the title
+title=$(echo "$file_name" | tr '-' ' ')
+
+# Write the complete content to the file
+# Create a temporary file with the complete content
+temp_file=$(mktemp)
+cat <<EOL >>"$temp_file"
+---
+date: "$current_date"
+tags:
+  - todos
+hubs: 
+urls: 
+done: false
+---
+
+# $title
+
+- [ ] 
+EOL
+
+# Append the existing content to the temporary file if any
+if [ -f "$file_path" ]; then
+	cat "$file_path" >>"$temp_file"
+fi
+
+# Replace the original file with the temporary file
+mv "$temp_file" "$file_path"
+
+# Change directory to /todos and open the file in nvim
+cd "$todosDir" || exit
+nvim "$file_path" -c "normal! G"
