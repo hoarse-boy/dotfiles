@@ -55,6 +55,20 @@ return {
     },
   },
 
+  -- explorer -- FIX: . Check and test this. remove comments later
+  {
+    "folke/snacks.nvim",
+    event = "VeryLazy",
+    opts = {
+      explorer = {
+
+      },
+    },
+    keys = {
+      -- stylua: ignore
+    },
+  },
+
   -- snacks notifier
   -- TODO: add snack-notifier config her
   {

@@ -123,7 +123,8 @@ return {
   {
     -- this plugin auto bullets and checkbox toggle is the best.
     "dkarter/bullets.vim",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
+    ft = { "markdown", "text", "gitcommit", "scratch" },
     config = function()
       vim.g.bullets_enabled_file_types = { "markdown", "text" }
       vim.g.bullets_outline_levels = { "num", "abc", "std", "-", "+" } -- Custom bullet levels

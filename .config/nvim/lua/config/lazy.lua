@@ -27,6 +27,7 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.dap.nlua" },
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.util.mini-hipatterns" }, -- highlight patterns, including tailwind.
+    { import = "lazyvim.plugins.extras.editor.snacks_explorer" }, -- a better explorer than neo-tree.
 
     -- deno, node.js, and bun
     { import = "lazyvim.plugins.extras.lang.typescript" },

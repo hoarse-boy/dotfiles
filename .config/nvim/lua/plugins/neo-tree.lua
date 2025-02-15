@@ -1,7 +1,8 @@
+-- don't remove this code. uses snacks.nvim explorer instead.
 return {
   {
     "nvim-neo-tree/neo-tree.nvim",
-    -- enabled = false, -- disabled plugin
+    enabled = false, -- disabled plugin
     opts = {
       event_handlers = {
         -- auto close when clicking file
