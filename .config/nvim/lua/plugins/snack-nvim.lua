@@ -3,7 +3,6 @@ local printf = require("plugins.util.printf").printf
 
 -- all snacks.nvim configs goes here
 return {
-  -- scratch buffer
   {
     "folke/snacks.nvim",
     event = "VeryLazy",
@@ -23,18 +22,8 @@ return {
         },
         win = { style = "scratch" },
       },
-    },
-    keys = {
-      -- stylua: ignore
-      { "<leader>.",  function() Snacks.scratch() end, desc = printf("Toggle 'quick-note' Buffer") },
-    },
-  },
 
-  -- picker
-  {
-    "folke/snacks.nvim",
-    event = "VeryLazy",
-    opts = {
+        -- FIX: . find files for config has different frecency score.
       picker = {
         files = {
           config = {
@@ -46,31 +35,23 @@ return {
           frecency = true,
         },
         debug = {
-          scores = false, -- show scores in the list. debugging only
+          scores = true, -- show scores in the list. debugging only
         },
       },
-    },
-    keys = {
-      -- stylua: ignore
-    },
-  },
 
-  -- explorer -- FIX: . Check and test this. remove comments later
-  {
-    "folke/snacks.nvim",
-    event = "VeryLazy",
-    opts = {
       explorer = {
-
+        -- TODO: add explorer config here
       },
+
+      -- snacks notifier
+      -- TODO: add snack-notifier config her
     },
     keys = {
       -- stylua: ignore
+      { "<leader>.",  function() Snacks.scratch() end, desc = printf("Toggle 'quick-note' Buffer") },
     },
   },
 
-  -- snacks notifier
-  -- TODO: add snack-notifier config her
   {
     "folke/which-key.nvim",
     opts = function(_, _)
