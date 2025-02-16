@@ -7,6 +7,7 @@ return {
     "folke/snacks.nvim",
     event = "VeryLazy",
     opts = {
+      -- scratch buffer
       scratch = {
         name = "quick-note",
         file = my_notes_dir .. "/quick-note.md", -- use this to avoid strange name generated
@@ -23,26 +24,42 @@ return {
         win = { style = "scratch" },
       },
 
-      -- picker and explorer has the same config. if picker hidden is true, explorer will too.
+      -- picker and explorer has the same config. hidden is true will make both explorer and picker hidden files to show up.
+      -- any config here will overwrite to all pickers. such as args, be careful.
       picker = {
-        cmd = "fd",
         hidden = true, -- explorer will not display files that are gitignored. to open those files, use picker.files.
-        -- stylua: ignore start
-        args = {
-          "--type", "f",          -- Search for files
-          "--hidden",             -- Include hidden files and directories
-          "--no-ignore",          -- Include files ignored by .gitignore
-          "--exclude", ".git",
-          "--exclude", "node_modules",
-          "--exclude", "vendor",
-          "--exclude", "*.pb.go",
-        },
-        -- stylua: ignore end
+        -- args = {} -- NOTE: don't add any args here as this is will overwrite to all sources / pickers
+
         matcher = {
           frecency = true,
         },
+
+        -- sources contains all of the pickers table. such as files, grep, todo_comments which are all default sources or pickers.
+        -- add new table to create custom pickers.
+        sources = {
+          -- overwrite the default 'files' picker to exclude some files and show hidden files
+          files = {
+            cmd = "fd",
+            hidden = true, -- explorer will not display files that are gitignored. to open those files, use picker.files.
+            -- stylua: ignore start
+            args = {
+              "--type", "f",          -- search for files
+              "--hidden",             -- include hidden files and directories
+              "--no-ignore",          -- include files ignored by .gitignore. example of this is to make launch.json to shows up.
+              "--exclude", ".git",
+              "--exclude", "node_modules",
+              "--exclude", "vendor",
+              "--exclude", "*.pb.go",
+            },
+            -- stylua: ignore end
+          },
+
+          -- example of creating new custom picker
+          -- custom_picker = {}
+        },
+
         debug = {
-          scores = true, -- show scores in the list. debugging only
+          scores = false, -- show scores in the list. debugging only
         },
       },
 
