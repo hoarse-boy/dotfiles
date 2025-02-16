@@ -27,3 +27,6 @@ stow-local-ignore
 .config/ghostty/macos
 .config/kitty/macos.conf
 .config/tmux/tmux.macos.conf
+
+# fish files
+.config/fish/fish_variables
