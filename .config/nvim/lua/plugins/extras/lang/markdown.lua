@@ -121,7 +121,7 @@ return {
   },
 
   {
-    -- this plugin auto bullets and checkbox toggle is the best.
+    -- this plugin auto generate bullets and checkbox toggle
     "dkarter/bullets.vim",
     -- event = "VeryLazy",
     ft = { "markdown", "text", "gitcommit", "scratch" },
@@ -166,8 +166,8 @@ return {
         { "<leader>n", icon = "󱞁", group = printf("notes"), mode = "n" }, -- group key with prefix like '+'
 
         -- find notes
-        { "<leader>nf", function () require("plugins.util.find-files").change_dir_and_find_files(my_notes_dir) end, desc = printf("Find Notes"), mode = "n" },
-        { "<leader>ns", function () require("plugins.util.find-files").change_dir_and_live_grep(my_notes_dir) end, desc = printf("Search Notes by Keyword"), mode = "n" },
+        { "<leader>nn", function () Snacks.picker.files({ cwd = my_notes_dir }) end, desc = printf("Find Notes"), mode = "n" }, -- 'n' to match dashboard 'n' to open personal notes -- FIX: . Check and test this. remove comments later
+        { "<leader>ns", function () require("plugins.util.find-files").change_dir_and_live_grep(my_notes_dir) end, desc = printf("Grep Notes (Chane Global Dir)"), mode = "n" },
         -- { "<leader>nn", function() telekasten.find_notes() end, desc = printf("Find Notes"), mode = "n" }, -- telekasten build in func but only uses telescope
         -- { "<leader>ns", function() telekasten.search_notes() end, desc = printf("Search Notes by Keyword"), mode = "n" }, -- telekasten build in func but only uses telescope
 
