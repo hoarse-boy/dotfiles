@@ -1,16 +1,15 @@
 -- all related util function to find files
 local M = {}
 
--- Change directory and launch fzf-lua's or telescope file picker in that directory.
+-- Change global directory and launch corresponding picker.
+-- call other func without chdir to avoid changing global dir causing harpoon and todo-comments to not work.
+-- such func is Snacks.dashboard.pick('files').
+---@param directory string The directory to search in
 function M.change_dir_and_find_files(directory)
-  -- TODO: update this to code to not change the working dir. this is needed to be able to open notes when opening other projects.
-  -- this for now, makes harpoon to change dir though
-  -- or create a autocmd to save current dir and save it in a variable.
-  -- create a keybind to fetch that value from the variable and change the dir to the previous one.
   vim.fn.chdir(directory) -- this is needed to globally change the dir
 
   if vim.g.lazyvim_picker == "snacks" then
-    require("snacks.picker").files({ cwd = directory })
+    Snacks.picker.files()
   else
     local ok, fzflua = pcall(require, "fzf-lua")
     if ok then

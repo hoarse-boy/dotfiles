@@ -23,24 +23,27 @@ return {
         win = { style = "scratch" },
       },
 
-        -- FIX: . find files for config has different frecency score.
+      -- picker and explorer has the same config. if picker hidden is true, explorer will too.
       picker = {
-        files = {
-          config = {
-            -- FIX: . not working
-            exclude = { "node_modules", "vendor", "**/*.pb.go" },
-          },
+        cmd = "fd",
+        hidden = true, -- explorer will not display files that are gitignored. to open those files, use picker.files.
+        -- stylua: ignore start
+        args = {
+          "--type", "f",          -- Search for files
+          "--hidden",             -- Include hidden files and directories
+          "--no-ignore",          -- Include files ignored by .gitignore
+          "--exclude", ".git",
+          "--exclude", "node_modules",
+          "--exclude", "vendor",
+          "--exclude", "*.pb.go",
         },
+        -- stylua: ignore end
         matcher = {
           frecency = true,
         },
         debug = {
           scores = true, -- show scores in the list. debugging only
         },
-      },
-
-      explorer = {
-        -- TODO: add explorer config here
       },
 
       -- snacks notifier
