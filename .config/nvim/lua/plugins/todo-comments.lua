@@ -63,7 +63,7 @@ return {
           require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(nil, "", false)
         end,
         mode = "n",
-        desc = printf("Insert 'FIX'"),
+        desc = printf("Insert 'FIX' (Normal Mode)"),
         noremap = true,
         silent = true,
       },
@@ -81,11 +81,10 @@ return {
         "<leader>md",
         function()
           require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(append_del_str, "DELETE LINES LATER", false)
-          -- require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(string.format("%s%s", append_del_str, ""), false)
         end,
         mode = "n",
         desc = printf("Insert 'DEL'"),
-        noremap = true, -- FIX:
+        noremap = true,
         silent = true,
       },
       {
@@ -108,14 +107,21 @@ return {
         noremap = true,
         silent = true,
       },
-      -- TODO: change todo telescopt and trouble.
-      -- for example make 'mt' to be regular tele to search MARKED.
-      -- but make mT to be telescopte to show selection first such as 'MARKED' and then 'FIXED' and search using telescope.
+      {
+        "<leader>mM",
+        -- stylua: ignore
+         function () Snacks.picker.todo_comments({ keywords = { "MARKED" } }) end,
+        mode = "n",
+        desc = printf("Open List of 'MARKED' Todo"),
+        noremap = true,
+        silent = true,
+      },
       {
         "<leader>mt",
-        "<cmd>TodoTelescope keywords=MARKED<cr>",
+        -- stylua: ignore
+         function () Snacks.picker.todo_comments({ keywords = { "FIX", "TODO", "DEL", "MARKED" } }) end,
         mode = "n",
-        desc = printf("Telescope Open 'MARKED' Todo"),
+        desc = printf("Open List of 'FIX', 'TODO', 'DEL', and 'MARKED' Todo"),
         noremap = true,
         silent = true,
       },
