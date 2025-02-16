@@ -4,6 +4,7 @@ local M = {}
 -- Change global directory and launch corresponding picker.
 -- call other func without chdir to avoid changing global dir causing harpoon and todo-comments to not work.
 -- such func is Snacks.dashboard.pick('files').
+-- or Snacks.picker.files({ cwd = directory })
 ---@param directory string The directory to search in
 function M.change_dir_and_find_files(directory)
   vim.fn.chdir(directory) -- this is needed to globally change the dir
@@ -26,7 +27,7 @@ function M.change_dir_and_live_grep(directory)
   vim.fn.chdir(directory) -- Change the global working directory
 
   if vim.g.lazyvim_picker == "snacks" then
-    require("snacks.picker").grep({ cwd = directory })
+    require("snacks.picker").grep() -- snacks grep does not have cwd option.
   else
     local ok, fzflua = pcall(require, "fzf-lua")
     if ok then
