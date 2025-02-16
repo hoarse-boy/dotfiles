@@ -1,27 +1,36 @@
 -- NOTE: Specify the trigger character(s) used for luasnip
 local trigger_text = ";"
-
 local printf = require("plugins.util.printf").printf
+
+vim.cmd.highlight("BlinkCmpLabelMatch guifg=#8f6e6e") -- to make the fuzzy match more visible as some cmp suggestion has identical white highlight too
 
 return {
   {
     "saghen/blink.cmp",
     -- version = not vim.g.lazyvim_blink_main and "*",
-    tag = "v0.11.0", -- currently working version. follow lazyvim versioning later.
+    -- tag = "v0.11.0", -- currently working version. follow lazyvim versioning later.
     build = vim.g.lazyvim_blink_main and "cargo build --release",
     dependencies = { "rafamadriz/friendly-snippets" },
     event = "InsertEnter",
     opts = {
+      appearance = {
+        -- Sets the fallback highlight groups to nvim-cmp's highlight groups
+        -- Useful for when your theme doesn't support blink.cmp
+        -- Will be removed in a future release
+        use_nvim_cmp_as_default = true,
+      },
+
       sources = {
-        default = { "lsp", "path", "buffer" },
+        -- commenting this out since it is not working in version 0.12
+        -- default = { "lsp", "path", "buffer" },
 
         providers = {
-          lsp = {},
-          lazydev = {
-            name = "LazyDev",
-            module = "lazydev.integrations.blink",
-            fallbacks = { "lsp" },
-          },
+          -- lsp = {},
+          -- lazydev = {
+          --   name = "LazyDev",
+          --   module = "lazydev.integrations.blink",
+          --   fallbacks = { "lsp" },
+          -- },
 
           path = {
             name = "Path",
@@ -175,4 +184,3 @@ return {
     opts = { integrations = { blink_cmp = true } },
   },
 }
-
