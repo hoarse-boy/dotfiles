@@ -415,6 +415,7 @@ return {
 
         extension = "avif", ---@type string
         process_cmd = "convert - -quality 75 avif:-", ---@type string
+        -- process_cmd = "convert - -quality 100 avif:-", ---@type string
 
         -- extension = "webp", ---@type string
         -- process_cmd = "convert - -quality 75 webp:-", ---@type string
@@ -517,8 +518,57 @@ return {
       })
     end,
   },
-
   -- TODO: add support for blink.cmp just like nvim-cmp above
+
+  -- shows image inside nvim. if this plugin causing memory hogging like 3rd/image.nvim, disable it.
+  -- it auto detect imagemagick without using complicated luarocks or lua path like image.nvim?? -- TODO: test in new arch machine.
+  -- it can make image showing to be very big.
+  -- it shows image super fast.
+  -- it does not slows down nvim when quiting when in tmux.
+  -- it makes the snacks picker to show images.
+  -- TODO: make 'K' to show image and disable auto-showing image.
+  {
+    "folke/snacks.nvim",
+    event = "VeryLazy",
+    opts = {
+      image = {
+        force = false, -- try displaying the image, even if the terminal does not support it
+        doc = {
+          -- enable image viewer for documents
+          -- a treesitter parser must be available for the enabled languages.
+          -- supported language injections: markdown, html
+          enabled = false, -- manually run `Snacks.image.hover()`
+          -- render the image inline in the buffer
+          -- if your env doesn't support unicode placeholders, this will be disabled
+          -- takes precedence over `opts.float` on supported terminals
+          inline = false,
+          -- render the image in a floating window
+          -- only used if `opts.inline` is disabled
+          float = true,
+          max_width = 200,
+          max_height = 150,
+        },
+        -- window options applied to windows displaying image buffers
+        -- an image buffer is a buffer with `filetype=image`
+        wo = {
+          wrap = false,
+          number = false,
+          relativenumber = false,
+          cursorcolumn = false,
+          signcolumn = "no",
+          foldcolumn = "0",
+          list = false,
+          spell = false,
+          statuscolumn = "",
+        },
+        cache = vim.fn.stdpath("cache") .. "/snacks/image",
+        env = {},
+      },
+    },
+    keys = {
+      { "gk", "<cmd>lua Snacks.image.hover()<cr>", desc = printf("Show image in a floating window"), mode = "n" },
+    },
+  },
 
   -- -- incorrect configuration can cause delay when closing nvim. this make nvim in tmux to be super slow and buggy.
   -- -- use the `iamcco/markdown-preview.nvim` instead.
