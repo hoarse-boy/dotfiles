@@ -27,7 +27,8 @@ return {
       -- picker and explorer has the same config. hidden is true will make both explorer and picker hidden files to show up.
       -- any config here will overwrite to all pickers. such as args, be careful.
       picker = {
-        hidden = true, -- explorer will not display files that are gitignored. to open those files, use picker.files.
+        hidden = true, -- true to shows .files or hidden files
+        ignored = true, -- true to shows ignored files. tools like `fd` respects .gitignore and this will make them show up.
         -- args = {} -- NOTE: don't add any args here as this is will overwrite to all sources / pickers
 
         matcher = {
@@ -36,11 +37,12 @@ return {
 
         -- sources contains all of the pickers table. such as files, grep, todo_comments which are all default sources or pickers.
         -- add new table to create custom pickers.
+        -- https://github.com/folke/snacks.nvim/issues/1023
         sources = {
           -- overwrite the default 'files' picker to exclude some files and show hidden files
           files = {
             cmd = "fd",
-            hidden = true, -- explorer will not display files that are gitignored. to open those files, use picker.files.
+
             -- stylua: ignore start
             args = {
               "--type", "f",          -- search for files
@@ -65,6 +67,9 @@ return {
 
       -- snacks notifier
       -- TODO: add snack-notifier config her
+
+      -- snacks image config at markdown.lua
+      -- snacks animate config at animation.lua
     },
     keys = {
       -- stylua: ignore
