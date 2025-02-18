@@ -27,6 +27,14 @@ return {
       -- picker and explorer has the same config. hidden is true will make both explorer and picker hidden files to show up.
       -- any config here will overwrite to all pickers. such as args, be careful.
       picker = {
+        -- lsp picker still shows excluded files. maybe because it is needed as there are lsp references to them.
+        exclude = {
+          ".git",
+          "node_modules",
+          "vendor",
+          "*.pb.go",
+        },
+
         hidden = true, -- true to shows .files or hidden files
         ignored = true, -- true to shows ignored files. tools like `fd` respects .gitignore and this will make them show up.
         -- args = {} -- NOTE: don't add any args here as this is will overwrite to all sources / pickers
@@ -42,18 +50,6 @@ return {
           -- overwrite the default 'files' picker to exclude some files and show hidden files
           files = {
             cmd = "fd",
-
-            -- stylua: ignore start
-            args = {
-              "--type", "f",          -- search for files
-              "--hidden",             -- include hidden files and directories
-              "--no-ignore",          -- include files ignored by .gitignore. example of this is to make launch.json to shows up.
-              "--exclude", ".git",
-              "--exclude", "node_modules",
-              "--exclude", "vendor",
-              "--exclude", "*.pb.go",
-            },
-            -- stylua: ignore end
           },
 
           -- example of creating new custom picker
@@ -72,8 +68,13 @@ return {
       -- snacks animate config at animation.lua
     },
     keys = {
-      -- stylua: ignore
+      -- stylua: ignore start
       { "<leader>.",  function() Snacks.scratch() end, desc = printf("Toggle 'quick-note' Buffer") },
+
+      -- overwriting to make it consistent with other keybinding where the capital letter is for workspace or all files. remove this if lazyvim's default has been changed
+      { "<leader>sd", function() Snacks.picker.diagnostics_buffer() end, desc = printf"Buffer Diagnostics" },
+      { "<leader>sD", function() Snacks.picker.diagnostics() end, desc = printf"Diagnostics" },
+      -- stylua: ignore end
     },
   },
 
