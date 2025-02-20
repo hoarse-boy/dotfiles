@@ -12,6 +12,11 @@ require("lazy").setup({
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
+    -- list of plugins enabled in lazyExtra
+    -- ● lang.toml    nvim-lspconfig
+    -- ● formatting.prettier  mason.nvim  conform.nvim  none-ls.nvim
+    -- TODO: add plugins using lazyExtra? and remove below?
+
     -- import any extras modules here from lazyvim.
     { import = "lazyvim.plugins.extras.lang.docker" },
     { import = "lazyvim.plugins.extras.lang.yaml" },
@@ -27,7 +32,7 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.dap.nlua" },
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.util.mini-hipatterns" }, -- highlight patterns, including tailwind.
-    { import = "lazyvim.plugins.extras.editor.snacks_explorer" }, -- a better explorer than neo-tree.
+    -- { import = "lazyvim.plugins.extras.editor.snacks_explorer" }, -- has many bugs and has less QoL. use neo-tree for now..
 
     -- deno, node.js, and bun
     { import = "lazyvim.plugins.extras.lang.typescript" },
