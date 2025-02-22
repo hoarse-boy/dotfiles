@@ -3,6 +3,29 @@ local printf = require("plugins.util.printf").printf
 -- local append_fix_str = "FIX: . " -- NOTE: '.' is used to avoid formatter to remove white space.
 local append_del_str = "DEL: . "
 
+-- DEL: . DELETE LINES LATER
+local function capture_visual_selection()
+  -- Get start and end positions of visual selection
+  local start_pos = vim.fn.getpos("'<")
+  local end_pos = vim.fn.getpos("'>")
+
+  -- Get selected lines
+  local lines = vim.api.nvim_buf_get_lines(
+    0,
+    start_pos[2] - 1, -- Convert from 1-indexed to 0-indexed
+    end_pos[2], -- Inclusive end
+    false
+  )
+
+  -- Join and store as before
+  local content = table.concat(lines, "\n")
+  vim.fn.setreg("a", content)
+  vim.g.captured_content = content
+
+  vim.notify("Captured selection to register 'a'", vim.log.levels.INFO)
+  return content
+end
+
 -- other keymaps for marking buffer are here.
 return {
   {
@@ -78,6 +101,16 @@ return {
         silent = true,
       },
       {
+        "<leader>mw",
+        function()
+          require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(nil, "follow up / is pending", false)
+        end,
+        mode = "n",
+        desc = printf("Insert 'FIX is pending'"),
+        noremap = true,
+        silent = true,
+      },
+      {
         "<leader>md",
         function()
           require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(append_del_str, "DELETE LINES LATER", false)
@@ -102,7 +135,18 @@ return {
         function()
           require("plugins.util.custom_todo_comments").remove_fix_comments_from_current_line()
         end,
-        mode = { "v", "n" }, -- FIX: visual is still buggy.
+        mode = "n",
+        desc = printf("Remove 'FIX' Comment"),
+        noremap = true,
+        silent = true,
+      },
+      {
+        "<leader>mr",
+        function()
+          capture_visual_selection() -- FIX: . Check and test this. remove comments later
+          -- require("plugins.util.custom_todo_comments").remove_todo_comments_from_visual_selection()
+        end,
+        mode = "v",
         desc = printf("Remove 'FIX' Comment"),
         noremap = true,
         silent = true,
