@@ -3,6 +3,7 @@ local my_snipmate_path = "~/.config/nvim/lua/snippets"
 local my_lua_snippets = "~/.config/nvim/lua/luasnippets"
 local honza_snippets_path = "~/.local/share/nvim/lazy/vim-snippets/snippets" -- community driven of all programing language snippets
 
+-- must install default lazyvim's luasnip form LazyExtra
 return {
   -- disable builtin snippet support
   { "garymjr/nvim-snippets", enabled = false },
