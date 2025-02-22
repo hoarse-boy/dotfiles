@@ -12,46 +12,44 @@ require("lazy").setup({
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
-    -- list of plugins enabled in lazyExtra
-    -- ● lang.toml    nvim-lspconfig
-    -- ● formatting.prettier  mason.nvim  conform.nvim  none-ls.nvim
-    -- TODO: add plugins using lazyExtra? and remove below?
+    -- lazyvim's extra will be done using LazyExtra
 
     -- import any extras modules here from lazyvim.
-    { import = "lazyvim.plugins.extras.lang.docker" },
-    { import = "lazyvim.plugins.extras.lang.yaml" },
-    { import = "lazyvim.plugins.extras.lang.terraform" },
-    { import = "lazyvim.plugins.extras.util.project" },
-    { import = "lazyvim.plugins.extras.test.core" },
-    { import = "lazyvim.plugins.extras.lsp.none-ls" },
-    { import = "lazyvim.plugins.extras.lang.helm" },
-    { import = "lazyvim.plugins.extras.lang.php" },
-    { import = "lazyvim.plugins.extras.lang.python" },
-    { import = "lazyvim.plugins.extras.coding.mini-surround" },
-    { import = "lazyvim.plugins.extras.coding.luasnip" },
-    { import = "lazyvim.plugins.extras.dap.nlua" },
-    { import = "lazyvim.plugins.extras.lang.json" },
-    { import = "lazyvim.plugins.extras.util.mini-hipatterns" }, -- highlight patterns, including tailwind.
-    -- { import = "lazyvim.plugins.extras.editor.snacks_explorer" }, -- has many bugs and has less QoL. use neo-tree for now..
+    -- { import = "lazyvim.plugins.extras.lang.docker" },
+    -- { import = "lazyvim.plugins.extras.lang.yaml" },
+    -- { import = "lazyvim.plugins.extras.lang.toml" },
+    -- { import = "lazyvim.plugins.extras.lang.terraform" },
+    -- { import = "lazyvim.plugins.extras.lang.helm" },
+    -- { import = "lazyvim.plugins.extras.lang.php" },
+    -- { import = "lazyvim.plugins.extras.lang.python" },
+    -- { import = "lazyvim.plugins.extras.lang.json" },
+    -- { import = "lazyvim.plugins.extras.formatting.prettier" },
+    -- { import = "lazyvim.plugins.extras.dap.nlua" },
+    -- { import = "lazyvim.plugins.extras.util.mini-hipatterns" }, -- highlight patterns, including tailwind.
+    -- { import = "lazyvim.plugins.extras.coding.luasnip" },
+    -- { import = "lazyvim.plugins.extras.test.core" },
 
     -- deno, node.js, and bun
-    { import = "lazyvim.plugins.extras.lang.typescript" },
-    { import = "plugins.extras.lang.deno" }, -- typescript config is required
+    -- { import = "lazyvim.plugins.extras.lang.typescript" },
+    -- installing tailwindcss language server will cause all other js or ts 'K' to print empty lsp info.
+    -- { import = "plugins.extras.lang.deno" }, -- typescript config is required
 
-    -- { import = "lazyvim.plugins.extras.lang.rust" }, -- TODO: check this plugin, and if it better, add which key instead of making my own.
-    -- { import = "lazyvim.plugins.extras.lsp.neoconf" }   ,
-    -- { import = "lazyvim.plugins.extras.editor.inc-rename" }, -- NOTE: dont use this as the rename cannot use vim normal mode.
     -- { import = "lazyvim.plugins.extras.lang.markdown" }, -- disable as the none-ls warning is too many. TODO: change the warning parameters
-    -- { import = "lazyvim.plugins.extras.dap.core" }, -- NOTE: dont import this, it makes the debugger to have double debugger option. lazyvim version 12.38.2
+    -- { import = "lazyvim.plugins.extras.lang.rust" }, -- TODO: check this plugin, and if it better, add which key instead of making my own.
     -- { import = "lazyvim.plugins.extras.editor.aerial" }, -- rarely used.
+    -- { import = "lazyvim.plugins.extras.lsp.neoconf" }   ,
+    -- { import = "lazyvim.plugins.extras.editor.inc-rename" }, -- WARN: dont use this as the rename cannot use vim normal mode.
+    -- { import = "lazyvim.plugins.extras.dap.core" }, -- WARN: dont import this, it makes the debugger to have double debugger option. lazyvim version 12.38.2
+    -- { import = "lazyvim.plugins.extras.editor.snacks_explorer" }, -- WARN: has many bugs and has less QoL. use neo-tree for now..
 
     -- import all of my languages config.
     { import = "plugins.extras.lang.go" },
-    { import = "plugins.extras.lang.markdown" }, -- NOTE: enable toc plugin for markdown
+    { import = "plugins.extras.lang.markdown" },
     { import = "plugins.extras.lang.rust" },
     { import = "plugins.extras.lang.helm" },
+    { import = "plugins.extras.lang.deno" }, -- typescript config is required in LazyExtra
     -- { import = "plugins.extras.lang.json" },
-    -- { import = "plugins.extras.lang.php" }, -- NOTE: causing lspconfig to load at startup, causing performance issue (50ms delay).
+    -- { import = "plugins.extras.lang.php" }, -- WARN: causing lspconfig to load at startup, causing performance issue (50ms delay).
 
     -- import editor plugins
     -- { import = "plugins.extras.editor.telescope" }, -- default will be fzf-lua. uncomment this to use fzf-lua.
