@@ -7,23 +7,23 @@ local rust_keymaps = augroup("rust_keymaps", {})
 
 return {
   -- Extend auto completion
-  {
-    "hrsh7th/nvim-cmp", -- TODO: add support for blink.cmp
-    dependencies = {
-      {
-        "Saecki/crates.nvim",
-        event = { "BufRead Cargo.toml" },
-        config = true,
-      },
-    },
-    ---@param opts cmp.ConfigSchema
-    opts = function(_, opts)
-      local cmp = require("cmp")
-      opts.sources = cmp.config.sources(vim.list_extend(opts.sources, {
-        { name = "crates" },
-      }))
-    end,
-  },
+  -- {
+  --   "hrsh7th/nvim-cmp", -- TODO: add support for blink.cmp
+  --   dependencies = {
+  --     {
+  --       "Saecki/crates.nvim",
+  --       event = { "BufRead Cargo.toml" },
+  --       config = true,
+  --     },
+  --   },
+  --   ---@param opts cmp.ConfigSchema
+  --   opts = function(_, opts)
+  --     local cmp = require("cmp")
+  --     opts.sources = cmp.config.sources(vim.list_extend(opts.sources, {
+  --       { name = "crates" },
+  --     }))
+  --   end,
+  -- },
 
   -- Add Rust & related to treesitter
   {
