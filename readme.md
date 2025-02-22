@@ -40,11 +40,18 @@ run the following commands to create symlinks:
 ```sh
 stow bin
 stow -t ~/.config .config
+stow -t ~ gitconfig
+stow -t ~ gitconfig_local
 ```
 
 **explanation:**
 - `stow bin` → symlinks `~/dotfiles/bin/` to `~/bin/`
 - `stow -t ~/.config .config` → symlinks `~/dotfiles/.config/*` into `~/.config/`
+- `stow -t ~ gitconfig` → symlinks `~/dotfiles/gitconfig` into `~/.gitconfig`.
+- `~` is `$HOME` directory.
+
+> [!NOTE]
+> must follow stow naming convention for symlinks to work properly
 
 ---
 
