@@ -162,6 +162,89 @@ function M.remove_fix_comments_from_current_line()
   end
 end
 
+-- FIX: . Check and test this. remove comments later
+-- Function to capture all lines and content in Nvim
+function M.remove_fix_comments()
+  -- Get the current buffer
+  local bufnr = vim.api.nvim_get_current_buf()
+
+  -- Get all lines in the buffer
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+  -- Join the lines into a single string with newlines
+  local content = table.concat(lines, "\n")
+
+  -- Store in a variable or register
+  -- Option 1: Store in register "a"
+  vim.fn.setreg("a", content)
+
+  -- Option 2: Store in global variable for access in Lua
+  vim.g.captured_content = content
+
+  -- Provide feedback to the user
+  vim.notify("Captured " .. #lines .. " lines to register 'a' and global variable 'captured_content'", vim.log.levels.INFO)
+
+  return content
+end
+
+-- FIX: . Check and test this. remove comments later
+-- function M.remove_fix_comments()
+--   local bufnr = vim.api.nvim_get_current_buf()
+--   local filetype = vim.bo[bufnr].filetype
+--   local comment_symbol = filetype_formats[filetype]
+
+--   if not comment_symbol then
+--     print("Filetype " .. filetype .. " is not supported.")
+--     return
+--   end
+
+--   -- Generate the FIX comment string for the current filetype
+--   local str_tobe_removed = "FIX: ."
+--   if filetype == "markdown" then
+--     str_tobe_removed = "FIX: . "
+--   end
+--   local fix_comment = string.format(comment_symbol, str_tobe_removed)
+
+--   -- Escape special Lua pattern characters
+--   local pattern_comment = vim.pesc(fix_comment)
+
+--   -- Create match pattern for the entire comment and any trailing text
+--   -- Handles optional whitespace before/after comment and any text following
+--   local pattern = "%s*" .. pattern_comment .. ".*"
+
+--   -- Determine the range of lines to process
+--   local start_line, end_line
+--   local mode = vim.fn.mode()
+
+--   if mode == "v" or mode == "V" then
+--     -- Visual mode: get the selected range
+--     start_line = vim.fn.line("'<")
+--     end_line = vim.fn.line("'>")
+--     -- Exit visual mode
+--     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
+--   else
+--     -- Normal mode: process only the current line
+--     start_line = vim.api.nvim_win_get_cursor(0)[1]
+--     end_line = start_line
+--   end
+
+--   -- Iterate over the specified range
+--   for linenr = start_line, end_line do
+--     -- Get current line content
+--     local current_line = vim.api.nvim_buf_get_lines(bufnr, linenr - 1, linenr, false)[1] or ""
+
+--     -- Remove the FIX comment and any trailing text
+--     local new_line = current_line:gsub(pattern, "")
+
+--     -- Update the line if changes were made
+--     if new_line ~= current_line then
+--       vim.api.nvim_buf_set_lines(bufnr, linenr - 1, linenr, false, { new_line })
+--     end
+--   end
+-- end
+
+-- DEL: . DELETE LINES LATER
+-- if above func works
 -- FIX: test htis. buggy
 -- check this?
 -- local start_line, _ = unpack(vim.fn.getpos("'<"), 2, 3)
