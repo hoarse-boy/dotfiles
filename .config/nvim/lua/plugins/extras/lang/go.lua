@@ -143,8 +143,8 @@ return {
             local wk = require("which-key")
             local mappings = {
               { "<leader>l", icon = "󰟓", group = printf("lsp (go.nvim)"), mode = "n", buffer = 0 },
-              { "<leader>lT", icon = "󰟓", group = printf("tags"), mode = "n", buffer = 0 },
-              { "<leader>lt", icon = "󰟓", group = printf("test"), mode = "n", buffer = 0 },
+              { "<leader>lt", icon = "󰟓", group = printf("tags"), mode = "n", buffer = 0 },
+              -- { "<leader>lt", icon = "󰟓", group = printf("test"), mode = "n", buffer = 0 },
               { "<leader>lp", icon = "󰟓", group = printf("goplay.nvim"), mode = "n", buffer = 0 },
 
               -- Code actions
@@ -153,20 +153,20 @@ return {
               { "<leader>lr", vim.lsp.buf.rename, mode = { "n" }, desc = printf("Rename"), buffer = 0 },
 
               -- Go tags
-              { "<leader>lTj", "<cmd>GoModifyTag -add-tags json -transform snakecase -add-options json=<cr>", mode = { "n" }, desc = printf("Add Tags snakecase No 'omitempty'"), buffer = 0 },
-              { "<leader>lTa", "<cmd>GoModifyTag -add-tags json -transform camelcase -add-options json=<cr>", mode = { "n" }, desc = printf("Add Tags No 'omitempty'"), buffer = 0 },
-              { "<leader>lTA", "<cmd>GoModifyTag -add-tags json -transform camelcase<cr>", mode = { "n" }, desc = printf("Add Tags"), buffer = 0 },
-              { "<leader>lTr", "<cmd>GoRename<cr>", mode = { "n" }, desc = printf("Remove Tags"), buffer = 0 },
+              { "<leader>ltj", "<cmd>GoModifyTag -add-tags json -transform snakecase -add-options json=<cr>", mode = { "n" }, desc = printf("Add Tags snakecase No 'omitempty'"), buffer = 0 },
+              { "<leader>lta", "<cmd>GoModifyTag -add-tags json -transform camelcase -add-options json=<cr>", mode = { "n" }, desc = printf("Add Tags No 'omitempty'"), buffer = 0 },
+              { "<leader>ltA", "<cmd>GoModifyTag -add-tags json -transform camelcase<cr>", mode = { "n" }, desc = printf("Add Tags"), buffer = 0 },
+              { "<leader>ltr", "<cmd>GoRename<cr>", mode = { "n" }, desc = printf("Remove Tags"), buffer = 0 },
 
-              -- Go tests
-              { "<leader>lta", "<cmd>GoAddTest<cr>", mode = { "n" }, desc = printf("Add Test for Current Func"), buffer = 0 },
-              { "<leader>ltA", "<cmd>GoAddAllTest<cr>", mode = { "n" }, desc = printf("Add Test for all Func"), buffer = 0 },
-              { "<leader>lte", "<cmd>GoAddExpTest<cr>", mode = { "n" }, desc = printf("Add Exported Func"), buffer = 0 },
-              { "<leader>ltT", "<cmd>GoTest<cr>", mode = { "n" }, desc = printf("Test All"), buffer = 0 },
-              { "<leader>ltt", "<cmd>GoTestFunc<cr>", mode = { "n" }, desc = printf("Test a Func"), buffer = 0 },
-              { "<leader>ltF", "<cmd>GoTestFile<cr>", mode = { "n" }, desc = printf("Test All Func in the File"), buffer = 0 },
-              { "<leader>ltP", "<cmd>GoTestPkg<cr>", mode = { "n" }, desc = printf("Test Package"), buffer = 0 },
-              { "<leader>ltc", "<cmd>GoCoverage<cr>", mode = { "n" }, desc = printf("Test -coverprofile"), buffer = 0 },
+              -- Go tests. uses neotest plugin
+              -- { "<leader>lta", "<cmd>GoAddTest<cr>", mode = { "n" }, desc = printf("Add Test for Current Func"), buffer = 0 },
+              -- { "<leader>ltA", "<cmd>GoAddAllTest<cr>", mode = { "n" }, desc = printf("Add Test for all Func"), buffer = 0 },
+              -- { "<leader>lte", "<cmd>GoAddExpTest<cr>", mode = { "n" }, desc = printf("Add Exported Func"), buffer = 0 },
+              -- { "<leader>ltT", "<cmd>GoTest<cr>", mode = { "n" }, desc = printf("Test All"), buffer = 0 },
+              -- { "<leader>ltt", "<cmd>GoTestFunc<cr>", mode = { "n" }, desc = printf("Test a Func"), buffer = 0 },
+              -- { "<leader>ltF", "<cmd>GoTestFile<cr>", mode = { "n" }, desc = printf("Test All Func in the File"), buffer = 0 },
+              -- { "<leader>ltP", "<cmd>GoTestPkg<cr>", mode = { "n" }, desc = printf("Test Package"), buffer = 0 },
+              -- { "<leader>ltc", "<cmd>GoCoverage<cr>", mode = { "n" }, desc = printf("Test -coverprofile"), buffer = 0 },
 
               -- Go documentation and utilities
               { "<leader>ld", "<cmd>GoDoc<cr>", mode = { "n" }, desc = printf("Go Doc"), buffer = 0 },
