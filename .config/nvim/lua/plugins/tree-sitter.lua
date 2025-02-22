@@ -6,37 +6,37 @@ return {
     -- commit = "865483f8d1c6e263a1a9efd46f84e78ec5fa31d4",
     dependencies = {
       -- rainbow-delimiters. p00f/nvim-ts-rainbow is buggy and archive along time ago.
-      {
-        "HiPhish/rainbow-delimiters.nvim",
-        enabled = false,
-        event = "VeryLazy",
-        config = function()
-          local rainbow_delimiters = require("rainbow-delimiters")
+      -- {
+      --   "HiPhish/rainbow-delimiters.nvim",
+      --   enabled = false,
+      --   event = "VeryLazy",
+      --   config = function()
+      --     local rainbow_delimiters = require("rainbow-delimiters")
 
-          vim.g.rainbow_delimiters = {
-            strategy = {
-              [""] = rainbow_delimiters.strategy["global"],
-              vim = rainbow_delimiters.strategy["local"],
-            },
-            query = {
-              [""] = "rainbow-delimiters",
-              lua = "rainbow-blocks",
-            },
-            priority = {
-              [""] = 110,
-            },
-            highlight = {
-              "RainbowDelimiterRed",
-              "RainbowDelimiterYellow",
-              "RainbowDelimiterBlue",
-              "RainbowDelimiterOrange",
-              "RainbowDelimiterGreen",
-              "RainbowDelimiterViolet",
-              "RainbowDelimiterCyan",
-            },
-          }
-        end,
-      },
+      --     vim.g.rainbow_delimiters = {
+      --       strategy = {
+      --         [""] = rainbow_delimiters.strategy["global"],
+      --         vim = rainbow_delimiters.strategy["local"],
+      --       },
+      --       query = {
+      --         [""] = "rainbow-delimiters",
+      --         lua = "rainbow-blocks",
+      --       },
+      --       priority = {
+      --         [""] = 110,
+      --       },
+      --       highlight = {
+      --         "RainbowDelimiterRed",
+      --         "RainbowDelimiterYellow",
+      --         "RainbowDelimiterBlue",
+      --         "RainbowDelimiterOrange",
+      --         "RainbowDelimiterGreen",
+      --         "RainbowDelimiterViolet",
+      --         "RainbowDelimiterCyan",
+      --       },
+      --     }
+      --   end,
+      -- },
 
       -- treesitter playground
       {
