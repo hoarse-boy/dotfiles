@@ -1,35 +1,35 @@
 -- TODO: create whichky to show list of binding for nvim-surround
 
-local surround_add_msg = [[
+-- local surround_add_msg = [[
 
-# add surround
+-- # add surround
 
-'yziw*' new surround in word
+-- 'yziw*' new surround in word
 
-or
+-- or
 
-'yza**' new surround outside current surround
+-- 'yza**' new surround outside current surround
 
-mode: normal
+-- mode: normal
 
----
+-- ---
 
-'Z*'
+-- 'Z*'
 
-mode: visual
+-- mode: visual
 
----
+-- ---
 
-## special add surround
+-- ## special add surround
 
-'yzz*' new surround in line
+-- 'yzz*' new surround in line
 
-or
+-- or
 
-'yZZ*' new surround new line (currently not working)
+-- 'yZZ*' new surround new line (currently not working)
 
-mode: normal
-]]
+-- mode: normal
+-- ]]
 
 return {
   {
@@ -43,15 +43,26 @@ return {
         keymaps = {
           insert = "<C-g>z",
           insert_line = "<C-g>Z",
-          normal = "yz",
-          normal_cur = "yzz",
-          normal_line = "yZ",
-          normal_cur_line = "yZZ",
-          visual = "z",
-          visual_line = "gZ",
-          delete = "dz",
-          change = "cz",
-          change_line = "cZ",
+          normal = "gs",
+          normal_cur = "gss",
+          normal_line = "gS",
+          normal_cur_line = "gSS",
+          visual = "gs",
+          visual_line = "gS",
+          delete = "gsd",
+          change = "gsc",
+          change_line = "gSc",
+
+          -- old
+          -- normal = "yz",
+          -- normal_cur = "yzz",
+          -- normal_line = "yZ",
+          -- normal_cur_line = "yZZ",
+          -- visual = "z",
+          -- visual_line = "gZ",
+          -- delete = "dz",
+          -- change = "cz",
+          -- change_line = "cZ",
         },
 
         aliases = {
@@ -64,16 +75,16 @@ return {
         },
 
         surrounds = {
-          ["*"] = {
-            add = function()
-              return {
-                { "**" },
-                { "**" },
-              }
-            end,
-            find = "%*%*(.-)%*%*", -- NOTE: not working
-            delete = "%*%*(.-)%*%*",
-          },
+          -- ["*"] = {
+          --   add = function()
+          --     return {
+          --       { "**" },
+          --       { "**" },
+          --     }
+          --   end,
+          --   find = "%*%*(.-)%*%*", -- NOTE: not working
+          --   delete = "%*%*(.-)%*%*",
+          -- },
 
           -- TODO: add more for markdown.
           ["l"] = {
@@ -84,23 +95,27 @@ return {
                 { "](" .. clipboard .. ")" },
               }
             end,
-            find = "%b[]%b()",
-            delete = "^(%[)().-(%]%b())()$",
-            change = {
-              target = "^()()%b[]%((.-)()%)$",
-              replacement = function()
-                local clipboard = vim.fn.getreg("+"):gsub("\n", "")
-                return {
-                  { "" },
-                  { clipboard },
-                }
-              end,
-            },
+            -- find = "%b[]%b()",
+            -- delete = "^(%[)().-(%]%b())()$",
+            -- change = {
+            --   target = "^()()%b[]%((.-)()%)$",
+            --   replacement = function()
+            --     local clipboard = vim.fn.getreg("+"):gsub("\n", "")
+            --     return {
+            --       { "" },
+            --       { clipboard },
+            --     }
+            --   end,
+            -- },
           },
 
           ["c"] = {
             add = function()
               local lang = config.get_input("Enter code language (e.g., json): ")
+              if lang == "" then
+                print("Error: Language cannot be empty.")
+                return nil
+              end
               return {
                 { "```" .. lang .. "\n" },
                 { "\n```" },
@@ -142,40 +157,40 @@ return {
     end,
   },
 
-  {
-    "folke/which-key.nvim",
-    opts = function(_, _)
-      local wk = require("which-key")
-      local printf = require("plugins.util.printf").printf
+  -- {
+  --   "folke/which-key.nvim",
+  --   opts = function(_, _)
+  --     local wk = require("which-key")
+  --     local printf = require("plugins.util.printf").printf
 
-      local surround_nvim_title_msg = "surround-nvim"
+  --     local surround_nvim_title_msg = "surround-nvim"
 
-      local mapping = {
-        { "<leader>oS", icon = "", group = printf("Surround Keys Cheatcodes"), mode = "n" },
+  --     local mapping = {
+  --       { "<leader>oS", icon = "", group = printf("Surround Keys Cheatcodes"), mode = "n" },
 
-        -- stylua: ignore start
-        { "<leader>oSC",
-          function() vim.notify("\n# add code block\n\n'zc'\nmode: v-line", vim.log.levels.INFO, { title = surround_nvim_title_msg })
-          end, desc = printf("Code Block (v-line mode)"), mode = "n"
-        },
+  --       -- stylua: ignore start
+  --       { "<leader>oSC",
+  --         function() vim.notify("\n# add code block\n\n'zc'\nmode: v-line", vim.log.levels.INFO, { title = surround_nvim_title_msg })
+  --         end, desc = printf("Code Block (v-line mode)"), mode = "n"
+  --       },
 
-        { "<leader>oSc",
-          function() vim.notify("\n# change surround\n\n'cz**'\nmode: normal\n\nfirst * is target\nsecond * is replacement", vim.log.levels.INFO, { title = surround_nvim_title_msg })
-          end, desc = printf("Change Surround"), mode = "n"
-        },
+  --       { "<leader>oSc",
+  --         function() vim.notify("\n# change surround\n\n'cz**'\nmode: normal\n\nfirst * is target\nsecond * is replacement", vim.log.levels.INFO, { title = surround_nvim_title_msg })
+  --         end, desc = printf("Change Surround"), mode = "n"
+  --       },
 
-        { "<leader>oSa",
-          function() vim.notify(surround_add_msg, vim.log.levels.INFO, { title = surround_nvim_title_msg })
-          end, desc = printf("Add Surround (most commond)"), mode = "n"
-        },
+  --       { "<leader>oSa",
+  --         function() vim.notify(surround_add_msg, vim.log.levels.INFO, { title = surround_nvim_title_msg })
+  --         end, desc = printf("Add Surround (most commond)"), mode = "n"
+  --       },
 
-        { "<leader>oSd",
-          function() vim.notify("\n# delete surround\n\n'dz*'\nmode: normal\n", vim.log.levels.INFO, { title = surround_nvim_title_msg })
-          end, desc = printf("Delete Surround"), mode = "n"
-        },
-        -- stylua: ignore end
-      }
-      wk.add(mapping)
-    end,
-  },
+  --       { "<leader>oSd",
+  --         function() vim.notify("\n# delete surround\n\n'dz*'\nmode: normal\n", vim.log.levels.INFO, { title = surround_nvim_title_msg })
+  --         end, desc = printf("Delete Surround"), mode = "n"
+  --       },
+  --       -- stylua: ignore end
+  --     }
+  --     wk.add(mapping)
+  --   end,
+  -- },
 }
