@@ -43,13 +43,20 @@ return {
           frecency = true,
         },
 
+        explorer = {
+          -- enable = false,
+        },
+
         -- sources contains all of the pickers table. such as files, grep, todo_comments which are all default sources or pickers.
         -- add new table to create custom pickers.
         -- https://github.com/folke/snacks.nvim/issues/1023
         sources = {
           -- overwrite the default 'files' picker to exclude some files and show hidden files
           files = {
-            cmd = "fd",
+            -- hidden and ignored must be assigned inside sources.files picker as it will not work when enabling in picker only
+            hidden = true, -- true to shows .files or hidden files
+            ignored = true, -- true to shows ignored files. tools like `fd` respects .gitignore and this will make them show up.
+            -- cmd = "fd",
           },
 
           -- example of creating new custom picker
