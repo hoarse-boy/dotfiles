@@ -1,11 +1,11 @@
 local hl_colors = {
   dark_blue = "#0286c7",
-  types = "#2b8756", -- #15a191 
+  types = "#2b8756", -- #15a191
   todo_NOTE = "#15a191",
   todo_TODO = "#18a4db",
   todo_WARN = "#b0ab8b",
   todo_HACK = "#7833f5",
-  todo_FIX = "#a10524",
+  todo_FIX = "#d4284a", -- #a10524
 }
 
 return {
@@ -70,6 +70,7 @@ return {
             Number = { fg = "#87b7c7" },
             Type = { fg = hl_colors.types },
             TreesitterContextLineNumber = { fg = "#d1d1d1" },
+            -- Contants = { fg = "#da8ede" },
             -- TreesitterContextBottom = { sp = "#d1d1d1" },
 
             -- change the treesitter todo highlighter such as 'NOTE' and 'TODO'. the default is too bright.
