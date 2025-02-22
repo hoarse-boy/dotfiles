@@ -45,8 +45,9 @@ if os_name == os_util.LINUX then
   vim.opt.directory = "/tmp/nvim/swap//" -- NOTE: change dir as the .local/share/nvim/swap is not working on arch linux. macos works fine.
 end
 
--- vim.g.lazyvim_cmp = "nvim-cmp" -- lazyvim 14.* reguired this if nvim-cmp is used, as blink.cmp is the default.
+-- specific global variable for lazyvim features
 vim.g.lazyvim_picker = "snacks" -- use snacks.nvim as the default picker without adding any extra config.
-
+vim.g.lazyvim_prettier_needs_config = true -- makes prettier to use prettierrc.yml file in the root of the project.
 -- vim.g.snacks_animate = false -- disable animations
 -- vim.g.snacks_animate_scroll = false -- disable scroll animations
+-- vim.g.lazyvim_cmp = "nvim-cmp" -- lazyvim 14.* reguired this if nvim-cmp is used, as blink.cmp is the default.
