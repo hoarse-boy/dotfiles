@@ -1,4 +1,4 @@
--- don't remove this code. uses snacks.nvim explorer instead.
+-- don't remove this code. uses snacks.nvim explorer instead. -- TODO: change back to snacks after it is fixed.
 
 return {
   {
