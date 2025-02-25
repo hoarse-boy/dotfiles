@@ -321,6 +321,21 @@ return {
     event = "VeryLazy",
     -- enabled = false,
     opts = function(_, opts)
+      Snacks.toggle({
+        name = "Render Markdown",
+        get = function()
+          return require("render-markdown.state").enabled
+        end,
+        set = function(enabled)
+          local m = require("render-markdown")
+          if enabled then
+            m.enable()
+          else
+            m.disable()
+          end
+        end,
+      }):map("<leader>um")
+
       opts.render_modes = true
 
       opts.code = {
@@ -512,15 +527,25 @@ return {
     end,
   },
 
-  -- disable markdown-oxide. uses telekasten.nvim for navigation. oxide is way faster though.
   -- Ensure mason is installed for easy installation of LSPs
   {
     "williamboman/mason.nvim",
     opts = function(_, opts)
       -- Install markdown-oxide LSP through Mason
-      vim.list_extend(opts.ensure_installed, { "markdown-oxide" })
+      vim.list_extend(opts.ensure_installed, { "markdown-oxide", "prettier" })
     end,
   },
+
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        ["markdown"] = { "prettier" },
+      },
+    },
+  },
+
   -- Configure nvim-lspconfig to use markdown-oxide
   {
     "neovim/nvim-lspconfig",
