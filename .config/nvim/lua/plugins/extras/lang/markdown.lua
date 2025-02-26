@@ -334,7 +334,7 @@ return {
             m.disable()
           end
         end,
-      }):map("<leader>um")
+      }):map("<leader>uM")
 
       opts.render_modes = true
 
@@ -438,6 +438,9 @@ return {
       }
     end,
     dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.icons" }, -- if you use standalone mini plugins
+    keys = {
+      { "<leader>um", "<cmd>RenderMarkdown<cr>", desc = printf("Render Markdown"), mode = "n" },
+    },
   },
 
   {
