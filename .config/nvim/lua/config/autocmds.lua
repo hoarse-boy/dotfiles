@@ -88,3 +88,15 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.wrap = false
   end,
 })
+
+-- -- for indentation. currently, makes my go code to have 4 tabs instead of 2.
+-- opt.shiftwidth = 4 -- this is to make indentation work properly.
+-- opt.tabstop = 4 -- Tabs are displayed as 4 spaces even when it is not. if the actual tab width is 4, it will be displayed the same.
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "typescript", "go" },
+  callback = function()
+    vim.bo.tabstop = 4
+    vim.bo.shiftwidth = 4
+    -- vim.bo.softtabstop = 4
+  end,
+})
