@@ -30,3 +30,6 @@ stow-local-ignore
 
 # fish files
 .config/fish/fish_variables
+
+# tmux files
+.config/tmux/plugins/
