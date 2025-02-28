@@ -78,3 +78,13 @@ autocmd("FileType", {
 --     vim.fn.writefile({log_message}, log_file, "a")
 --   end
 -- })
+
+-- options.lua is not working. this is a workaround.
+-- opt.wrap = false
+-- vim.wo.wrap = false
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "text" },
+  callback = function()
+    vim.opt_local.wrap = false
+  end,
+})
