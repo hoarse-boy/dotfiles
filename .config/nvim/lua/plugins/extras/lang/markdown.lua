@@ -91,7 +91,7 @@ return {
       local telekasten = require("telekasten")
       telekasten.setup({
         home = vim.fn.expand(my_notes_dir), -- Put the name of your notes directory here
-        media_previewer = "telescope-media-files",
+        -- media_previewer = "telescope-media-files",
         auto_set_filetype = false, -- disabling telekasten.nvim to force markdown to be telekasten filetype.
         image_subdir = "img",
         image_link_style = "markdown",
@@ -535,6 +535,8 @@ return {
     "williamboman/mason.nvim",
     opts = function(_, opts)
       -- Install markdown-oxide LSP through Mason
+      -- if used markdown-oxide, do not install marksman. it will conflict with markdown-oxide.
+      -- such as creating double lsp info.
       vim.list_extend(opts.ensure_installed, { "markdown-oxide", "prettier" })
     end,
   },
