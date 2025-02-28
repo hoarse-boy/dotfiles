@@ -1,4 +1,6 @@
-local char_symbol = "▎"
+local char_symbol = "▏"
+-- local char_symbol = "▎"
+-- local char_symbol = "▎"
 -- local char_symbol = "▍"
 -- local char_symbol = "┃"
 -- local char_symbol = "│"
@@ -6,18 +8,26 @@ local char_symbol = "▎"
 -- NOTE: best v2 with wezterm enable undercurl => https://wezfurlong.org/wezterm/faq.html#how-do-i-enable-undercurl-curly-underlines
 -- disable these plugins to use one plugin that can do both without mini.indentscope performance hit.
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "yaml", "yml", "toml" },
+  callback = function()
+    vim.b.snacks_indent = false
+  end,
+})
+
 -- TODO: change to snacks.nvim if it has no bug.
 return {
   {
     "folke/snacks.nvim",
     opts = {
       indent = {
-        enabled = false, -- NOTE: enable or disable snacks indent
+        -- enabled = false, -- NOTE: enable or disable snacks indent
         ---@class snacks.indent.Config
         indent = {
-          enabled = false, -- enable indent guides
+          -- enabled = false, -- enable indent guides
           -- char = "▎",
-          char = char_symbol,
+          char = "│",
+          -- char = char_symbol,
           blank = " ",
           -- blank = "∙",
           only_scope = false, -- only show indent guides of the scope
@@ -25,14 +35,14 @@ return {
           -- hl = "SnacksIndent", ---@type string|string[] hl groups for indent guides
           -- can be a list of hl groups to cycle through
           hl = {
-            "SnacksIndent1",
-            "SnacksIndent2",
-            "SnacksIndent3",
-            "SnacksIndent4",
-            "SnacksIndent5",
-            "SnacksIndent6",
-            "SnacksIndent7",
-            "SnacksIndent8",
+            "Comment",
+            -- "SnacksIndent2",
+            -- "SnacksIndent3",
+            -- "SnacksIndent4",
+            -- "SnacksIndent5",
+            -- "SnacksIndent6",
+            -- "SnacksIndent7",
+            -- "SnacksIndent8",
           },
         },
         ---@class snacks.indent.Scope.Config: snacks.scope.Config
@@ -49,39 +59,41 @@ return {
               total = 500, -- maximum duration
             },
           },
-          char = char_symbol,
-          underline = true, -- underline the start of the scope
-          -- underline = false, -- underline the start of the scope
+          char = "│",
+          -- char = char_symbol,
+          -- underline = true, -- underline the start of the scope
+          underline = false, -- underline the start of the scope
+          -- only_current = true, -- only show scope in the current window
           only_current = false, -- only show scope in the current window
-          hl = "SnacksIndentScope", ---@type string|string[] hl group for scopes
+          hl = "Function", ---@type string|string[] hl group for scopes
+          -- hl = "SnacksIndentScope", ---@type string|string[] hl group for scopes
         },
         chunk = {
           -- when enabled, scopes will be rendered as chunks, except for the
           -- top-level scope which will be rendered as a scope.
-          enabled = false,
+          enabled = true,
+          -- enabled = false,
           -- only show chunk scopes in the current window
+          -- only_current = true,
           only_current = false,
-          hl = "SnacksIndentChunk", ---@type string|string[] hl group for chunk scopes
+          hl = "Function", ---@type string|string[] hl group for chunk scopes
+          -- hl = "SnacksIndentChunk", ---@type string|string[] hl group for chunk scopes
           char = {
-            corner_top = "┌",
-            corner_bottom = "└",
+            -- corner_top = "┌",
+            -- corner_bottom = "└",
+            corner_top = "╭",
             -- corner_top = "╭",
-            -- corner_bottom = "╰",
+            corner_bottom = "╰",
             horizontal = "─",
-            vertical = char_symbol,
-            -- vertical = "│",
+            -- vertical = char_symbol,
+            vertical = "│",
             arrow = ">",
           },
         },
-        blank = {
-          char = " ",
-          -- char = "·",
-          hl = "SnacksIndentBlank", ---@type string|string[] hl group for blank spaces
-        },
         -- filter for buffers to enable indent guides
-        filter = function(buf)
-          return vim.g.snacks_indent ~= false and vim.b[buf].snacks_indent ~= false and vim.bo[buf].buftype == ""
-        end,
+        -- filter = function(buf)
+        --   return vim.g.snacks_indent ~= false and vim.b[buf].snacks_indent ~= false and vim.bo[buf].buftype == ""
+        -- end,
         priority = 200,
       },
     },
@@ -91,7 +103,7 @@ return {
   {
     "lukas-reineke/indent-blankline.nvim",
     event = "LazyFile",
-    -- enabled = false, -- disabled plugin
+    enabled = false, -- disabled plugin
     opts = {
       indent = {
         char = char_symbol,
