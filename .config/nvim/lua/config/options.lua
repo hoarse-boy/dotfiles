@@ -20,14 +20,13 @@ opt.list = false -- NOTE: make the > and other symbol to be hidden when the obje
 opt.scrolloff = 4
 -- opt.scrolloff = 12 -- minimal number of screen lines to keep above and below the cursor.
 opt.sidescrolloff = 20 -- minimal number of screen lines to keep left and right of the cursor.
-
 opt.hlsearch = true -- highlight all matches on previous search pattern.
 opt.relativenumber = false
-vim.g.autoformat = false -- disable auto format. use <leader>cf to format.
-
 opt.backup = false
 opt.undofile = true
 opt.writebackup = false
+
+vim.g.autoformat = false -- disable auto format. use <leader>cf to format.
 
 -- NOTE: the prompt is annoying. however, it is required in case of nvim or neovide crash.
 -- how to stop the prompt, choose the option 'r' or recover.
