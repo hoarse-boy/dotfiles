@@ -24,6 +24,8 @@ return {
 
   {
     "sphamba/smear-cursor.nvim",
+    event = "VeryLazy",
+    enabled = true,
     opts = {
       -- -- fire animation when moving cursor
       -- cursor_color = "#ff8800",
