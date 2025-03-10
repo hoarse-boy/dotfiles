@@ -79,7 +79,7 @@ require("lazy").setup({
   },
   install = {
     -- install missing plugins on startup. This doesn't increase startup time.
-    missing = false,
+    missing = true, --  -- WARN: this must be true else fresh install will fail. tried 'Lazy' and manual install but still not working
     -- colorscheme = { "tokyonight", "habamax" }
   },
   -- ui config
