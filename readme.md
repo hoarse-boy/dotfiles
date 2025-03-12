@@ -22,7 +22,7 @@ brew install git stow
 
 ### 1. clone the repository
 ```sh
-git clone --recursive https://github.com/hoarse-boy/dotfiles.git ~/dotfiles
+git clone --recursive https://github.com/hoarse-boy/dotfiles.git ~/my-dotfiles
 ```
 
 ---

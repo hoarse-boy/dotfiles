@@ -55,4 +55,3 @@ elif [ "$AUTH_METHOD" == "2" ]; then
     echo "Testing SSH connection..."
     ssh -T git@github.com
 fi
-
