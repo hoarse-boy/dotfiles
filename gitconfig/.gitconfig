@@ -1,11 +1,13 @@
 [user]
-      # These values are set in ~/.gitconfig_local
+	name = hoarse-boy
+	email = jourdymagoofficial@gmail.com
 
 [include]
-      path = ~/.gitconfig_local
+    path = ~/.gitconfig_local
 
 [core]
     pager = delta --dark --paging=never
+    excludesfile = ~/.gitignore_global
 
 [delta]
   features = side-by-side
@@ -25,3 +27,9 @@
     conflictstyle = diff3
     git = delta
     tool = delta
+
+[init]
+	defaultBranch = main
+
+[credential]
+	helper = store
