@@ -121,49 +121,11 @@ return {
     end,
   },
 
-  -- TODO: test and disable bullet.vim
-  -- {
-  --       "gaoDean/autolist.nvim",
-  --       event = "VeryLazy",
-  --       enabled = false,
-  --       ft = {
-  --         "markdown",
-  --         "text",
-  --         "tex",
-  --         "plaintex",
-  --         "norg",
-  --       },
-  --       config = function()
-  --         require("autolist").setup()
-
-  --         vim.keymap.set("i", "<tab>", "<cmd>AutolistTab<cr>")
-  --         vim.keymap.set("i", "<s-tab>", "<cmd>AutolistShiftTab<cr>")
-  --         -- vim.keymap.set("i", "<c-t>", "<c-t><cmd>AutolistRecalculate<cr>") -- an example of using <c-t> to indent
-  --         vim.keymap.set("i", "<CR>", "<CR><cmd>AutolistNewBullet<cr>")
-  --         vim.keymap.set("n", "o", "o<cmd>AutolistNewBullet<cr>")
-  --         vim.keymap.set("n", "O", "O<cmd>AutolistNewBulletBefore<cr>")
-  --         vim.keymap.set("n", "<CR>", "<cmd>AutolistToggleCheckbox<cr><CR>")
-  --         vim.keymap.set("n", "<C-r>", "<cmd>AutolistRecalculate<cr>")
-
-  --         -- cycle list types with dot-repeat
-  --         vim.keymap.set("n", "<leader>cn", require("autolist").cycle_next_dr, { expr = true })
-  --         vim.keymap.set("n", "<leader>cp", require("autolist").cycle_prev_dr, { expr = true })
-
-  --         -- if you don't want dot-repeat
-  --         -- vim.keymap.set("n", "<leader>cn", "<cmd>AutolistCycleNext<cr>")
-  --         -- vim.keymap.set("n", "<leader>cp", "<cmd>AutolistCycleNext<cr>")
-
-  --         -- functions to recalculate list on edit
-  --         vim.keymap.set("n", ">>", ">><cmd>AutolistRecalculate<cr>")
-  --         vim.keymap.set("n", "<<", "<<<cmd>AutolistRecalculate<cr>")
-  --         vim.keymap.set("n", "dd", "dd<cmd>AutolistRecalculate<cr>")
-  --         vim.keymap.set("v", "d", "d<cmd>AutolistRecalculate<cr>")
-  --       end,
-  --     },
-
   {
+    -- TODO: check this out https://github.com/kaymmm/bullets.nvim
     -- this plugin auto generate bullets and checkbox toggle
-    "dkarter/bullets.vim",
+    "hoarse-boy/bullets.vim", -- use my forked version as the original one's fix is yet to be merged
+    -- "dkarter/bullets.vim",
     -- enabled = false,
     -- event = "VeryLazy",
     ft = { "markdown", "text", "gitcommit", "scratch" },
@@ -174,13 +136,9 @@ return {
       vim.g.bullets_set_mappings = 0 -- disable default mappings not working on nvim. need to disable the keymaps manually.
 
       vim.api.nvim_create_autocmd("FileType", {
-        group = vim.api.nvim_create_augroup("RemoveBulletsMapping", { clear = true }),
-        -- pattern = "*", -- Or specify a filetype like 'markdown' if needed
+        group = vim.api.nvim_create_augroup("MyBulletsvimMapping", { clear = true }),
         pattern = "markdown", -- Or specify a filetype like 'markdown' if needed
         callback = function()
-          -- vim.schedule(function()
-          -- vim.wo.wrap = false
-
           -- remove bullets.vim keymaps. regular nvim del key not working.
           local bufnr = vim.api.nvim_get_current_buf()
           vim.api.nvim_buf_del_keymap(bufnr, "n", "<leader>x") -- Remove toggle checkbox
@@ -190,7 +148,34 @@ return {
           vim.api.nvim_buf_del_keymap(bufnr, "v", ">")
 
           vim.keymap.set("n", "<CR>", "<cmd>pu _<cr>") -- overwrite enter in normal mode to not follow bullets.vim newline indenting
-          -- end)
+
+          local wk = require("which-key")
+          local markdown_func = require("plugins.util.markdown-func")
+          local l_mapping = {
+            -- stylua: ignore start
+
+            -- checkbox
+            { "gt", function() markdown_func.check_or_add_checkbox(true) end, mode = { "n", "v" }, desc = printf("Add Checkbox and Insert Mode"), buffer = 0 },
+            { "gT", function() markdown_func.check_or_add_checkbox() end, mode = { "n", "v" }, desc = printf("Add Checkbox"), buffer = 0 },
+            { "gR", function() markdown_func.remove_checkbox() end, mode = { "n", "v" }, desc = printf("Remove Checkbox"), buffer = 0 },
+            { "g<space>", "<Plug>(bullets-toggle-checkbox)", mode = "n", desc = printf("Toggle Checkbox"), buffer = 0 }, -- works only in normal mode
+
+            -- bullets manipulation
+            { "gN", "<Plug>(bullets-renumber)", mode = { "n", "v" }, desc = printf("Renumber Bullets"), buffer = 0 },
+            { "<cr>", "<Plug>(bullets-newline)", mode = { "i" }, desc = printf("Bullets Newline in insert mode"), buffer = 0 }, -- NOTE: it conflict with blink
+            { "<c-cr>", "<cr>", mode = { "i" }, desc = printf("Normal Newline in insert mode"), buffer = 0 },
+            { "o", "<Plug>(bullets-newline)", mode = { "n" }, desc = printf("Newline in normal mode"), buffer = 0 },
+
+            -- WARN: don't enable these. these are bullet.vim default mappings and they are buggy. this is commented as a reminder.
+            -- { ">>", "<Plug>(bullets-demote)", mode = { "n" }, desc = printf("Demote Bullet"), buffer = 0 },
+            -- { "<<", "<Plug>(bullets-promote)", mode = { "n" }, desc = printf("Promote Bullet"), buffer = 0 },
+            -- { ">", "<Plug>(bullets-demote)", mode = { "v" }, desc = printf("Demote Bullet"), buffer = 0 },
+            -- { "<", "<Plug>(bullets-promote)", mode = { "v" }, desc = printf("Promote Bullet"), buffer = 0 },
+
+            -- stylua: ignore end
+          }
+
+          wk.add(l_mapping)
         end,
       })
     end,
@@ -248,25 +233,6 @@ return {
 
             local l_mapping = {
               -- stylua: ignore start
-
-              -- checkbox
-              { "gt", function() markdown_func.check_or_add_checkbox(true) end, mode = { "n", "v" }, desc = printf("Add Checkbox and Insert Mode"), buffer = 0 },
-              { "gT", function() markdown_func.check_or_add_checkbox() end, mode = { "n", "v" }, desc = printf("Add Checkbox"), buffer = 0 },
-              { "gR", function() markdown_func.remove_checkbox() end, mode = { "n", "v" }, desc = printf("Remove Checkbox"), buffer = 0 },
-              { "g<space>", "<Plug>(bullets-toggle-checkbox)", mode = "n", desc = printf("Toggle Checkbox"), buffer = 0 }, -- works only in normal mode
-
-              -- bullets manipulation
-              { "gN", "<Plug>(bullets-renumber)", mode = { "n", "v" }, desc = printf("Renumber Bullets"), buffer = 0 },
-              { "<cr>", "<Plug>(bullets-newline)", mode = { "i" }, desc = printf("Bullets Newline in insert mode"), buffer = 0 }, -- NOTE: it conflict with blink
-              { "<c-cr>", "<cr>", mode = { "i" }, desc = printf("Normal Newline in insert mode"), buffer = 0 },
-              { "o", "<Plug>(bullets-newline)", mode = { "n" }, desc = printf("Newline in normal mode"), buffer = 0 },
-
-              -- NOTE: don't enable these. these are bullet.vim default mappings and they are buggy. this is commented as a reminder.
-              -- { ">>", "<Plug>(bullets-demote)", mode = { "n" }, desc = printf("Demote Bullet"), buffer = 0 },
-              -- { "<<", "<Plug>(bullets-promote)", mode = { "n" }, desc = printf("Promote Bullet"), buffer = 0 },
-              -- { ">", "<Plug>(bullets-demote)", mode = { "v" }, desc = printf("Demote Bullet"), buffer = 0 },
-              -- { "<", "<Plug>(bullets-promote)", mode = { "v" }, desc = printf("Promote Bullet"), buffer = 0 },
-
               { "<leader>l", group = printf("lsp (markdown)"), icon = "󰍔", mode = { "v", "n" }, buffer = 0 },
 
               -- telekasten navigation. enables lb and ll as oxide is needed. telekasten has some weird behavour, such as copying the name of the backlink when trasversing.
@@ -290,6 +256,8 @@ return {
               { "<leader>ld", function() markdown_func.toggle_is_done_in_buffer() end, mode = "n", desc = printf("Toggle is_done in buffer"), buffer = 0 },
               { "<leader>lD", function() telekasten.delete_current_file() end, desc = printf("Delete current file"), buffer = 0 }, -- FIX: not working check linkarsu code
               { "<leader>lI", function() markdown_func.delete_image_file() end, desc = printf("Delete image file"), buffer = 0 }, -- FIX: notworking
+              { "<leader>ls", function() markdown_func.insert_separator(true) end, desc = printf("Insert '---' and new line with checkbox"), buffer = 0 },
+              { "<leader>lS", function() markdown_func.insert_separator() end, desc = printf("Insert single '---' and new line"), buffer = 0 },
 
               -- formatter
               { "<leader>lj", ":!prettier --parser json<CR>",mode = "v", desc = printf("Format JSON code"), buffer = 0 }, -- TODO: find a better one

@@ -429,4 +429,17 @@ function M.search_markdown(pattern, prompt)
   end
 end
 
+function M.insert_separator(with_todo)
+  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- get current cursor position
+
+  if with_todo then
+    vim.api.nvim_buf_set_lines(0, row, row, false, { "", "---", "", "- [ ]  " }) -- insert formatted lines
+    vim.api.nvim_win_set_cursor(0, { row + 4, 6 }) -- move cursor inside the checklist
+    vim.cmd("startinsert") -- enter insert mode
+  else
+    vim.api.nvim_buf_set_lines(0, row, row, false, { "", "---", "" }) -- insert '---' and an empty line
+    vim.api.nvim_win_set_cursor(0, { row + 3, 0 }) -- move cursor 3 lines down
+  end
+end
+
 return M
