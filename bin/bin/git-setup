@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# Get existing Git global config values
-EXISTING_USER=$(git config --global user.name)
-EXISTING_EMAIL=$(git config --global user.email)
+# Default values
+DEFAULT_USER="hoarse-boy"
+DEFAULT_EMAIL="jourdymagoofficial@gmail.com"
 
-# Prompt for user details with default values
-echo "Enter your GitHub username [$EXISTING_USER]:"
+# Prompt for user details (default to pre-set values if empty)
+echo "Enter your GitHub username [${DEFAULT_USER}]:"
 read GITHUB_USER
-GITHUB_USER=${GITHUB_USER:-$EXISTING_USER}
+GITHUB_USER=${GITHUB_USER:-$DEFAULT_USER}
 
-echo "Enter your GitHub email [$EXISTING_EMAIL]:"
+echo "Enter your GitHub email [${DEFAULT_EMAIL}]:"
 read GITHUB_EMAIL
-GITHUB_EMAIL=${GITHUB_EMAIL:-$EXISTING_EMAIL}
+GITHUB_EMAIL=${GITHUB_EMAIL:-$DEFAULT_EMAIL}
 
 # Set up Git global config
 git config --global user.name "$GITHUB_USER"
@@ -19,9 +19,9 @@ git config --global user.email "$GITHUB_EMAIL"
 git config --global init.defaultBranch main
 git config --global credential.helper store
 
-echo "Git global config set!"
+echo "Git global config set for $GITHUB_USER ($GITHUB_EMAIL)!"
 
-# Choose authentication method
+# Choose Authentication Method
 echo "Choose authentication method (1 for HTTPS, 2 for SSH):"
 read AUTH_METHOD
 
@@ -30,21 +30,10 @@ if [ "$AUTH_METHOD" == "1" ]; then
     echo "Enter your GitHub Personal Access Token (PAT):"
     read -s GITHUB_PAT
 
-    # Store credentials
     echo "https://$GITHUB_USER:$GITHUB_PAT@github.com" > ~/.git-credentials
     chmod 600 ~/.git-credentials
 
-    echo "Testing HTTPS authentication..."
-    
-    # Test authentication by listing repositories
-    if git ls-remote https://github.com/"$GITHUB_USER" &>/dev/null; then
-        echo "✅ HTTPS authentication successful!"
-    else
-        echo "❌ Authentication failed. Check your username, token, or permissions."
-        rm -f ~/.git-credentials # Remove credentials if authentication fails
-        exit 1
-    fi
-
+    echo "HTTPS authentication set up!"
 elif [ "$AUTH_METHOD" == "2" ]; then
     # Set up SSH
     SSH_KEY_PATH="$HOME/.ssh/id_rsa"
@@ -64,11 +53,6 @@ elif [ "$AUTH_METHOD" == "2" ]; then
     fi
 
     echo "Testing SSH connection..."
-    if ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
-        echo "✅ SSH authentication successful!"
-    else
-        echo "❌ SSH authentication failed. Make sure your SSH key is added to GitHub."
-        exit 1
-    fi
+    ssh -T git@github.com
 fi
 
