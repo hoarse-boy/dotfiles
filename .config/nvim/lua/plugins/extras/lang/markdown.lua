@@ -186,6 +186,7 @@ return {
     opts = function(_, _)
       local telekasten = require("telekasten")
       local markdown_func = require("plugins.util.markdown-func")
+      local tag_manager = require("plugins.util.tag-manager")
 
       local wk = require("which-key")
       local mapping = {
@@ -243,14 +244,13 @@ return {
               {"<leader>lr", function() telekasten.rename_note() end,  mode = "n", desc = printf("Telekasten Rename Note (and its Backlink)"), buffer = 0 },
 
               {"<leader>lL", function() telekasten.insert_link() end, mode = "n", desc = printf("Insert link to note"), buffer = 0 }, -- can open image and link in browser.
-              {"<leader>lc", function() telekasten.show_calendar() end, mode = "n", desc = printf("Show calendar"), buffer = 0 },
+              -- {"<leader>lc", function() telekasten.show_calendar() end, mode = "n", desc = printf("Show calendar"), buffer = 0 },
               {"<leader>lv", function() vim.cmd("PasteImage") end, mode = "n", desc = printf("Insert image from clipboard"), buffer = 0 },
               -- set("n", "<leader>lv", function() telekasten.paste_img_and_link() end, buffer = 0, desc = printf("Paste image and create link")) -- use img-clip's
               -- set("n", "<leader>lt", function() telekasten.toggle_todo() end, buffer = 0, desc = printf("Toggle todo")) -- use bullet.vim's
 
               -- others
-              { "<leader>lc", "<cmd>TOC<cr>", desc = printf("Generate Table of Contents"), buffer = 0 },
-              { "<leader>lC", "<cmd>Telekasten show_calendar<cr>", desc = printf("Show Calender"), buffer = 0 },
+              { "<leader>lC", "<cmd>TOC<cr>", desc = printf("Generate Table of Contents"), buffer = 0 },
               { "<leader>ld", function() markdown_func.toggle_is_done_in_buffer() end, desc = printf("Toggle is_done in buffer"), buffer = 0 },
               { "<leader>lp", "<cmd>MarkdownPreviewToggle<cr>", mode = "n", desc = printf("Markdown Preview"), buffer = 0 },
               { "<leader>ld", function() markdown_func.toggle_is_done_in_buffer() end, mode = "n", desc = printf("Toggle is_done in buffer"), buffer = 0 },
@@ -259,8 +259,19 @@ return {
               { "<leader>ls", function() markdown_func.insert_separator(true) end, desc = printf("Insert '---' and new line with checkbox"), buffer = 0 },
               { "<leader>lS", function() markdown_func.insert_separator() end, desc = printf("Insert single '---' and new line"), buffer = 0 },
 
+
+              -- tags
+              { "<leader>lt", group = printf("tags"), icon = "󰀅 ", mode = "n", desc = printf("Get Tags"), buffer = 0 },
+              { "<leader>lts", function() tag_manager.show_tags_picker() end, desc = printf("Show Tags Collection"), buffer = 0 },
+              { "<leader>ltf", function() telekasten.show_tags() end, desc = printf("Lsp Show Tags"), buffer = 0 },
+              { "<leader>ltc", function() tag_manager.create_new_tags() end, desc = printf("Create a New Tag"), buffer = 0 },
+              { "<leader>ltr", function() tag_manager.remove_tag() end, desc = printf("Remove a Tag"), buffer = 0 },
+              { "<leader>lta", function() tag_manager.append_tags_to_front_matter() end, desc = printf("Append Tags to Front Matter"), buffer = 0 },
+              { "<leader>ltu", function() tag_manager.rename_tag() end, desc = printf("Rename a Tag"), buffer = 0 },
+
               -- formatter
               { "<leader>lj", ":!prettier --parser json<CR>",mode = "v", desc = printf("Format JSON code"), buffer = 0 }, -- TODO: find a better one
+
               -- stylua: ignore end
             }
 
