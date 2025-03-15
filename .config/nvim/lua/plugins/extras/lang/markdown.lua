@@ -71,17 +71,21 @@ return {
                   ["<C-k>"] = actions.cycle_history_next,
                   ["<C-j>"] = actions.cycle_history_prev,
                   ["<esc>"] = actions.close,
+                  ["<Tab>"] = actions.toggle_selection + actions.move_selection_next,
+                  ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_previous,
                 },
                 n = {
                   ["q"] = actions.close,
                   ["<esc>"] = actions.close,
+                  ["<Tab>"] = actions.toggle_selection + actions.move_selection_next,
+                  ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_previous,
                 },
               },
             },
           }
         end,
       },
-      -- "nvim-telekasten/calendar-vim", -- -- NOTE: disabling this. it makes the <leader>ca to be written and cannot be seen in keymaps searching.
+      -- "nvim-telekasten/calendar-vim", -- NOTE: disabling this. it makes the <leader>ca to be written and cannot be seen in keymaps searching.
     },
     -- enabled = false,
     config = function()
@@ -265,7 +269,8 @@ return {
               { "<leader>lts", function() tag_manager.show_tags_picker() end, desc = printf("Show Tags Collection"), buffer = 0 },
               { "<leader>ltf", function() telekasten.show_tags() end, desc = printf("Lsp Show Tags"), buffer = 0 },
               { "<leader>ltc", function() tag_manager.create_new_tags() end, desc = printf("Create a New Tag"), buffer = 0 },
-              { "<leader>ltr", function() tag_manager.remove_tag() end, desc = printf("Remove a Tag"), buffer = 0 },
+              { "<leader>ltr", function() tag_manager.remove_tags_from_front_matter() end, desc = printf("Remove Tags from Front Matter"), buffer = 0 },
+              { "<leader>ltR", function() tag_manager.remove_tag() end, desc = printf("Remove a Tag from Collection"), buffer = 0 },
               { "<leader>lta", function() tag_manager.append_tags_to_front_matter() end, desc = printf("Append Tags to Front Matter"), buffer = 0 },
               { "<leader>ltu", function() tag_manager.rename_tag() end, desc = printf("Rename a Tag"), buffer = 0 },
 

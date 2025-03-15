@@ -115,31 +115,92 @@ function M.remove_tag()
   end)
 end
 
-function M.show_tags_picker(callback, multi_select)
+-- NOTE: working snacks. picker but multi-select is not working.
+-- function M.show_tags_picker(callback, multi_select)
+--   local tags = M.get_tags()
+--   if not tags or #tags == 0 then
+--     vim.notify("No tags available", vim.log.levels.WARN)
+--     return
+--   end
+
+--   require("snacks.picker").select(tags, {
+--     prompt = "Select tag(s):",
+--     format_item = function(item)
+--       return "📌 " .. item
+--     end,
+--     multi = multi_select, -- enable multi-select
+--   }, function(choices, idx)
+--     if choices then
+--       local selected_tags = type(choices) == "table" and choices or { choices }
+--       vim.notify("Selected tags: " .. table.concat(selected_tags, ", "))
+--       if callback then
+--         callback(selected_tags)
+--       end
+--     end
+--   end)
+-- end
+
+local pickers = require("telescope.pickers")
+local finders = require("telescope.finders")
+local conf = require("telescope.config").values
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
+local action_utils = require("telescope.actions.utils")
+
+function M.show_tags_picker(callback)
   local tags = M.get_tags()
   if not tags or #tags == 0 then
     vim.notify("No tags available", vim.log.levels.WARN)
     return
   end
 
-  require("snacks.picker").select(tags, {
-    prompt = "Select tag(s):",
-    format_item = function(item)
-      return "📌 " .. item
-    end,
-    multi = multi_select, -- enable multi-select
-  }, function(choices)
-    if choices then
-      local selected_tags = type(choices) == "table" and choices or { choices }
-      vim.notify("Selected tags: " .. table.concat(selected_tags, ", "))
-      if callback then
-        callback(selected_tags)
-      end
-    end
-  end)
+  pickers
+    .new({}, {
+      prompt_title = "Select tag(s):",
+      finder = finders.new_table({
+        results = tags,
+        entry_maker = function(tag)
+          return {
+            value = tag,
+            display = "📌 " .. tag,
+            ordinal = tag,
+          }
+        end,
+      }),
+      sorter = conf.generic_sorter({}),
+      attach_mappings = function(prompt_bufnr, map)
+        local function select_tags()
+          local selected_tags = {}
+          -- Use Telescope's map_selections to gather multi selections
+          action_utils.map_selections(prompt_bufnr, function(entry, _)
+            table.insert(selected_tags, entry.value)
+          end)
+          -- If no multi selections, fallback to the current highlighted entry.
+          if #selected_tags == 0 then
+            local entry = action_state.get_selected_entry()
+            if entry then
+              table.insert(selected_tags, entry.value)
+            end
+          end
+
+          if #selected_tags > 0 then
+            vim.notify("Selected tags: " .. table.concat(selected_tags, ", "))
+            if callback then
+              callback(selected_tags)
+            end
+          end
+          actions.close(prompt_bufnr)
+        end
+
+        map("i", "<CR>", select_tags)
+        map("n", "<CR>", select_tags)
+        return true
+      end,
+    })
+    :find()
 end
 
--- TODO: the multi-select is not working. find out if it is possible, else remove the logic.
+-- TODO: the multi-select is working now but uses telescope instead of snacks.picker. find out how to do the same with snacks.picker.
 function M.append_tags_to_front_matter()
   local bufnr = vim.api.nvim_get_current_buf()
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
@@ -225,7 +286,118 @@ function M.append_tags_to_front_matter()
     local api_insertion_index = insertion_index - 1
     vim.api.nvim_buf_set_lines(bufnr, api_insertion_index, api_insertion_index, false, new_lines)
     vim.notify("Added new tag(s): " .. table.concat(new_lines, ", "), vim.log.levels.INFO)
-  end, true) -- true enables multi-select in the picker
+  end)
+end
+
+function M.remove_tags_from_front_matter()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+  -- Find front matter boundaries
+  local fm_start, fm_end = nil, nil
+  for i, line in ipairs(lines) do
+    if line:match("^%-%-%-$") then
+      if not fm_start then
+        fm_start = i
+      else
+        fm_end = i
+        break
+      end
+    end
+  end
+
+  if not fm_start or not fm_end then
+    vim.notify("No proper front matter found", vim.log.levels.WARN)
+    return
+  end
+
+  -- Find tags block
+  local tags_line_index = nil
+  for i = fm_start + 1, fm_end - 1 do
+    if lines[i]:match("^tags:%s*$") then
+      tags_line_index = i
+      break
+    end
+  end
+
+  if not tags_line_index then
+    vim.notify("No tags section found in front matter", vim.log.levels.WARN)
+    return
+  end
+
+  -- Collect existing tags and store their line indices
+  local tag_lines = {}
+  local tag_indices = {}
+  for i = tags_line_index + 1, fm_end - 1 do
+    local tag = lines[i]:match("^%s*%-+%s*(#%S+)")
+    if tag then
+      table.insert(tag_lines, tag)
+      tag_indices[tag] = i
+    else
+      break
+    end
+  end
+
+  if #tag_lines == 0 then
+    vim.notify("No tags to remove", vim.log.levels.WARN)
+    return
+  end
+
+  -- Open Telescope picker to select tags to remove
+  pickers
+    .new({}, {
+      prompt_title = "Select tag(s) to remove:",
+      finder = finders.new_table({
+        results = tag_lines,
+        entry_maker = function(tag)
+          return {
+            value = tag,
+            display = "❌ " .. tag,
+            ordinal = tag,
+          }
+        end,
+      }),
+      sorter = conf.generic_sorter({}),
+      attach_mappings = function(prompt_bufnr, map)
+        local function remove_selected_tags()
+          local selected_tags = {}
+          action_utils.map_selections(prompt_bufnr, function(entry, _)
+            table.insert(selected_tags, entry.value)
+          end)
+
+          if #selected_tags == 0 then
+            local entry = action_state.get_selected_entry()
+            if entry then
+              table.insert(selected_tags, entry.value)
+            end
+          end
+
+          if #selected_tags > 0 then
+            -- Create a new filtered list without the selected tags
+            local updated_lines = {}
+            for i, line in ipairs(lines) do
+              local tag = line:match("^%s*%-+%s*(#%S+)")
+              if tag and vim.tbl_contains(selected_tags, tag) then
+                -- Skip removing tag
+              else
+                table.insert(updated_lines, line)
+              end
+            end
+
+            -- Update the buffer with modified lines
+            vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, updated_lines)
+            vim.notify("Removed tag(s): " .. table.concat(selected_tags, ", "), vim.log.levels.INFO)
+          end
+
+          actions.close(prompt_bufnr)
+        end
+
+        map("i", "<CR>", remove_selected_tags)
+        map("n", "<CR>", remove_selected_tags)
+        return true
+      end,
+    })
+    :find()
 end
 
 -- Function to rename a tag in cache and text file
@@ -299,8 +471,6 @@ function M.rename_tag()
     vim.notify("Tag renamed successfully: " .. default_tag .. " → " .. new_tag)
   end)
 end
-
-
 
 -- Autoload on first .md file open (for caching)
 vim.api.nvim_create_autocmd("BufReadPost", {
