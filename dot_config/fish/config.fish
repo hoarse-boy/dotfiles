@@ -29,20 +29,21 @@ abbr lt "lsd --tree"
 alias cd='z'
 
 # git bare
-alias cfg="/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
-abbr cfgs 'cfg status'
-abbr cfga 'cfg add -u'
-abbr cfgd 'cfg diff' # make sure ~/.gitconfig has the correct config to use delta. check ~/.gitconfig.template
-abbr cfgA 'cfg add .' # add new files inside dirs. for example add new file in nvim dir. carefull as this can add all files in the dir.
-abbr cfgr 'cfg restore' # to remove modified git files.
-abbr cfgps 'cfg push'
-abbr cfgp 'cfg pull'
-abbr cfgc "GIT_DIR=$HOME/dotfiles GIT_WORK_TREE=$HOME cz c" # commit using commitizen.
+# alias cfg="/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
+# abbr cfgs 'cfg status'
+# abbr cfga 'cfg add -u'
+# abbr cfgd 'cfg diff' # make sure ~/.gitconfig has the correct config to use delta. check ~/.gitconfig.template
+# abbr cfgA 'cfg add .' # add new files inside dirs. for example add new file in nvim dir. carefull as this can add all files in the dir.
+# abbr cfgr 'cfg restore' # to remove modified git files.
+# abbr cfgps 'cfg push'
+# abbr cfgp 'cfg pull'
+# abbr cfgc "GIT_DIR=$HOME/dotfiles GIT_WORK_TREE=$HOME cz c" # commit using commitizen.
 
 # fish
 abbr sf 'source ~/.config/fish/config.fish'
 
 # chezmoi
+abbr cm 'chezmoi'
 abbr cme 'chezmoi edit'
 abbr cma 'chezmoi apply'
 abbr cmd 'chezmoi diff'
