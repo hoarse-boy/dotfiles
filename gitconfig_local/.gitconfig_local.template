@@ -1,7 +1,0 @@
-# This is Git's per-user configuration file.
-# rename the file to .gitconfig_local
-# and update the settings below.
-
-[user]
-	name = username
-	email = username@email.com
