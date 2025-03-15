@@ -1,1 +1,4 @@
 dot_config/tmux/plugins/
+
+dot_git-credentials
+private_dot_git-credentials
