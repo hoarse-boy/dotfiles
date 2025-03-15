@@ -2,9 +2,9 @@ regular_note
 linux
 arch_linux
 nvim
-github
-gitlab
 git
+gitlab
+github
 chatgpt_interaction
 chatgpt
 deepseek_interaction
@@ -18,7 +18,7 @@ typescript
 deno
 oak
 javascript
-golang
+go
 java
 docker
 redis
@@ -122,3 +122,13 @@ claude_ai_interaction
 ts_interface
 error_handling
 index
+golang
+lua
+zsh
+systemd
+beginner
+expert
+advanced
+systemd_timer
+env
+environment
