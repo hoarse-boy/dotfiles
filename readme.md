@@ -1,87 +1,102 @@
-# dotfiles setup guide
+# **Dotfiles Setup & Usage Guide**  
 
-## prerequisites
+This repo contains my personal dotfiles, managed with [ChezMoi](https://www.chezmoi.io). Follow these steps to set up your environment.  
 
-before cloning this repository, make sure you have **git** and **gnu stow** installed.
+---
 
-### install git & stow
+## **📥 Install Dependencies**  
 
-#### arch linux
+### **Arch Linux**  
 ```sh
-sudo pacman -S git stow
+sudo pacman -S git chezmoi
 ```
 
-#### macos (homebrew)
+### **macOS**  
 ```sh
-brew install git stow
+brew install git chezmoi
 ```
 
 ---
 
-## cloning and setting up
+## **📂 Clone and Apply Dotfiles**  
 
-### 1. clone the repository
+### **First-time setup**  
 ```sh
-git clone --recursive https://github.com/hoarse-boy/dotfiles.git ~/my-dotfiles
+chezmoi init --apply https://github.com/hoarse-boy/dotfiles.git
+```
+
+### **If ChezMoi is already initialized**  
+```sh
+rm -rf ~/.local/share/chezmoi/.git
+git clone https://github.com/hoarse-boy/dotfiles.git ~/.local/share/chezmoi
+chezmoi apply
+```
+
+### **Verify everything is set up correctly**  
+```sh
+chezmoi status
 ```
 
 ---
 
-### 2. navigate to the dotfiles directory
+## **📌 Adding New Config Files to ChezMoi**  
+
+### **Track a single file**  
 ```sh
-cd ~/dotfiles
+chezmoi add ~/.bashrc
 ```
 
----
-
-### 3. symlink dotfiles using stow
-run the following commands to create symlinks:
-
+### **Track an entire folder manually**  
+Since `chezmoi add --follow` does not work properly for symlinked folders, manually copy the real files:  
 ```sh
-stow bin
-stow -t ~/.config .config
-stow -t ~ gitconfig
-stow -t ~ gitconfig_local
+cp -r ~/.config/nvim ~/.local/share/chezmoi/
+chezmoi add ~/.local/share/chezmoi/nvim
 ```
 
-**explanation:**
-- `stow bin` → symlinks `~/dotfiles/bin/` to `~/bin/`
-- `stow -t ~/.config .config` → symlinks `~/dotfiles/.config/*` into `~/.config/`
-- `stow -t ~ gitconfig` → symlinks `~/dotfiles/gitconfig` into `~/.gitconfig`.
-- `~` is `$HOME` directory.
-
-> [!NOTE]
-> must follow stow naming convention for symlinks to work properly
-
----
-
-### 4. verify the symlinks
-run:
+### **Commit and push the changes**  
 ```sh
-ls -l ~/.config/
-```
-
-you should see **symlinks** pointing to `~/dotfiles/.config/`.
-
----
-
-## updating and pushing changes
-
-if you modify your dotfiles, commit and push them with:
-```sh
+chezmoi cd
 git add .
-git commit -m "updated dotfiles"
-git push origin main
+git commit -m "Added new config files"
+git push
 ```
 
 ---
 
-## additional notes
+## **🛠️ Managing Dotfiles**  
 
-- to remove a symlinked folder without deleting the original files, use:
+### **Check changes before applying**  
+```sh
+chezmoi diff
+```
+
+### **Apply all changes**  
+
+- chezmoi apply → Copies files from ~/.local/share/chezmoi/ to your system (e.g., ~/.config/nvim/)
+
+```sh
+chezmoi apply
+```
+
+### **Edit a file inside ChezMoi storage**  
+```sh
+chezmoi edit ~/.bashrc
+```
+
+### **Update dotfiles from this repo**  
+
+- pulls the latest changes from your Git repository
+
+```sh
+chezmoi update
+```
+
+---
+
+## **🔥 Additional Notes**  
+
+- ChezMoi stores dotfiles in `~/.local/share/chezmoi/`.
+- To manually edit files before applying, navigate to:  
   ```sh
-  stow -D bin
-  stow -D -t ~/.config .config
+  chezmoi cd
   ```
-- if you encounter permission errors, run `chown -R $USER:$USER ~/dotfiles/`.
-
