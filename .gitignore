@@ -38,3 +38,4 @@ dot_config/fish/fish_variables-back
 # tmux files
 dot_config/tmux/plugins/
 
+private_dot_git-credentials
