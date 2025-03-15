@@ -2,6 +2,7 @@ local printf = require("plugins.util.printf").printf
 -- local append_fix_str = "FIX: " -- NOTE: '.' is used to avoid formatter to remove white space.
 -- local append_fix_str = "FIX: . " -- NOTE: '.' is used to avoid formatter to remove white space.
 local append_del_str = "DEL: . "
+-- local uncomment_str = "UNCOMMENT: . "
 
 -- DEL: . DELETE LINES LATER
 local function capture_visual_selection()
@@ -45,11 +46,17 @@ return {
           color = "del",
           -- signs = false, -- configure signs for some keywords individually
         },
+        UNCOMMENT = {
+          icon = "󰅽",
+          color = "uncomment",
+          -- signs = false, -- configure signs for some keywords individually
+        },
       }
 
       opts.colors = {
         mark = { "marked-hl", "#d0d2d6" },
         del = { "del-hl", "#d47028" },
+        uncomment = { "uncomment-hl", "#663820" },
       }
 
       -- here are the list of default keywords
@@ -68,6 +75,7 @@ return {
       -- custom keywords
       -- MARKED: as harpoon alternative to jump to the line using trouble
       -- DEL: to be used to delete the line.
+      -- UNCOMMENT: to be used as sign to uncomment it later.
     end,
     keys = {
       {
@@ -76,7 +84,7 @@ return {
           require("plugins.util.custom_todo_comments").insert_custom_todo_comments()
         end,
         mode = "n",
-        desc = printf("Insert MARKED todo"),
+        desc = printf("Break line and Append MARKED todo"),
         noremap = true,
         silent = true,
       },
@@ -86,7 +94,7 @@ return {
           require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(nil, "", false)
         end,
         mode = "n",
-        desc = printf("Insert 'FIX' (Normal Mode)"),
+        desc = printf("Append 'FIX' (Normal Mode)"),
         noremap = true,
         silent = true,
       },
@@ -96,7 +104,7 @@ return {
           require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(nil, "Check and test this. remove comments later", false)
         end,
         mode = "n",
-        desc = printf("Insert 'FIX Check and Test'"),
+        desc = printf("Append 'FIX Check and Test'"),
         noremap = true,
         silent = true,
       },
@@ -106,7 +114,17 @@ return {
           require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(nil, "follow up / is pending", false)
         end,
         mode = "n",
-        desc = printf("Insert 'FIX is pending'"),
+        desc = printf("Append 'FIX follow up / is pending'"),
+        noremap = true,
+        silent = true,
+      },
+      {
+        "<leader>mu",
+        function()
+          require("plugins.util.custom_todo_comments").toggle_uncomment_comment()
+        end,
+        mode = "n",
+        desc = printf("Uncomment and remove 'UNCOMMENT' comment in current line"),
         noremap = true,
         silent = true,
       },
@@ -116,7 +134,7 @@ return {
           require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(append_del_str, "DELETE LINES LATER", false)
         end,
         mode = "n",
-        desc = printf("Insert 'DEL'"),
+        desc = printf("Append 'DEL'"),
         noremap = true,
         silent = true,
       },
@@ -126,7 +144,7 @@ return {
           require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(nil, "", true)
         end,
         mode = "n",
-        desc = printf("Insert 'FIX' and Insert Mode"),
+        desc = printf("Insert 'FIX'"),
         noremap = true,
         silent = true,
       },
@@ -163,9 +181,9 @@ return {
       {
         "<leader>mt",
         -- stylua: ignore
-         function () Snacks.picker.todo_comments({ keywords = { "FIX", "TODO", "DEL", "MARKED" } }) end,
+         function () Snacks.picker.todo_comments({ keywords = { "FIX", "TODO", "DEL", "MARKED", "UNCOMMENT" } }) end,
         mode = "n",
-        desc = printf("Open List of 'FIX', 'TODO', 'DEL', and 'MARKED' Todo"),
+        desc = printf("Open List of 'FIX', 'TODO', 'DEL', 'MARKED', and 'UNCOMMENT' Todo"),
         noremap = true,
         silent = true,
       },
@@ -181,7 +199,7 @@ return {
         "<leader>mF",
         "<cmd>Trouble todo filter = {tag = {FIX, DEL, MARKED}}<cr>",
         mode = "n",
-        desc = printf("Trouble Open 'FIX', 'DEL', and 'MARKED' Todo"), -- FIX:
+        desc = printf("Trouble Open 'FIX', 'DEL', and 'MARKED' Todo"),
         noremap = true,
         silent = true,
       },

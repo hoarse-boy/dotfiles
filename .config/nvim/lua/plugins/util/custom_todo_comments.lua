@@ -104,7 +104,7 @@ function M.append_todo_comments_to_current_line(keyword_str, additional_str, is_
   local current_line = vim.api.nvim_buf_get_lines(bufnr, linenr - 1, linenr, false)[1]
 
   if additional_str == "" and filetype == "markdown" then
-    additional_str = "priority"
+    additional_str = "priority. "
   end
 
   -- Append the custom keyword to the current line
@@ -298,6 +298,43 @@ function M.remove_fix_comments_from_current_lines()
         vim.api.nvim_buf_set_lines(bufnr, linenr - 1, linenr, false, { new_line })
       end
     end
+  end
+end
+
+-- comment or uncomment current line.
+-- if the line has the 'UNCOMMENT: .' comment, remove it and uncomment the line
+-- otherwise, comment the line and append 'UNCOMMENT: .'
+function M.toggle_uncomment_comment()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local filetype = vim.bo[bufnr].filetype
+  local comment_symbol = filetype_formats[filetype]
+
+  if not comment_symbol then
+    print("Filetype " .. filetype .. " is not supported.")
+    return
+  end
+
+  local str_tobe_removed = "UNCOMMENT: . Uncomment this line later"
+  local uncomment_comment = string.format(comment_symbol, str_tobe_removed)
+  local pattern_comment = vim.pesc(uncomment_comment)
+  local pattern = "%s*" .. pattern_comment .. ".*"
+
+  local linenr = vim.api.nvim_win_get_cursor(0)[1]
+  local current_line = vim.api.nvim_buf_get_lines(bufnr, linenr - 1, linenr, false)[1] or ""
+
+  if current_line:match(pattern) then
+    -- If the line has the 'UNCOMMENT: .' comment, remove it and uncomment the line
+    local new_line = current_line:gsub(pattern, "")
+    vim.api.nvim_buf_set_lines(bufnr, linenr - 1, linenr, false, { new_line })
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(comment_toggle_linewise_current)", true, false, true), "m", false)
+  else
+    -- Otherwise, comment the line and append 'UNCOMMENT: .'
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Plug>(comment_toggle_linewise_current)", true, false, true), "m", false)
+    vim.defer_fn(function()
+      local commented_line = vim.api.nvim_buf_get_lines(bufnr, linenr - 1, linenr, false)[1] or ""
+      local updated_line = commented_line .. " " .. uncomment_comment
+      vim.api.nvim_buf_set_lines(bufnr, linenr - 1, linenr, false, { updated_line })
+    end, 50) -- Small delay to ensure comment toggle applies first
   end
 end
 
