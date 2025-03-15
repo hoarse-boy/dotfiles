@@ -42,7 +42,13 @@ abbr cfgc "GIT_DIR=$HOME/dotfiles GIT_WORK_TREE=$HOME cz c" # commit using commi
 # fish
 abbr sf 'source ~/.config/fish/config.fish'
 
-# abbreviation
+# chezmoi
+abbr cme 'chezmoi edit'
+abbr cma 'chezmoi apply'
+abbr cmd 'chezmoi diff'
+abbr cmU 'chezmoi update' # pull from git remote and apply
+abbr cms 'chezmoi status'
+
 # nvim
 abbr v nvim
 abbr lazy "cd ~/.local/share/nvim/lazy/LazyVim/ && $editor"
@@ -73,14 +79,23 @@ abbr kb kubectl
 abbr dc docker
 
 # config abbreviation
-abbr hc "cd ~/.config/hypr && $editor userprefs.conf"
-abbr fc "cd ~/.config/fish && $editor config.fish"
-abbr gc "cd ~/.config/ghostty && $editor config"
-abbr kc "cd ~/.config/kitty && $editor kitty.conf"
-abbr wc "cd ~/.config/wezterm/ && $editor wezterm.lua"
-abbr tc "cd ~/.config/tmux/ && $editor tmux.conf"
-abbr nc "cd ~/.config/nvim/ && $editor lua/config/lazy.lua"
-abbr chc "cd ~/.local/share/chezmoi && $editor"
+# NOTE: commented out as editing dotfiles must directly be done inside chezmoi directory
+# abbr hc "cd ~/.config/hypr && $editor userprefs.conf"
+# abbr fc "cd ~/.config/fish && $editor config.fish"
+# abbr gc "cd ~/.config/ghostty && $editor config"
+# abbr kc "cd ~/.config/kitty && $editor kitty.conf"
+# abbr wc "cd ~/.config/wezterm/ && $editor wezterm.lua"
+# abbr tc "cd ~/.config/tmux/ && $editor tmux.conf"
+# abbr nc "cd ~/.config/nvim/ && $editor lua/config/lazy.lua"
+
+abbr hc "cd ~/.local/share/chezmoi/dot_config/hypr && $editor userprefs.conf"
+abbr fc "cd ~/.local/share/chezmoi/dot_config/fish && $editor config.fish"
+abbr gc "cd ~/.local/share/chezmoi/dot_config/ghostty && $editor config"
+abbr kc "cd ~/.local/share/chezmoi/dot_config/kitty && $editor kitty.conf"
+abbr wc "cd ~/.local/share/chezmoi/dot_config/wezterm && $editor wezterm.lua"
+abbr tc "cd ~/.local/share/chezmoi/dot_config/tmux && $editor tmux.conf"
+abbr nc "cd ~/.local/share/chezmoi/dot_config/nvim && $editor lua/config/lazy.lua"
+abbr de "cd ~/.local/share/chezmoi && $editor" # to edit chezmoi dotfiles using neovide
 
 # Handy change dir shortcuts
 abbr .. 'cd ..'
