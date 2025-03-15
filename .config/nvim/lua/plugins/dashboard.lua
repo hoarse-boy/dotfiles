@@ -36,14 +36,15 @@ return {
     opts = {
       dashboard = {
         preset = {
-          header = [[
-          ██╗      █████╗ ███████╗██╗   ██╗██╗   ██╗██╗███╗   ███╗          Z
-          ██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝██║   ██║██║████╗ ████║      Z    
-          ██║     ███████║  ███╔╝  ╚████╔╝ ██║   ██║██║██╔████╔██║   z       
-          ██║     ██╔══██║ ███╔╝    ╚██╔╝  ╚██╗ ██╔╝██║██║╚██╔╝██║ z         
-          ███████╗██║  ██║███████╗   ██║    ╚████╔╝ ██║██║ ╚═╝ ██║           
-          ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝           
-    ]],
+          --       header = [[
+          --       ██╗      █████╗ ███████╗██╗   ██╗██╗   ██╗██╗███╗   ███╗          Z
+          --       ██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝██║   ██║██║████╗ ████║      Z
+          --       ██║     ███████║  ███╔╝  ╚████╔╝ ██║   ██║██║██╔████╔██║   z
+          --       ██║     ██╔══██║ ███╔╝    ╚██╔╝  ╚██╗ ██╔╝██║██║╚██╔╝██║ z
+          --       ███████╗██║  ██║███████╗   ██║    ╚████╔╝ ██║██║ ╚═╝ ██║
+          --       ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝
+          -- ]],
+          header = logo,
           -- stylua: ignore
           ---@type snacks.dashboard.Item[]
           keys = {
@@ -64,72 +65,6 @@ return {
       },
     },
   },
-
-  -- {
-  --   "nvimdev/dashboard-nvim",
-  --   enabled = false,
-  --   opts = function(_, opts)
-  --     -- NOTE: create the braille at https://asciiart.club/
-  --     -- https://superemotes.com/img2ascii#google_vignette -- just copy the text.
-
-  --     logo = string.rep("\n", 8) .. logo .. "\n\n"
-  --     opts.config.header = vim.split(logo, "\n")
-
-  --     local obsidian_path = "~/obsidian-syncthing"
-
-  --     local os_util = require("plugins.util.check-os")
-  --     local os_name = os_util.get_os_name()
-
-  --     if os_name == os_util.OSX then
-  --       obsidian_path = "~/My Drive/obsidian-vault"
-  --     end
-
-  --     -- add new dashboard item obsidian_todos.
-  --     local obsidian_todos = {
-  --       action = string.format([[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("%s/todos/")]], obsidian_path),
-  --       desc = printf("Obsidian Todos"),
-  --       icon = "  ",
-  --       key = "t",
-  --     }
-
-  --     obsidian_todos.desc = obsidian_todos.desc .. string.rep(" ", 43 - #obsidian_todos.desc)
-  --     obsidian_todos.key_format = "  %s"
-
-  --     table.insert(opts.config.center, 2, obsidian_todos)
-
-  --     -- update_dashboard_shortcut(opts, "c", [[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/.config/nvim/")]], " Config")
-
-  --     -- -- remove some defaults dashboard items.
-  --     -- -- remove_dashboard_item is moved to util.lua
-  --     -- remove_dashboard_item(opts, "n") -- remove create new file.
-  --     -- remove_dashboard_item(opts, "x") -- remove lazyvim xtra.
-  --     -- remove_dashboard_item(opts, "l") -- remove lazy.
-  --     -- remove_dashboard_item(opts, "p") -- remove projects.
-  --     -- remove_dashboard_item(opts, "r") -- remove recent files.
-
-  --     -- NOTE: not used dashboard items.
-  --     -- -- add new dashboard item obsidian_inbox.
-  --     -- local obsidian_inbox = {
-  --     --   action = string.format([[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("%s/inbox/")]], obsidian_path),
-  --     --   desc = printf("Obsidian Inbox"),
-  --     --   icon = "󱉳  ",
-  --     --   key = "i",
-  --     -- }
-  --     -- obsidian_inbox.desc = obsidian_inbox.desc .. string.rep(" ", 43 - #obsidian_inbox.desc)
-  --     -- obsidian_inbox.key_format = "  %s"
-  --     -- table.insert(opts.config.center, 3, obsidian_inbox)
-
-  --     -- local lazyvim_config = {
-  --     --   action = [[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/.local/share/nvim/lazy/LazyVim/")]],
-  --     --   desc = printf("Lazyvim Config"),
-  --     --   icon = "  ",
-  --     --   key = "L",
-  --     -- }
-  --     -- lazyvim_config.desc = lazyvim_config.desc .. string.rep(" ", 43 - #lazyvim_config.desc)
-  --     -- lazyvim_config.key_format = "  %s"
-  --     -- table.insert(opts.config.center, 11, lazyvim_config)
-  --   end,
-  -- },
 
   {
     "folke/which-key.nvim",
@@ -198,3 +133,71 @@ return {
 -- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠉⠁⣶⣶⣶⣶⣶⣶⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣶⣶⡆⢰⣶⣶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 -- ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠛⠛⠛⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠿⠿⠃⠸⠿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 -- ]]
+
+-- old plugin
+
+-- {
+--   "nvimdev/dashboard-nvim",
+--   enabled = false,
+--   opts = function(_, opts)
+--     -- NOTE: create the braille at https://asciiart.club/
+--     -- https://superemotes.com/img2ascii#google_vignette -- just copy the text.
+
+--     logo = string.rep("\n", 8) .. logo .. "\n\n"
+--     opts.config.header = vim.split(logo, "\n")
+
+--     local obsidian_path = "~/obsidian-syncthing"
+
+--     local os_util = require("plugins.util.check-os")
+--     local os_name = os_util.get_os_name()
+
+--     if os_name == os_util.OSX then
+--       obsidian_path = "~/My Drive/obsidian-vault"
+--     end
+
+--     -- add new dashboard item obsidian_todos.
+--     local obsidian_todos = {
+--       action = string.format([[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("%s/todos/")]], obsidian_path),
+--       desc = printf("Obsidian Todos"),
+--       icon = "  ",
+--       key = "t",
+--     }
+
+--     obsidian_todos.desc = obsidian_todos.desc .. string.rep(" ", 43 - #obsidian_todos.desc)
+--     obsidian_todos.key_format = "  %s"
+
+--     table.insert(opts.config.center, 2, obsidian_todos)
+
+--     -- update_dashboard_shortcut(opts, "c", [[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/.config/nvim/")]], " Config")
+
+--     -- -- remove some defaults dashboard items.
+--     -- -- remove_dashboard_item is moved to util.lua
+--     -- remove_dashboard_item(opts, "n") -- remove create new file.
+--     -- remove_dashboard_item(opts, "x") -- remove lazyvim xtra.
+--     -- remove_dashboard_item(opts, "l") -- remove lazy.
+--     -- remove_dashboard_item(opts, "p") -- remove projects.
+--     -- remove_dashboard_item(opts, "r") -- remove recent files.
+
+--     -- NOTE: not used dashboard items.
+--     -- -- add new dashboard item obsidian_inbox.
+--     -- local obsidian_inbox = {
+--     --   action = string.format([[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("%s/inbox/")]], obsidian_path),
+--     --   desc = printf("Obsidian Inbox"),
+--     --   icon = "󱉳  ",
+--     --   key = "i",
+--     -- }
+--     -- obsidian_inbox.desc = obsidian_inbox.desc .. string.rep(" ", 43 - #obsidian_inbox.desc)
+--     -- obsidian_inbox.key_format = "  %s"
+--     -- table.insert(opts.config.center, 3, obsidian_inbox)
+
+--     -- local lazyvim_config = {
+--     --   action = [[lua require("plugins.util.teles-find").ChangeDirAndFindFiles("~/.local/share/nvim/lazy/LazyVim/")]],
+--     --   desc = printf("Lazyvim Config"),
+--     --   icon = "  ",
+--     --   key = "L",
+--     -- }
+--     -- lazyvim_config.desc = lazyvim_config.desc .. string.rep(" ", 43 - #lazyvim_config.desc)
+--     -- lazyvim_config.key_format = "  %s"
+--     -- table.insert(opts.config.center, 11, lazyvim_config)
+--   end,
+-- },
