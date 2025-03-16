@@ -135,3 +135,16 @@ environment
 sandbox
 hyprland_workspace
 migrate
+surfingkeys
+browser
+vim_motion
+macos
+raycast
+spotlight
+rofi
+wofi
+clipboard
+clipboard_manager
+POSIX-compliant
+benchmark
+nushell
