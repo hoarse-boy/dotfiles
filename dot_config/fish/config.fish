@@ -43,11 +43,11 @@ alias cd='z'
 abbr sf 'source ~/.config/fish/config.fish'
 
 # chezmoi
-abbr cm 'chezmoi'
-abbr cme 'chezmoi edit'
+abbr cm chezmoi
+# abbr cme 'chezmoi edit' # TODO: chezmoi cd && chezmoi edit ?
 abbr cma 'chezmoi add'
 abbr cmA 'chezmoi apply'
-abbr cmd 'chezmoi diff'
+abbr cmd 'chezmoi -v diff'
 abbr cmU 'chezmoi update' # pull from git remote and apply
 abbr cms 'chezmoi status'
 abbr cmc 'chezmoi cd'
