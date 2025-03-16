@@ -85,7 +85,7 @@ chezmoi edit ~/.bashrc
 
 ### **Update dotfiles from this repo**  
 
-- pulls the latest changes from your Git repository
+- pulls the latest changes from Git repository and apply
 
 ```sh
 chezmoi update
