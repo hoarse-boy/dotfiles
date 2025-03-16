@@ -1,13 +1,8 @@
--- TODO: create a new plugin to manage my tags.
--- this will have;
--- 1. create a new tag
--- 2. delete a tag
--- 3. update a tag
--- 4. search a tag
-
+-- manage tags in md files
 local M = {}
 
-M.tags_file = vim.fn.expand("~/.config/nvim/tags.txt")
+M.tags_file = vim.fn.expand("~/.local/share/chezmoi/dot_config/nvim/tags.txt") -- overwrite directly to chezmoi dir
+-- M.tags_file = vim.fn.expand("~/.config/nvim/tags.txt") -- old dir
 M.tags_cache = nil -- Cache
 
 -- Function to read tags from file
@@ -76,27 +71,28 @@ function M.create_new_tags()
   end)
 end
 
-function M.remove_tag()
+function M.remove_tags()
   local tags = M.get_tags()
   if not tags or #tags == 0 then
     vim.notify("No tags available to remove", vim.log.levels.WARN)
     return
   end
 
-  require("snacks.picker").select(tags, {
-    prompt = "Select a tag to remove:",
-    format_item = function(item)
-      return "❌ " .. item
-    end,
-  }, function(choice)
-    if not choice then
+  M.show_tags_picker(function(selected_tags)
+    if not selected_tags or #selected_tags == 0 then
+      vim.notify("No tags selected for removal", vim.log.levels.INFO)
       return
     end
 
-    -- Remove from cache
+    -- Remove selected tags from cache
+    local tag_set = {}
+    for _, tag in ipairs(selected_tags) do
+      tag_set[tag] = true
+    end
+
     local new_tags = {}
     for _, tag in ipairs(tags) do
-      if tag ~= choice then
+      if not tag_set[tag] then
         table.insert(new_tags, tag)
       end
     end
@@ -111,8 +107,14 @@ function M.remove_tag()
       file:close()
     end
 
-    vim.notify("Removed tag: " .. choice, vim.log.levels.INFO)
-  end)
+    vim.notify("Removed tag(s): " .. table.concat(selected_tags, ", "), vim.log.levels.INFO)
+  end, {
+    prompt = "Select tags to remove:",
+    multi_select = true,
+    format_item = function(item)
+      return "❌ " .. item
+    end,
+  })
 end
 
 -- NOTE: working snacks. picker but multi-select is not working.

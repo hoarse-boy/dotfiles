@@ -263,14 +263,13 @@ return {
               { "<leader>ls", function() markdown_func.insert_separator(true) end, desc = printf("Insert '---' and new line with checkbox"), buffer = 0 },
               { "<leader>lS", function() markdown_func.insert_separator() end, desc = printf("Insert single '---' and new line"), buffer = 0 },
 
-
               -- tags
               { "<leader>lt", group = printf("tags"), icon = "󰀅 ", mode = "n", desc = printf("Get Tags"), buffer = 0 },
               { "<leader>lts", function() tag_manager.show_tags_picker() end, desc = printf("Show Tags Collection"), buffer = 0 },
               { "<leader>ltf", function() telekasten.show_tags() end, desc = printf("Lsp Show Tags"), buffer = 0 },
               { "<leader>ltc", function() tag_manager.create_new_tags() end, desc = printf("Create a New Tag"), buffer = 0 },
               { "<leader>ltr", function() tag_manager.remove_tags_from_front_matter() end, desc = printf("Remove Tags from Front Matter"), buffer = 0 },
-              { "<leader>ltR", function() tag_manager.remove_tag() end, desc = printf("Remove a Tag from Collection"), buffer = 0 },
+              { "<leader>ltR", function() tag_manager.remove_tags() end, desc = printf("Remove a Tag from Collection"), buffer = 0 },
               { "<leader>lta", function() tag_manager.append_tags_to_front_matter() end, desc = printf("Append Tags to Front Matter"), buffer = 0 },
               { "<leader>ltu", function() tag_manager.rename_tag() end, desc = printf("Rename a Tag"), buffer = 0 },
 
