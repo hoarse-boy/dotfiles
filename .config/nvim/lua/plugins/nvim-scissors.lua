@@ -1,4 +1,4 @@
-local chezmoi_dir = os.getenv("HOME") .. "/.local/share/chezmoi"
+-- local chezmoi_dir = os.getenv("HOME") .. "/.local/share/chezmoi"
 
 return {
   {
@@ -9,9 +9,8 @@ return {
     config = function()
       -- default settings
       require("scissors").setup({
-        -- /Users/oktagon-jourdy/.local/share/chezmoi/dot_config/nvim/lua/vscode-snippets -- DEL: . DELETE LINES LATER
-        snippetDir = chezmoi_dir .. "/dot_config/nvim/lua/vscode-snippets", -- FIX: . change this
-        -- snippetDir = vim.fn.stdpath("config") .. "/lua/vscode-snippets", -- FIX: . change this
+        -- snippetDir = chezmoi_dir .. "/dot_config/nvim/lua/vscode-snippets",
+        snippetDir = vim.fn.stdpath("config") .. "/lua/vscode-snippets",
         editSnippetPopup = {
           height = 0.4, -- relative to the window, between 0-1
           width = 0.6,

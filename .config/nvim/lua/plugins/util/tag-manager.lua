@@ -1,8 +1,8 @@
 -- manage tags in md files
 local M = {}
 
-M.tags_file = vim.fn.expand("~/.local/share/chezmoi/dot_config/nvim/tags.txt") -- overwrite directly to chezmoi dir
--- M.tags_file = vim.fn.expand("~/.config/nvim/tags.txt") -- old dir
+-- M.tags_file = vim.fn.expand("~/.local/share/chezmoi/dot_config/nvim/tags.txt") -- overwrite directly to chezmoi dir
+M.tags_file = vim.fn.expand("~/.config/nvim/tags.txt") -- old dir
 M.tags_cache = nil -- Cache
 
 -- Function to read tags from file

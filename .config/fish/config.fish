@@ -45,16 +45,6 @@ abbr sf 'source ~/.config/fish/config.fish'
 # delta
 abbr delta 'delta --pager=never'
 
-# chezmoi
-abbr cm chezmoi
-abbr cma 'chezmoi add'
-abbr cmA 'chezmoi apply'
-abbr cmd 'chezmoi -v diff'
-abbr cmU 'chezmoi update' # pull from git remote and apply
-abbr cms 'chezmoi status'
-abbr cme 'cd ~/.local/share/chezmoi && nvim' # edit
-abbr cmc 'cd ~/.local/share/chezmoi' # dont use chezmoi cd as it is slow
-
 # nvim
 abbr v nvim
 abbr lazy "cd ~/.local/share/nvim/lazy/LazyVim/ && $editor"
@@ -85,23 +75,32 @@ abbr kb kubectl
 abbr dc docker
 
 # config abbreviation
-# NOTE: commented out as editing dotfiles must directly be done inside chezmoi directory
-# abbr hc "cd ~/.config/hypr && $editor userprefs.conf"
-# abbr fc "cd ~/.config/fish && $editor config.fish"
-# abbr gc "cd ~/.config/ghostty && $editor config"
-# abbr kc "cd ~/.config/kitty && $editor kitty.conf"
-# abbr wc "cd ~/.config/wezterm/ && $editor wezterm.lua"
-# abbr tc "cd ~/.config/tmux/ && $editor tmux.conf"
-# abbr nc "cd ~/.config/nvim/ && $editor lua/config/lazy.lua"
+abbr hc "cd ~/.config/hypr && $editor userprefs.conf"
+abbr fc "cd ~/.config/fish && $editor config.fish"
+abbr gc "cd ~/.config/ghostty && $editor config"
+abbr kc "cd ~/.config/kitty && $editor kitty.conf"
+abbr wc "cd ~/.config/wezterm/ && $editor wezterm.lua"
+abbr tc "cd ~/.config/tmux/ && $editor tmux.conf"
+abbr nc "cd ~/.config/nvim/ && $editor lua/config/lazy.lua"
 
-abbr hc "cd ~/.local/share/chezmoi/dot_config/hypr && $editor userprefs.conf"
-abbr fc "cd ~/.local/share/chezmoi/dot_config/fish && $editor config.fish"
-abbr gc "cd ~/.local/share/chezmoi/dot_config/ghostty && $editor config"
-abbr kc "cd ~/.local/share/chezmoi/dot_config/kitty && $editor kitty.conf"
-abbr wc "cd ~/.local/share/chezmoi/dot_config/wezterm && $editor wezterm.lua"
-abbr tc "cd ~/.local/share/chezmoi/dot_config/tmux && $editor tmux.conf"
-abbr nc "cd ~/.local/share/chezmoi/dot_config/nvim && $editor lua/config/lazy.lua"
-abbr de "cd ~/.local/share/chezmoi && $editor" # to edit chezmoi dotfiles using neovide
+# chezmoi abbr
+# abbr hc "cd ~/.local/share/chezmoi/dot_config/hypr && $editor userprefs.conf"
+# abbr fc "cd ~/.local/share/chezmoi/dot_config/fish && $editor config.fish"
+# abbr gc "cd ~/.local/share/chezmoi/dot_config/ghostty && $editor config"
+# abbr kc "cd ~/.local/share/chezmoi/dot_config/kitty && $editor kitty.conf"
+# abbr wc "cd ~/.local/share/chezmoi/dot_config/wezterm && $editor wezterm.lua"
+# abbr tc "cd ~/.local/share/chezmoi/dot_config/tmux && $editor tmux.conf"
+# abbr nc "cd ~/.local/share/chezmoi/dot_config/nvim && $editor lua/config/lazy.lua"
+# abbr de "cd ~/.local/share/chezmoi && $editor" # to edit chezmoi dotfiles using neovide
+# abbr cm chezmoi
+# abbr cma 'chezmoi add'
+# abbr cmA 'chezmoi apply'
+# abbr cmd 'chezmoi -v diff'
+# abbr cmU 'chezmoi update' # pull from git remote and apply
+# abbr cms 'chezmoi status'
+# abbr cme 'cd ~/.local/share/chezmoi && nvim' # edit
+# abbr cmc 'cd ~/.local/share/chezmoi' # dont use chezmoi cd as it is slow
+
 
 # Handy change dir shortcuts
 abbr .. 'cd ..'
