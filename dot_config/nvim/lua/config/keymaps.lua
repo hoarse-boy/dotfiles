@@ -73,14 +73,30 @@ end, { desc = printf("Enable line number and signcolumn"), noremap = true, silen
 local os_util = require("plugins.util.check-os")
 local os_name = os_util.get_os_name()
 
+-- Unset the Alt-based line moving keybindings from lazyvim
+del("n", "<A-j>")
+del("n", "<A-k>")
+del("i", "<A-j>")
+del("i", "<A-k>")
+del("v", "<A-j>")
+del("v", "<A-k>")
+
+-- Move Lines
+set("n", "<C-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
+set("n", "<C-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
+set("i", "<C-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
+set("i", "<C-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
+set("v", "<C-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" }) -- has bug where the vim cmd will open in split second and then close
+set("v", "<C-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" }) -- has bug where the vim cmd will open in split second and then close
+
 if os_name == os_util.LINUX then
-  -- Unset the Alt-based line moving keybindings from lazyvim
-  del("n", "<A-j>")
-  del("n", "<A-k>")
-  del("i", "<A-j>")
-  del("i", "<A-k>")
-  del("v", "<A-j>")
-  del("v", "<A-k>")
+  -- -- Unset the Alt-based line moving keybindings from lazyvim
+  -- del("n", "<A-j>")
+  -- del("n", "<A-k>")
+  -- del("i", "<A-j>")
+  -- del("i", "<A-k>")
+  -- del("v", "<A-j>")
+  -- del("v", "<A-k>")
 
   -- Unset the window resizing mappings from lazyvim
   del("n", "<C-Up>")
@@ -89,12 +105,14 @@ if os_name == os_util.LINUX then
   del("n", "<C-Right>")
 
   -- Move Lines
-  set("n", "<C-m>", "<cmd>m .-2<cr>==", { desc = printf("Move Line Up") })
-  set("n", "<C-n>", "<cmd>m .+1<cr>==", { desc = printf("Move Line Down") })
-  set("i", "<C-m>", "<esc><cmd>m .-2<cr>==gi", { desc = printf("Move Line Up") })
-  set("i", "<C-n>", "<esc><cmd>m .+1<cr>==gi", { desc = printf("Move Line Down") })
-  set("v", "<C-m>", ":m '<-2<cr>gv=gv", { desc = printf("Move Selected Line Up") })
-  set("v", "<C-n>", ":m '>+1<cr>gv=gv", { desc = printf("Move Selected Line Down") })
+  set("n", "<C-k>", "<cmd>m .-2<cr>==", { desc = printf("Move Line Up") })
+  set("n", "<C-j>", "<cmd>m .+1<cr>==", { desc = printf("Move Line Down") })
+  set("i", "<C-k>", "<esc><cmd>m .-2<cr>==gi", { desc = printf("Move Line Up") })
+  set("i", "<C-j>", "<esc><cmd>m .+1<cr>==gi", { desc = printf("Move Line Down") })
+  set("v", "<C-k>", ":m '<-2<cr>gv=gv", { desc = printf("Move Selected Line Up") })
+  set("v", "<C-j>", ":m '>+1<cr>gv=gv", { desc = printf("Move Selected Line Down") })
+  -- set("v", "<C-m>", ":m '<-2<cr>gv=gv", { desc = printf("Move Selected Line Up") }) -- FIX: . Check and test this. remove comments later
+  -- set("v", "<C-n>", ":m '>+1<cr>gv=gv", { desc = printf("Move Selected Line Down") })
 end
 
 -- stylua: ignore start

@@ -164,6 +164,10 @@ return {
             { "gR", function() markdown_func.remove_checkbox() end, mode = { "n", "v" }, desc = printf("Remove Checkbox"), buffer = 0 },
             { "g<space>", "<Plug>(bullets-toggle-checkbox)", mode = "n", desc = printf("Toggle Checkbox"), buffer = 0 }, -- works only in normal mode
 
+            -- separator
+            { "gb", function() markdown_func.insert_separator(true) end, desc = printf("Insert '---' and new line with checkbox"), buffer = 0 },
+            { "gB", function() markdown_func.insert_separator() end, desc = printf("Insert single '---' and new line"), buffer = 0 },
+
             -- bullets manipulation
             { "gN", "<Plug>(bullets-renumber)", mode = { "n", "v" }, desc = printf("Renumber Bullets"), buffer = 0 },
             { "<cr>", "<Plug>(bullets-newline)", mode = { "i" }, desc = printf("Bullets Newline in insert mode"), buffer = 0 }, -- NOTE: it conflict with blink
@@ -198,7 +202,7 @@ return {
         { "<leader>n", icon = "󱞁", group = printf("notes"), mode = "n" }, -- group key with prefix like '+'
 
         -- find notes
-        { "<leader>nn", function () Snacks.picker.files({ cwd = my_notes_dir }) end, desc = printf("Find Notes"), mode = "n" }, -- 'n' to match dashboard 'n' to open personal notes -- FIX: . Check and test this. remove comments later
+        { "<leader>nn", function () Snacks.picker.files({ cwd = my_notes_dir }) end, desc = printf("Find Notes"), mode = "n" }, -- 'n' to match dashboard 'n' to open personal notes. this does not change the global dir.
         { "<leader>ns", function () require("plugins.util.find-files").change_dir_and_live_grep(my_notes_dir) end, desc = printf("Grep Notes (Chane Global Dir)"), mode = "n" },
         -- { "<leader>nn", function() telekasten.find_notes() end, desc = printf("Find Notes"), mode = "n" }, -- telekasten build in func but only uses telescope
         -- { "<leader>ns", function() telekasten.search_notes() end, desc = printf("Search Notes by Keyword"), mode = "n" }, -- telekasten build in func but only uses telescope
@@ -245,11 +249,11 @@ return {
               -- {"gd", function() telekasten.follow_link() end,  mode = "n", desc = printf("Follow link under cursor") },
               {"<leader>lb", function() telekasten.show_backlinks() end,  mode = "n", desc = printf("Show backlinks"), buffer = 0 },
               {"<leader>ll", function() telekasten.follow_link() end,  mode = "n", desc = printf("Follow link under cursor"), buffer = 0 },
-              {"<leader>lr", function() telekasten.rename_note() end,  mode = "n", desc = printf("Telekasten Rename Note (and its Backlink)"), buffer = 0 },
-
               {"<leader>lL", function() telekasten.insert_link() end, mode = "n", desc = printf("Insert link to note"), buffer = 0 }, -- can open image and link in browser.
+              {"<leader>lr", function() telekasten.rename_note() end,  mode = "n", desc = printf("Telekasten Rename Note (and its Backlink)"), buffer = 0 },
               -- {"<leader>lc", function() telekasten.show_calendar() end, mode = "n", desc = printf("Show calendar"), buffer = 0 },
-              {"<leader>lv", function() vim.cmd("PasteImage") end, mode = "n", desc = printf("Insert image from clipboard"), buffer = 0 },
+
+              {"<leader>lv", "<cmd>PasteImage<cr>" , mode = "n", desc = printf("Insert image from clipboard"), buffer = 0 },
               -- set("n", "<leader>lv", function() telekasten.paste_img_and_link() end, buffer = 0, desc = printf("Paste image and create link")) -- use img-clip's
               -- set("n", "<leader>lt", function() telekasten.toggle_todo() end, buffer = 0, desc = printf("Toggle todo")) -- use bullet.vim's
 
@@ -260,8 +264,6 @@ return {
               { "<leader>ld", function() markdown_func.toggle_is_done_in_buffer() end, mode = "n", desc = printf("Toggle is_done in buffer"), buffer = 0 },
               { "<leader>lD", function() telekasten.delete_current_file() end, desc = printf("Delete current file"), buffer = 0 }, -- FIX: not working check linkarsu code
               { "<leader>lI", function() markdown_func.delete_image_file() end, desc = printf("Delete image file"), buffer = 0 }, -- FIX: notworking
-              { "<leader>ls", function() markdown_func.insert_separator(true) end, desc = printf("Insert '---' and new line with checkbox"), buffer = 0 },
-              { "<leader>lS", function() markdown_func.insert_separator() end, desc = printf("Insert single '---' and new line"), buffer = 0 },
 
               -- tags
               { "<leader>lt", group = printf("tags"), icon = "󰀅 ", mode = "n", desc = printf("Get Tags"), buffer = 0 },
@@ -300,8 +302,8 @@ return {
 
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    tag = "v7.7.0", -- NOTE: use this tag as the latest has some bug. it will return an error if resume the nvim session super fast.
-    event = "VeryLazy",
+    -- tag = "v7.7.0", -- use this tag as the latest has some bug. it will return an error if resume the nvim session super fast.
+    ft = "markdown",
     -- enabled = false,
     opts = function(_, opts)
       Snacks.toggle({
@@ -354,7 +356,6 @@ return {
         -- position = "overlay",
         unchecked = {
           icon = "󰄱 ",
-          -- icon = "󰄱 ",
           highlight = "RenderMarkdownUnchecked",
           scope_highlight = nil,
         },
@@ -430,13 +431,11 @@ return {
     "HakonHarnes/img-clip.nvim",
     event = "VeryLazy",
     opts = {
-      -- add options here
-      -- or leave it empty to use the default settings
       default = {
         use_absolute_path = false, ---@type boolean
         relative_to_current_file = true, ---@type boolean
-        dir_path = "assets", ---@type string | fun(): string  NOTE: image.nvim failed to show image if the folder created has space.
-        prompt_for_file_name = false, ---@type boolean -- this prompt is kinda buggy. will use below function instead.
+        dir_path = "assets", ---@type string | fun(): string
+        prompt_for_file_name = false, ---@type boolean -- WARN: this prompt is kinda buggy. will use below function instead.
         file_name = function()
           -- Get the current date and time in the format YYYY-MM-DD-HH-MM-SS
           local date_suffix = os.date("%Y-%m-%d-%H-%M-%S")
@@ -456,9 +455,15 @@ return {
           return image_name .. "-" .. date_suffix
         end,
 
+        -- NOTE: img-clip is very slow but it is very much needed to downsize the image (3 seconds).
+        -- it can achieve:
+        -- 1,334,554 bytes → 45 KB → ~96.6% smaller (img-clip png convertion. took 1 seconds)
+        -- 2,094,203 bytes → 45 KB → ~97.85% smaller (obsidian image pasting. lightning fast)
+        -- obsidian image pasting is super fast as it is not converting the image to make it smaller?
+
+        -- convert - -quality 100 avif has no difference in quality
         extension = "avif", ---@type string
         process_cmd = "convert - -quality 75 avif:-", ---@type string
-        -- process_cmd = "convert - -quality 100 avif:-", ---@type string
 
         -- extension = "webp", ---@type string
         -- process_cmd = "convert - -quality 75 webp:-", ---@type string
@@ -557,31 +562,12 @@ return {
     end,
   },
 
-  -- Setup completion with nvim-cmp for markdown LSP
-  -- {
-  --   "hrsh7th/nvim-cmp",
-  --   opts = function(_, opts)
-  --     -- Extend nvim-cmp to support markdown LSP completions
-  --     -- local cmp = require("cmp")
-  --     table.insert(opts.sources, {
-  --       name = "nvim_lsp",
-  --       option = {
-  --         markdown_oxide = {
-  --           keyword_pattern = [[\(\k\| \|\/\|#\)\+]],
-  --         },
-  --       },
-  --     })
-  --   end,
-  -- },
-  -- TODO: add support for blink.cmp just like nvim-cmp above
-
   -- shows image inside nvim. if this plugin causing memory hogging like 3rd/image.nvim, disable it.
-  -- it auto detect imagemagick without using complicated luarocks or lua path like image.nvim?? -- TODO: test in new arch machine.
+  -- it auto detect imagemagick without using complicated luarocks or lua path like image.nvim.
   -- it can make image showing to be very big.
   -- it shows image super fast.
   -- it does not slows down nvim when quiting when in tmux.
   -- it makes the snacks picker to show images.
-  -- TODO: make 'K' to show image and disable auto-showing image.
   {
     "folke/snacks.nvim",
     event = "VeryLazy",
@@ -624,80 +610,99 @@ return {
       { "gk", "<cmd>lua Snacks.image.hover()<cr>", desc = printf("Show image in a floating window"), mode = "n" },
     },
   },
-
-  -- -- incorrect configuration can cause delay when closing nvim. this make nvim in tmux to be super slow and buggy.
-  -- -- use the `iamcco/markdown-preview.nvim` instead.
-  -- -- don't remove this code.
-  -- {
-  --   "3rd/image.nvim",
-  --   enabled = false,
-  --   -- enabled = enabled,
-  --   -- commit = "5f8fceca2d1be96a45b81de21c2f98bf6084fb34", -- this commits make it a little bit faster.
-  --   ft = { "markdown" }, -- NOTE: to not make nvim slower when quiting.
-  --   config = function()
-  --     -- Set LuaRocks paths dynamically. if set in shell, this code are not needed.
-  --     -- local home = vim.fn.expand("$HOME")
-  --     -- package.path = package.path .. ";" .. home .. "/.luarocks/share/lua/5.1/?.lua;" .. home .. "/.luarocks/share/lua/5.1/?/init.lua"
-  --     -- package.cpath = package.cpath .. ";" .. home .. "/.luarocks/lib/lua/5.1/?.so"
-
-  --     -- Verify that magick is loaded correctly
-  --     local success, _ = pcall(require, "magick")
-  --     if not success then
-  --       print("Failed to load magick module. Check Lua paths.")
-  --     end
-
-  --     require("image").setup({
-  --       backend = "kitty",
-  --       kitty_method = "normal",
-  --       integrations = {
-  --         -- Notice these are the settings for markdown files
-  --         markdown = {
-  --           enabled = true,
-  --           clear_in_insert_mode = false,
-  --           -- Set this to false if you don't want to render images coming from
-  --           -- a URL
-  --           download_remote_images = true,
-  --           -- Change this if you would only like to render the image where the
-  --           -- cursor is at
-  --           -- I set this to true, because if the file has way too many images
-  --           -- it will be laggy and will take time for the initial load
-  --           only_render_image_at_cursor = true,
-  --           -- markdown extensions (ie. quarto) can go here
-  --           filetypes = { "markdown", "vimwiki" },
-  --         },
-  --         html = {
-  --           enabled = true,
-  --         },
-  --         css = {
-  --           enabled = true,
-  --         },
-  --       },
-  --       max_width = nil,
-  --       max_height = nil,
-  --       max_width_window_percentage = nil,
-
-  --       -- This is what I changed to make my images look smaller, like a
-  --       -- thumbnail, the default value is 50
-  --       -- max_height_window_percentage = 20,
-  --       max_height_window_percentage = 80,
-
-  --       -- toggles images when windows are overlapped
-  --       window_overlap_clear_enabled = false,
-  --       window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
-
-  --       -- auto show/hide images when the editor gains/looses focus
-  --       editor_only_render_when_focused = true,
-
-  --       -- auto show/hide images in the correct tmux window
-  --       -- In the tmux.conf add `set -g visual-activity off`
-  --       tmux_show_only_in_active_window = true,
-
-  --       -- render image files as images when opened
-  --       -- NOTE: wezterm will have buggy webp files in certain cases. it happens when the image's directory is in a complex location.
-  --       -- in case of current directory of all md files in root and a single image dir, it will not have a problem.
-  --       -- latest finding, the webp image not working again. use avif instead.
-  --       hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif" },
-  --     })
-  --   end,
-  -- },
 }
+
+-- old config
+
+-- -- incorrect configuration can cause delay when closing nvim. this make nvim in tmux to be super slow and buggy.
+-- -- use the `iamcco/markdown-preview.nvim` instead.
+-- -- don't remove this code.
+-- {
+--   "3rd/image.nvim",
+--   enabled = false,
+--   -- enabled = enabled,
+--   -- commit = "5f8fceca2d1be96a45b81de21c2f98bf6084fb34", -- this commits make it a little bit faster.
+--   ft = { "markdown" }, -- NOTE: to not make nvim slower when quiting.
+--   config = function()
+--     -- Set LuaRocks paths dynamically. if set in shell, this code are not needed.
+--     -- local home = vim.fn.expand("$HOME")
+--     -- package.path = package.path .. ";" .. home .. "/.luarocks/share/lua/5.1/?.lua;" .. home .. "/.luarocks/share/lua/5.1/?/init.lua"
+--     -- package.cpath = package.cpath .. ";" .. home .. "/.luarocks/lib/lua/5.1/?.so"
+
+--     -- Verify that magick is loaded correctly
+--     local success, _ = pcall(require, "magick")
+--     if not success then
+--       print("Failed to load magick module. Check Lua paths.")
+--     end
+
+--     require("image").setup({
+--       backend = "kitty",
+--       kitty_method = "normal",
+--       integrations = {
+--         -- Notice these are the settings for markdown files
+--         markdown = {
+--           enabled = true,
+--           clear_in_insert_mode = false,
+--           -- Set this to false if you don't want to render images coming from
+--           -- a URL
+--           download_remote_images = true,
+--           -- Change this if you would only like to render the image where the
+--           -- cursor is at
+--           -- I set this to true, because if the file has way too many images
+--           -- it will be laggy and will take time for the initial load
+--           only_render_image_at_cursor = true,
+--           -- markdown extensions (ie. quarto) can go here
+--           filetypes = { "markdown", "vimwiki" },
+--         },
+--         html = {
+--           enabled = true,
+--         },
+--         css = {
+--           enabled = true,
+--         },
+--       },
+--       max_width = nil,
+--       max_height = nil,
+--       max_width_window_percentage = nil,
+
+--       -- This is what I changed to make my images look smaller, like a
+--       -- thumbnail, the default value is 50
+--       -- max_height_window_percentage = 20,
+--       max_height_window_percentage = 80,
+
+--       -- toggles images when windows are overlapped
+--       window_overlap_clear_enabled = false,
+--       window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+
+--       -- auto show/hide images when the editor gains/looses focus
+--       editor_only_render_when_focused = true,
+
+--       -- auto show/hide images in the correct tmux window
+--       -- In the tmux.conf add `set -g visual-activity off`
+--       tmux_show_only_in_active_window = true,
+
+--       -- render image files as images when opened
+--       -- NOTE: wezterm will have buggy webp files in certain cases. it happens when the image's directory is in a complex location.
+--       -- in case of current directory of all md files in root and a single image dir, it will not have a problem.
+--       -- latest finding, the webp image not working again. use avif instead.
+--       hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif" },
+--     })
+--   end,
+-- },
+
+-- Setup completion with nvim-cmp for markdown LSP
+-- {
+--   "hrsh7th/nvim-cmp",
+--   opts = function(_, opts)
+--     -- Extend nvim-cmp to support markdown LSP completions
+--     -- local cmp = require("cmp")
+--     table.insert(opts.sources, {
+--       name = "nvim_lsp",
+--       option = {
+--         markdown_oxide = {
+--           keyword_pattern = [[\(\k\| \|\/\|#\)\+]],
+--         },
+--       },
+--     })
+--   end,
+-- },

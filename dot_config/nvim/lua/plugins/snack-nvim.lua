@@ -180,6 +180,10 @@ return {
         -- end,
         priority = 200,
       },
+
+      terminal = {
+
+      },
     },
 
     keys = {
@@ -189,6 +193,7 @@ return {
       -- overwriting to make it consistent with other keybinding where the capital letter is for workspace or all files. remove this if lazyvim's default has been changed
       { "<leader>sd", function() Snacks.picker.diagnostics_buffer() end, desc = printf"Buffer Diagnostics" },
       { "<leader>sD", function() Snacks.picker.diagnostics() end, desc = printf"Diagnostics" },
+      { "<leader>T", function() Snacks.terminal({ "lazygit"}) end, desc = printf"Lazygit Terminal" },
       -- stylua: ignore end
     },
   },
