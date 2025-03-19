@@ -42,15 +42,18 @@ alias cd='z'
 # fish
 abbr sf 'source ~/.config/fish/config.fish'
 
+# delta
+abbr delta 'delta --pager=never'
+
 # chezmoi
 abbr cm chezmoi
-# abbr cme 'chezmoi edit' # TODO: chezmoi cd && chezmoi edit ?
 abbr cma 'chezmoi add'
 abbr cmA 'chezmoi apply'
 abbr cmd 'chezmoi -v diff'
 abbr cmU 'chezmoi update' # pull from git remote and apply
 abbr cms 'chezmoi status'
-abbr cmc 'chezmoi cd'
+abbr cme 'cd ~/.local/share/chezmoi && nvim' # edit
+abbr cmc 'cd ~/.local/share/chezmoi' # dont use chezmoi cd as it is slow
 
 # nvim
 abbr v nvim
@@ -62,7 +65,7 @@ abbr ssh 'TERM=xterm-256color ssh ' # need the env TERM for ghostty to work as t
 # kitty
 abbr kt 'kitten ssh'
 
-# wezterm
+# wezterm 
 abbr ws 'wezterm connect unix & disown & exit' # re attached or create new wezterm session if not exist.
 
 # tmux 
