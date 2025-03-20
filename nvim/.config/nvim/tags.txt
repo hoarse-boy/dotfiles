@@ -174,3 +174,5 @@ vim_autocmd
 snacks_nvim
 vim_print
 prettier_print
+zig
+python

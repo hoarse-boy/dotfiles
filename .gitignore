@@ -58,3 +58,9 @@ dot_config/fish/fish_variables-back
 # git
 .git-credentials
 private_dot_git-credentials
+fish/.config/fish/macos.fish
+fish/.config/fish/fish_variables-back
+fish/.config/fish/fish_variables
+ghostty/.config/ghostty/macos
+tmux/.config/tmux/plugins
+tmux/.config/tmux/plugins

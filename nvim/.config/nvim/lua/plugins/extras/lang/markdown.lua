@@ -303,6 +303,7 @@ return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
     -- tag = "v7.7.0", -- use this tag as the latest has some bug. it will return an error if resume the nvim session super fast.
+    -- event = "VeryLazy",
     ft = "markdown",
     -- enabled = false,
     opts = function(_, opts)
