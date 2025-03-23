@@ -64,3 +64,4 @@ fish/.config/fish/fish_variables
 ghostty/.config/ghostty/macos
 tmux/.config/tmux/plugins
 tmux/.config/tmux/plugins
+kitty/.config/kitty/macos.conf
