@@ -7,7 +7,3 @@ run this command to update the plugins or install new ones after `tmp` is instal
 ```txt
 type ctrl+b and then `I`
 ```
-
-## fix broken tmux status line
-
-
