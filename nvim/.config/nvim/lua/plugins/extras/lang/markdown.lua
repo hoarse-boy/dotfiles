@@ -208,10 +208,10 @@ return {
         -- { "<leader>ns", function() telekasten.search_notes() end, desc = printf("Search Notes by Keyword"), mode = "n" }, -- telekasten build in func but only uses telescope
 
         { "<leader>nm", function() markdown_func.search_markdown("#moc", "Find MOC Files") end, desc = printf("Find MOC files"), mode = "n" },
-        { "<leader>np", function() markdown_func.search_markdown("is_done: false", "Search Pending Work Notes") end, desc = printf("Search pending work notes"), mode = "n" },
+        -- { "<leader>np", function() markdown_func.search_markdown("is_done: false", "Search Pending Work Notes") end, desc = printf("Search pending work notes"), mode = "n" },
 
         -- open notes
-        { "<leader>nT", function () require("plugins.util.find-files").open_a_file("personal-todo-moc.md", my_notes_dir) end, desc = printf("Open Personal Todo"), mode = "n" },
+        { "<leader>np", function () require("plugins.util.find-files").open_a_file("personal-todo-moc.md", my_notes_dir) end, desc = printf("Open Personal Todo"), mode = "n" },
         { "<leader>nq", function () require("plugins.util.find-files").open_a_file("quick-note.md", my_notes_dir) end, desc = printf("Open Quick Note"), mode = "n" },
         { "<leader>nC", function() require("plugins.util.find-files").open_a_file("nvim-cheat-sheets.md", my_notes_dir) end, desc = printf("Open Nvim Cheat Sheets"), mode = "n" },
 

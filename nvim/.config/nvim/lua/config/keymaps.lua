@@ -82,8 +82,8 @@ del("v", "<A-j>")
 del("v", "<A-k>")
 
 -- Move Lines
-set("n", "<C-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
-set("n", "<C-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
+-- set("n", "<C-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" }) -- NOTE: collide with nvim window movement
+-- set("n", "<C-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
 set("i", "<C-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
 set("i", "<C-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 set("v", "<C-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" }) -- has bug where the vim cmd will open in split second and then close

@@ -50,8 +50,8 @@ return {
           keys = {
             { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
             { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
-            { icon = "󱙓 ", key = "n", desc = "My Personal Notes (Change Global Dir)", action = function () require("plugins.util.find-files").change_dir_and_find_files(my_notes_dir) end },
-            { icon = " ", key = "t", desc = "Personal Todo", action = function () require("plugins.util.find-files").open_a_file("personal-todo-moc.md", my_notes_dir) end },
+            { icon = "󱙓 ", key = "n", desc = "My Notes (Change Global Dir)", action = function () require("plugins.util.find-files").change_dir_and_find_files(my_notes_dir) end },
+            { icon = " ", key = "p", desc = "Personal Todo", action = function () require("plugins.util.find-files").open_a_file("personal-todo-moc.md", my_notes_dir) end },
             -- { icon = " ", key = "c", desc = "Config (Change Global Dir)", action = function () require("plugins.util.find-files").change_dir_and_find_files("~/.local/share/chezmoi/dot_config/nvim") end },
             { icon = " ", key = "c", desc = "Config (Change Global Dir)", action = function () require("plugins.util.find-files").change_dir_and_find_files("~/.config/nvim/") end },
             -- { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
