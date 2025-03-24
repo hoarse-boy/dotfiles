@@ -1,5 +1,5 @@
 # startup_mode fullscreen
-macos_traditional_fullscreen yes
+# macos_traditional_fullscreen yes
 macos_quit_when_last_window_closed no
 
 font_size        16.0
