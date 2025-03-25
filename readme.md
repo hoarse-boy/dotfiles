@@ -46,6 +46,14 @@ run the following commands to create symlinks:
 bash stow-all.sh
 ```
 
+#### 3.1 symlink specific files in hyprland machine
+
+this is for stowing hyprland config files.
+
+```sh
+bash manage-hypr-files.sh
+```
+
 ---
 
 ### 4. verify the symlinks
