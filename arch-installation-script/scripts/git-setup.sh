@@ -78,3 +78,5 @@ setup_git
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   setup_git
 fi
+
+# FIX: the github setup is asked 3 times
