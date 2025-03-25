@@ -176,3 +176,7 @@ vim_print
 prettier_print
 zig
 python
+music
+nature
+white_noise
+free
