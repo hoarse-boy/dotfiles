@@ -1,0 +1,46 @@
+[
+    {
+        "key": "general:gaps_in",
+        "value": 5
+    },
+    {
+        "key": "general:gaps_out",
+        "value": 10
+    },
+    {
+        "key": "general:no_border_on_floating",
+        "value": false
+    },
+    {
+        "key": "general:border_size",
+        "value": 0
+    },
+    {
+        "key": "general:gaps_workspaces",
+        "value": 0
+    },
+    {
+        "key": "general:extend_border_grab_area",
+        "value": 15
+    },
+    {
+        "key": "general:allow_tearing",
+        "value": false
+    },
+    {
+        "key": "decoration:rounding",
+        "value": 10
+    },
+    {
+        "key": "decoration:blur:xray",
+        "value": true
+    },
+    {
+        "key": "decoration:dim_inactive",
+        "value": true
+    },
+    {
+        "key": "decoration:dim_strength",
+        "value": 0.3
+    }
+]

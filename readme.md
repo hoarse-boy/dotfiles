@@ -51,7 +51,7 @@ bash stow-all.sh
 this is for stowing hyprland config files.
 
 ```sh
-bash manage-hypr-files.sh
+bash manage-ml4w-config.sh
 ```
 
 ---

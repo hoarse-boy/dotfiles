@@ -2,7 +2,7 @@
 
 cd ~/my-dotfiles || exit 1  # exit if cd fails
 
-EXCLUDE=("hypr" "arch-installation-script" ".git")  # list of directories to exclude
+EXCLUDE=(".ml4w-hyprland" "hypr" "arch-installation-script" ".git")  # list of directories to exclude
 
 for package in */; do
   package_name="${package%/}"  # remove trailing slash

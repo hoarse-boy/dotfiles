@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EXCLUDE=("hypr" "arch-installation-script" ".git")  # list of directories to exclude
+EXCLUDE=(".ml4w-hyprland" "hypr" "arch-installation-script" ".git")  # list of directories to exclude
 
 echo "Choose an operation for the actual dotfiles in your home directory:"
 echo "1) Remove (permanent deletion)"
