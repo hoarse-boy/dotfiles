@@ -71,14 +71,14 @@ return {
                   ["<C-k>"] = actions.cycle_history_next,
                   ["<C-j>"] = actions.cycle_history_prev,
                   ["<esc>"] = actions.close,
-                  ["<Tab>"] = actions.toggle_selection + actions.move_selection_next,
-                  ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_previous,
+                  ["<Tab>"] = actions.toggle_selection + actions.move_selection_previous, -- the movement will be in reverse order as telescope most matches value are from bottom to top
+                  ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_next,
                 },
                 n = {
                   ["q"] = actions.close,
                   ["<esc>"] = actions.close,
-                  ["<Tab>"] = actions.toggle_selection + actions.move_selection_next,
-                  ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_previous,
+                  ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_next,
+                  ["<Tab>"] = actions.toggle_selection + actions.move_selection_previous, -- the movement will be in reverse order as telescope most matches value are from bottom to top
                 },
               },
             },
