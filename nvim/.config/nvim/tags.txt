@@ -180,3 +180,11 @@ music
 nature
 white_noise
 free
+rm
+trash-cli
+fish_function
+fish_command
+systemd_service
+disk_usage
+find
+syncthing
