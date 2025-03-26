@@ -1,6 +1,9 @@
 <configuration version="37">
     <folder id="default" label="Default Folder" path="/home/jho/Sync" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" fsWatcherTimeoutS="0" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
+        <device id="HKXRBAL-R2AL557-TMX2HSJ-SB47G7L-DDKCEAU-NOGEN3E-HT325QX-6AMNGA7" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
         <device id="5TS6JM7-DVXSYNT-3GPLUCA-HNAMWQY-YZE3H6E-XXFHNWL-JZDB3PO-5GDT2QZ" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
@@ -43,6 +46,9 @@
     <folder id="jlpyc-owdkn" label="jho-notes" path="~/jho-notes" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" fsWatcherTimeoutS="0" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="CLA5IY3-OOTQYQX-KZ2WOCN-JIC7RPO-PBVPHXP-RRAR6OH-KDLMNWZ-BSHNTQU" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <device id="HKXRBAL-R2AL557-TMX2HSJ-SB47G7L-DDKCEAU-NOGEN3E-HT325QX-6AMNGA7" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
         <device id="5TS6JM7-DVXSYNT-3GPLUCA-HNAMWQY-YZE3H6E-XXFHNWL-JZDB3PO-5GDT2QZ" introducedBy="">
@@ -91,6 +97,9 @@
         <device id="CLA5IY3-OOTQYQX-KZ2WOCN-JIC7RPO-PBVPHXP-RRAR6OH-KDLMNWZ-BSHNTQU" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
+        <device id="HKXRBAL-R2AL557-TMX2HSJ-SB47G7L-DDKCEAU-NOGEN3E-HT325QX-6AMNGA7" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
         <device id="5TS6JM7-DVXSYNT-3GPLUCA-HNAMWQY-YZE3H6E-XXFHNWL-JZDB3PO-5GDT2QZ" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
@@ -134,6 +143,9 @@
     </folder>
     <folder id="snrcp-wunzn" label="" path="~/drive" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" fsWatcherTimeoutS="0" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
+        <device id="HKXRBAL-R2AL557-TMX2HSJ-SB47G7L-DDKCEAU-NOGEN3E-HT325QX-6AMNGA7" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
         <device id="5TS6JM7-DVXSYNT-3GPLUCA-HNAMWQY-YZE3H6E-XXFHNWL-JZDB3PO-5GDT2QZ" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
@@ -175,6 +187,9 @@
     </folder>
     <folder id="syncthing-obsidian" label="" path="~/syncthing-obsidian" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" fsWatcherTimeoutS="0" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
+        <device id="HKXRBAL-R2AL557-TMX2HSJ-SB47G7L-DDKCEAU-NOGEN3E-HT325QX-6AMNGA7" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
         <device id="5TS6JM7-DVXSYNT-3GPLUCA-HNAMWQY-YZE3H6E-XXFHNWL-JZDB3PO-5GDT2QZ" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
@@ -217,6 +232,17 @@
         </xattrFilter>
     </folder>
     <device id="CLA5IY3-OOTQYQX-KZ2WOCN-JIC7RPO-PBVPHXP-RRAR6OH-KDLMNWZ-BSHNTQU" name="macos" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
+        <address>dynamic</address>
+        <paused>false</paused>
+        <autoAcceptFolders>false</autoAcceptFolders>
+        <maxSendKbps>0</maxSendKbps>
+        <maxRecvKbps>0</maxRecvKbps>
+        <maxRequestKiB>0</maxRequestKiB>
+        <untrusted>false</untrusted>
+        <remoteGUIPort>0</remoteGUIPort>
+        <numConnections>0</numConnections>
+    </device>
+    <device id="HKXRBAL-R2AL557-TMX2HSJ-SB47G7L-DDKCEAU-NOGEN3E-HT325QX-6AMNGA7" name="archlinux" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
         <address>dynamic</address>
         <paused>false</paused>
         <autoAcceptFolders>false</autoAcceptFolders>
@@ -302,6 +328,9 @@
     <defaults>
         <folder id="" label="" path="~" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" fsWatcherTimeoutS="0" ignorePerms="false" autoNormalize="true">
             <filesystemType>basic</filesystemType>
+            <device id="HKXRBAL-R2AL557-TMX2HSJ-SB47G7L-DDKCEAU-NOGEN3E-HT325QX-6AMNGA7" introducedBy="">
+                <encryptionPassword></encryptionPassword>
+            </device>
             <device id="5TS6JM7-DVXSYNT-3GPLUCA-HNAMWQY-YZE3H6E-XXFHNWL-JZDB3PO-5GDT2QZ" introducedBy="">
                 <encryptionPassword></encryptionPassword>
             </device>
