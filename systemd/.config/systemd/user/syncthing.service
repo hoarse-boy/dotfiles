@@ -1,0 +1,16 @@
+[Unit]
+Description=Syncthing
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/syncthing serve --no-browser --no-restart --logflags=0
+Restart=on-failure
+RestartSec=5
+Environment=STNORESTART=1
+
+# Use standard XDG locations
+Environment=XDG_CONFIG_HOME=%h/.config
+Environment=XDG_DATA_HOME=%h/.local/share
+
+[Install]
+WantedBy=default.target
