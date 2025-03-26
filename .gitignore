@@ -65,3 +65,17 @@ ghostty/.config/ghostty/macos
 tmux/.config/tmux/plugins
 tmux/.config/tmux/plugins
 kitty/.config/kitty/macos.conf
+
+# ~/.config/systemd/user/
+*.wants/
+*.requires/
+*.d/
+*.target/
+*.socket/
+*.timer/
+
+# Add to ~/my-dotfiles/.gitignore:
+*.pem
+csrftokens.txt
+*-key.pem
+syncthing/.config/syncthing/index-v0.14.0.db
