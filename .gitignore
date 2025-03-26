@@ -74,8 +74,8 @@ kitty/.config/kitty/macos.conf
 *.socket/
 *.timer/
 
-# Add to ~/my-dotfiles/.gitignore:
 *.pem
 csrftokens.txt
 *-key.pem
-syncthing/.config/syncthing/index-v0.14.0.db
+syncthing/.config/syncthing/*.db
+syncthing/.config/syncthing/.syncthing.tmp.*
