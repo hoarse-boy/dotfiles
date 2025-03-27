@@ -79,3 +79,7 @@ csrftokens.txt
 *-key.pem
 syncthing/.config/syncthing/*.db
 syncthing/.config/syncthing/.syncthing.tmp.*
+
+# exclude machine-specific binaries
+/.local/bin/*.bin
+/.local/bin/secrets_*
