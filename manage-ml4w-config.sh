@@ -4,7 +4,8 @@
 DOTFILES_ROOT="$HOME/my-dotfiles"
 STOW_OPERATIONS=(
   "hypr/.config/hypr/conf/keybindings:~/.config/hypr/conf/keybindings"
-  ".ml4w-hyprland:~/.ml4w-hyprland"
+  "hypr/.config/hypr/scripts:~/.config/hypr/scripts"
+  "hypr/.ml4w-hyprland:~/.ml4w-hyprland"
   # Add more as: "package_path:target_path"
 )
 
@@ -33,21 +34,22 @@ stow_operation() {
   done
 
   echo "✅ ${mode^}ing complete!"
+  return 0
 }
 
 # Main menu
-while true; do
-  echo ""
-  echo "Dotfiles Manager"
-  echo "1) Stow all"
-  echo "2) Unstow all"
-  echo "3) Exit"
-  read -rp "Choose an option [1-3]: " choice
+echo ""
+echo "Dotfiles Manager"
+echo "1) Stow all"
+echo "2) Unstow all"
+echo "3) Exit"
+read -rp "Choose an option [1-3]: " choice
 
-  case "$choice" in
-  1) stow_operation "stow" ;;
-  2) stow_operation "unstow" ;;
-  3) exit 0 ;;
-  *) echo "Invalid option" ;;
-  esac
-done
+case "$choice" in
+1) stow_operation "stow" ;;
+2) stow_operation "unstow" ;;
+3) exit 0 ;;
+*) echo "Invalid option" ;;
+esac
+
+exit 0
