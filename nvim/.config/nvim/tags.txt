@@ -188,3 +188,7 @@ systemd_service
 disk_usage
 find
 syncthing
+documentation
+bin
+binary
+executable
