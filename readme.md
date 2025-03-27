@@ -2,14 +2,14 @@
 
 ## prerequisites
 
-before cloning this repository, make sure you have **git** and **gnu stow** installed.
+before cloning this repository, make sure you have **git** and **gnu stow** or **curl** installed.
 
 ### install git & stow
 
 #### arch linux
 
 ```sh
-sudo pacman -S git stow
+sudo pacman -S git stow curl
 ```
 
 #### macos (homebrew)
@@ -18,45 +18,49 @@ sudo pacman -S git stow
 brew install git stow
 ```
 
----
-
 ## cloning and setting up
 
-### 1. clone the repository
+### linux
+
+#### complete installation script (arch linux only)
+
+Install [Hyprland](https://hyprland.org/) bootstraped by [ML4W](https://github.com/mylinuxforwork/dotfiles), stow dotfiles and run arch init scripts.
+
+```bash
+bash <(curl -sL https://raw.githubusercontent.com/hoarse-boy/dotfiles/main/install.sh)
+```
+
+### macos
+
+#### 1. clone the repository
 
 ```sh
 git clone --recursive https://github.com/hoarse-boy/dotfiles.git ~/my-dotfiles
 ```
 
----
-
-### 2. navigate to the dotfiles directory
+#### 2. navigate to the dotfiles directory
 
 ```sh
 cd ~/my-dotfiles
 ```
 
----
-
-### 3. symlink dotfiles
+#### 3. symlink dotfiles
 
 run the following commands to create symlinks:
 
 ```sh
-bash stow-all.sh
+stow-all
 ```
 
-#### 3.1 symlink specific files in hyprland machine
+#### 3.1 symlink specific files (optional)
 
 this is for stowing hyprland config files.
 
 ```sh
-bash manage-ml4w-config.sh
+manage-ml4w-config
 ```
 
----
-
-### 4. verify the symlinks
+#### 4. verify the symlinks
 
 run:
 
@@ -64,28 +68,14 @@ run:
 ls -l ~/.config/
 ```
 
-you should see **symlinks** pointing to `~/dotfiles/.config/`.
-
----
-
-## updating and pushing changes
-
-if you modify your dotfiles, commit and push them with:
-
-```sh
-git add .
-git commit -m "updated dotfiles"
-git push origin main
-```
-
----
+you should see **symlinks** pointing to `~/my-dotfiles/.config/`.
 
 ## additional notes
 
 - to remove a symlinked folder without deleting the original files, use:
 
     ```sh
-    bash remove-dotfiles.sh
+    remove-dotfiles
     ```
 
 - if you encounter permission errors, run `chown -R $USER:$USER ~/my-dotfiles/`.
