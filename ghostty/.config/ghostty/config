@@ -14,8 +14,7 @@ adjust-underline-thickness = 2
 
 shell-integration-features = cursor
 
-
 confirm-close-surface = false
 
 config-file = "macos"
-
+config-file = "arch"
