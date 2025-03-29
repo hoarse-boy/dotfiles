@@ -1,77 +1,144 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# set error handling
-set -e
+# -e: Exit immediately on error
+# -u: Treat unset variables as error
+# -o pipefail: Consider pipeline errors
+set -euo pipefail
 
-# define script directory
+# Get script directory (absolute path)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# function to check for ml4w dotfiles
+# Color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Log file
+LOG_FILE="${SCRIPT_DIR}/setup.log"
+exec > >(tee -a "$LOG_FILE") 2>&1
+
+# Function to check for ml4w dotfiles
 check_ml4w_dotfiles() {
-  if [[ ! -d "$HOME/.ml4w-hyprland/hook.sh" ]]; then
-    echo "⚠️  WARNING: ml4w dotfiles not found!"
-    echo "Expected directory or file : ~/.ml4w-hyprland/hook.sh"
+  local dotfiles_dir="$HOME/.ml4w-hyprland"
+  local hook_file="$dotfiles_dir/hook.sh"
+
+  if [[ ! -f "$hook_file" ]]; then
+    echo -e "${YELLOW}⚠️  WARNING: ml4w dotfiles not found!${NC}"
+    echo -e "Expected file: ${BLUE}${hook_file}${NC}"
     echo ""
-    echo "This setup is designed to work with ml4w dotfiles configuration."
-    echo "Run bash scripts in root of 'my-dotfiles' to create '~/.ml4w-hyprland/hook.sh' symlink and others."
+    echo -e "This setup is designed to work with ml4w dotfiles configuration."
+    echo -e "Run bash scripts in root of 'my-dotfiles' to create the symlinks."
     echo ""
-    echo "Continuing without it may cause unexpected behavior."
+    echo -e "${RED}Continuing without it may cause unexpected behavior.${NC}"
     echo ""
 
     while true; do
-      read -p "Choose action:
-1) Continue anyway (not recommended)
-2) Abort and setup dotfiles first
-Your choice [1/2]: " choice
+      read -rp $'\e[33mChoose action:\n1) Continue anyway (not recommended)\n2) Abort and setup dotfiles first\nYour choice [1/2]: \e[0m' choice
 
       case "$choice" in
         1)
-          echo "Continuing without ml4w dotfiles..."
+          echo -e "${YELLOW}Continuing without ml4w dotfiles...${NC}"
           return 0
           ;;
         2)
-          echo "Aborting. Please set up 'ml4w' first."
+          echo -e "${RED}Aborting. Please set up 'ml4w' first.${NC}"
           exit 1
           ;;
         *)
-          echo "Invalid choice. Please enter 1 or 2."
+          echo -e "${RED}Invalid choice. Please enter 1 or 2.${NC}"
           ;;
       esac
     done
   else
-    echo "✅ Found ml4w dotfiles at: ~/.ml4w-hyprland"
+    echo -e "${GREEN}✅ Found ml4w dotfiles at: ${BLUE}${dotfiles_dir}${NC}"
   fi
 }
 
-# function to source environment scripts
-source_scripts() {
-  for script in "$SCRIPT_DIR/scripts/"*.sh; do
-    if [[ -f "$script" ]]; then
-      echo "🔹 Sourcing: $(basename "$script")"
-      source "$script"
-    fi
-  done
+# Function to run package installation
+install_packages() {
+  echo -e "\n${BLUE}=== Installing Packages ===${NC}"
+  local pkg_script="${SCRIPT_DIR}/install-packages/install-packages.sh"
+  
+  if [[ -f "$pkg_script" ]]; then
+    echo -e "${GREEN}Running package installer...${NC}"
+    bash "$pkg_script"
+  else
+    echo -e "${RED}Error: Package installer not found at ${pkg_script}${NC}"
+    exit 1
+  fi
 }
 
-# function to execute setup scripts
-run_scripts() {
-  for script in "$SCRIPT_DIR/scripts/"*.sh; do
-    if [[ -f "$script" && -x "$script" ]]; then
-      echo "🚀 Running: $(basename "$script")"
-      bash "$script" || {
-        if [ $? -eq 0 ]; then
-          echo "🟡 Skipping $(basename "$script")"
-          continue
-        else
-          exit $?
-        fi
+# Function to source environment scripts
+source_scripts() {
+  echo -e "\n${BLUE}=== Sourcing Environment Scripts ===${NC}"
+  for script in "${SCRIPT_DIR}/scripts/"*.sh; do
+    if [[ -f "$script" ]]; then
+      echo -e "${GREEN}🔹 Sourcing: ${BLUE}$(basename "$script")${NC}"
+      # shellcheck disable=SC1090
+      source "$script" || {
+        echo -e "${YELLOW}⚠️  Warning: Failed to source ${script} - continuing...${NC}"
+        continue
       }
     fi
   done
 }
 
-echo "🔧 Starting setup..."
-check_ml4w_dotfiles  # verify dotfiles exist
-source_scripts       # source scripts (e.g., env variables)
-run_scripts          # run scripts (e.g., install packages)
-echo "✅ Setup complete!"
+# Function to execute setup scripts
+run_scripts() {
+  echo -e "\n${BLUE}=== Running Setup Scripts ===${NC}"
+  for script in "${SCRIPT_DIR}/scripts/"*.sh; do
+    if [[ -f "$script" && -x "$script" ]]; then
+      echo -e "${GREEN}🚀 Running: ${BLUE}$(basename "$script")${NC}"
+      
+      # Skip test scripts unless in debug mode
+      if [[ "$script" == *"test.sh" && "${DEBUG:-false}" != "true" ]]; then
+        echo -e "${YELLOW}🟡 Skipping test script${NC}"
+        continue
+      fi
+
+      if ! bash "$script"; then
+        echo -e "${YELLOW}⚠️  Warning: Script ${script} exited with error${NC}"
+        echo -e "${YELLOW}Would you like to:${NC}"
+        select choice in "Continue" "Retry" "Abort"; do
+          case $choice in
+            "Continue")
+              break
+              ;;
+            "Retry")
+              bash "$script" && break || {
+                echo -e "${RED}Retry failed for ${script}${NC}"
+                continue
+              }
+              ;;
+            "Abort")
+              echo -e "${RED}Aborting setup...${NC}"
+              exit 1
+              ;;
+            *)
+              echo -e "${RED}Invalid option${NC}"
+              ;;
+          esac
+        done
+      fi
+    fi
+  done
+}
+
+# Main execution
+main() {
+  echo -e "${BLUE}🔧 Starting ML4W System Setup...${NC}"
+  echo -e "Logging output to: ${BLUE}${LOG_FILE}${NC}"
+  
+  check_ml4w_dotfiles  # Verify dotfiles exist
+  install_packages     # Install system packages first
+  source_scripts       # Source environment scripts
+  run_scripts          # Run configuration scripts
+  
+  echo -e "\n${GREEN}✅ Setup complete!${NC}"
+  echo -e "Review log file for details: ${BLUE}${LOG_FILE}${NC}"
+}
+
+# Run main function
+main
