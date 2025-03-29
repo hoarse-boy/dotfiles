@@ -1,11 +1,12 @@
 #!/bin/bash
 
-cd ~/my-dotfiles || exit 1  # exit if cd fails
+cd ~/my-dotfiles || exit 1 # exit if cd fails
 
-EXCLUDE=("hypr" "arch-installation-script" ".git")  # list of directories to exclude
+EXCLUDE=("hypr" "arch-installation-script" ".git") # list of directories to exclude
 
+echo ""
 for package in */; do
-  package_name="${package%/}"  # remove trailing slash
+  package_name="${package%/}" # remove trailing slash
 
   # improved exclusion check
   if printf '%s\n' "${EXCLUDE[@]}" | grep -Fxq "$package_name"; then
@@ -16,4 +17,3 @@ for package in */; do
   echo "Stowing: $package_name"
   stow -v "$package_name"
 done
-

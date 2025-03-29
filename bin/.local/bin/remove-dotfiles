@@ -1,7 +1,8 @@
 #!/bin/bash
 
-EXCLUDE=("hypr" "arch-installation-script" ".git")  # list of directories to exclude
+EXCLUDE=("hypr" "arch-installation-script" ".git") # list of directories to exclude
 
+echo ""
 echo "Choose an operation for the actual dotfiles in your home directory:"
 echo "1) Remove (permanent deletion)"
 echo "2) Rename (backup)"
@@ -18,8 +19,8 @@ if [[ $choice == "4" ]]; then
 fi
 
 for package in ~/my-dotfiles/*/; do
-  package_name="${package%/}"         # remove trailing slash
-  package_name="${package_name##*/}"  # extract folder name
+  package_name="${package%/}"        # remove trailing slash
+  package_name="${package_name##*/}" # extract folder name
 
   # Skip excluded packages
   if printf '%s\n' "${EXCLUDE[@]}" | grep -Fxq "$package_name"; then
@@ -46,7 +47,7 @@ for package in ~/my-dotfiles/*/; do
       confirm="$(echo "$raw_confirm" | xargs | tr '[:upper:]' '[:lower:]')"
       if [[ "$confirm" == "y" || "$confirm" == "yes" ]]; then
         echo "Removing: $target"
-        rm -rf "$target"  # Using rm -rf for both files/dirs and symlinks safely
+        rm -rf "$target" # Using rm -rf for both files/dirs and symlinks safely
       else
         echo "Skipping removal of $target"
       fi
@@ -56,7 +57,7 @@ for package in ~/my-dotfiles/*/; do
 
   elif [[ $choice == "2" ]]; then
     if [[ -e "$target" || -L "$target" ]]; then
-      timestamp=$(date +"%Y%m%d_%H%M%S")  # generate unique timestamp
+      timestamp=$(date +"%Y%m%d_%H%M%S") # generate unique timestamp
       new_name="${target}_old_${timestamp}"
 
       # Ensure uniqueness in case of duplicate timestamps
@@ -76,12 +77,10 @@ for package in ~/my-dotfiles/*/; do
   elif [[ $choice == "3" ]]; then
     # Unstow the package using stow -D
     echo "Unstowing package: $package_name"
-    stow -D "$package_name" 
+    stow -D "$package_name"
   fi
 done
 
 if [[ $choice != "3" ]]; then
   echo "Run stow-all.sh to restore dotfiles."
 fi
-
-
