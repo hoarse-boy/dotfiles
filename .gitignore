@@ -66,13 +66,13 @@ tmux/.config/tmux/plugins
 tmux/.config/tmux/plugins
 kitty/.config/kitty/macos.conf
 
-# ~/.config/systemd/user/
-*.wants/
-*.requires/
-*.d/
-*.target/
-*.socket/
-*.timer/
+# systemd
+systemd/.config/systemd/user/*.wants/
+systemd/.config/systemd/user/*.requires/
+systemd/.config/systemd/user/*.d/
+systemd/.config/systemd/user/*.target/
+systemd/.config/systemd/user/*.socket/
+systemd/.config/systemd/user/*.timer/
 
 *.pem
 csrftokens.txt
@@ -83,3 +83,5 @@ syncthing/.config/syncthing/.syncthing.tmp.*
 # exclude machine-specific binaries
 /.local/bin/*.bin
 /.local/bin/secrets_*
+ghostty/.config/ghostty/arch
+ghostty/.config/ghostty/arch.toml
