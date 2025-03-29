@@ -192,3 +192,7 @@ documentation
 bin
 binary
 executable
+yay
+aur
+pacman
+firefox
