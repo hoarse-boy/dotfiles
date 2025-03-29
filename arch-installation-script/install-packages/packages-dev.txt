@@ -1,0 +1,10 @@
+fish
+rustup
+go
+deno
+nodejs
+bun-bin
+python
+zig
+postgresql
+mongodb-bin

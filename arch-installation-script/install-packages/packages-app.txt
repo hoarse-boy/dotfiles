@@ -1,0 +1,8 @@
+syncthing
+ghostty
+dbeaver
+postman-bin
+spotify
+neovide
+parsec-bin
+atuin
