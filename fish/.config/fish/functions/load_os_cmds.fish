@@ -64,7 +64,9 @@ function load_os_cmds
             abbr -a paste wl-paste # Paste from clipboard
 
             # trah-cli better rm. avoid deleting files to void.
-            alias rm trash-put $argv
+            alias rm trash-put
+            alias grep="rg"
+            alias find="fd"
 
         case '*'
             echo "Unknown OS"
