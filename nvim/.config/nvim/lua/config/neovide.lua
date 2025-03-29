@@ -7,6 +7,7 @@ local M = {}
 M.setup = function()
   if vim.g.neovide then
     -- TODO: lualine "" and "" characters color is different in neovide. need to fix it.
+    -- it is fine arch hyprland
 
     opt.guifont = "JetBrainsMono Nerd Font:h16.00:Medium" -- the font used in graphical neovim applications
 
@@ -15,7 +16,7 @@ M.setup = function()
     local change_scale_factor = function(delta) vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * delta end
 
     vim.g.neovide_underline_stroke_scale = 2.0 -- the same as kitty's and wezterm's underline underline modifier
-    vim.g.neovide_transparency = 0.9 -- NOTE: can be used in windows too but moving neovide to new desktop in windows is not fun just to get transparency and background.
+    -- vim.g.neovide_transparency = 0.9 -- disable this as macos will make it fullscreen and hyprland will be using it as quick-note in special toggle-able workspace.
     vim.g.neovide_refresh_rate = 75
     vim.g.neovide_refresh_rate_idle = 5
     vim.g.neovide_padding_top = 3
@@ -24,7 +25,7 @@ M.setup = function()
     vim.g.neovide_padding_left = 3
     -- NOTE: to remove the gap between lines for "|" or other characters. this also fix the lualine "" and "" characters position was a bit lower, -3 will make the position the same as nvim in wezterm.
     -- dont increase the value too much.
-    vim.opt.linespace = -3
+    -- vim.opt.linespace = -3
 
     -- enable ctlr-tab navigation for neovide only as it has no tab support
     set_keymap("n", "<C-Tab>", "<cmd>BufferLineCycleNext<cr>", { desc = printf("Next buffer") })
