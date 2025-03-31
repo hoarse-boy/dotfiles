@@ -85,3 +85,4 @@ syncthing/.config/syncthing/.syncthing.tmp.*
 /.local/bin/secrets_*
 ghostty/.config/ghostty/arch
 ghostty/.config/ghostty/arch.toml
+bin/.local/bin/bunx
