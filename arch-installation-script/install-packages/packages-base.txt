@@ -17,3 +17,9 @@ ripgrep
 wev
 wl-kbptr
 wlrctl
+man-db 
+man-pages
+atuin
+tokei
+dust
+t-rec

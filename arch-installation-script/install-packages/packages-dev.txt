@@ -8,3 +8,10 @@ python
 zig
 postgresql
 mongodb-bin
+valkey
+podman
+podman-docker
+podman-compose
+crun
+fuse-overlayfs
+slirp4netns

@@ -38,17 +38,17 @@ check_ml4w_dotfiles() {
       read -rp $'\e[33mChoose action:\n1) Continue anyway (not recommended)\n2) Abort and setup dotfiles first\nYour choice [1/2]: \e[0m' choice
 
       case "$choice" in
-        1)
-          echo -e "${YELLOW}Continuing without ml4w dotfiles...${NC}"
-          return 0
-          ;;
-        2)
-          echo -e "${RED}Aborting. Please set up 'ml4w' first.${NC}"
-          exit 1
-          ;;
-        *)
-          echo -e "${RED}Invalid choice. Please enter 1 or 2.${NC}"
-          ;;
+      1)
+        echo -e "${YELLOW}Continuing without ml4w dotfiles...${NC}"
+        return 0
+        ;;
+      2)
+        echo -e "${RED}Aborting. Please set up 'ml4w' first.${NC}"
+        exit 1
+        ;;
+      *)
+        echo -e "${RED}Invalid choice. Please enter 1 or 2.${NC}"
+        ;;
       esac
     done
   else
@@ -60,7 +60,7 @@ check_ml4w_dotfiles() {
 install_packages() {
   echo -e "\n${BLUE}=== Installing Packages ===${NC}"
   local pkg_script="${SCRIPT_DIR}/install-packages/install-packages.sh"
-  
+
   if [[ -f "$pkg_script" ]]; then
     echo -e "${GREEN}Running package installer...${NC}"
     bash "$pkg_script"
@@ -91,7 +91,7 @@ run_scripts() {
   for script in "${SCRIPT_DIR}/scripts/"*.sh; do
     if [[ -f "$script" && -x "$script" ]]; then
       echo -e "${GREEN}🚀 Running: ${BLUE}$(basename "$script")${NC}"
-      
+
       # Skip test scripts unless in debug mode
       if [[ "$script" == *"test.sh" && "${DEBUG:-false}" != "true" ]]; then
         echo -e "${YELLOW}🟡 Skipping test script${NC}"
@@ -103,22 +103,22 @@ run_scripts() {
         echo -e "${YELLOW}Would you like to:${NC}"
         select choice in "Continue" "Retry" "Abort"; do
           case $choice in
-            "Continue")
-              break
-              ;;
-            "Retry")
-              bash "$script" && break || {
-                echo -e "${RED}Retry failed for ${script}${NC}"
-                continue
-              }
-              ;;
-            "Abort")
-              echo -e "${RED}Aborting setup...${NC}"
-              exit 1
-              ;;
-            *)
-              echo -e "${RED}Invalid option${NC}"
-              ;;
+          "Continue")
+            break
+            ;;
+          "Retry")
+            bash "$script" && break || {
+              echo -e "${RED}Retry failed for ${script}${NC}"
+              continue
+            }
+            ;;
+          "Abort")
+            echo -e "${RED}Aborting setup...${NC}"
+            exit 1
+            ;;
+          *)
+            echo -e "${RED}Invalid option${NC}"
+            ;;
           esac
         done
       fi
@@ -130,12 +130,12 @@ run_scripts() {
 main() {
   echo -e "${BLUE}🔧 Starting ML4W System Setup...${NC}"
   echo -e "Logging output to: ${BLUE}${LOG_FILE}${NC}"
-  
-  check_ml4w_dotfiles  # Verify dotfiles exist
-  install_packages     # Install system packages first
-  source_scripts       # Source environment scripts
-  run_scripts          # Run configuration scripts
-  
+
+  check_ml4w_dotfiles # Verify dotfiles exist
+  install_packages    # Install system packages first
+  source_scripts      # Source environment scripts
+  run_scripts         # Run configuration scripts
+
   echo -e "\n${GREEN}✅ Setup complete!${NC}"
   echo -e "Review log file for details: ${BLUE}${LOG_FILE}${NC}"
 }
