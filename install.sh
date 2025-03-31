@@ -97,7 +97,7 @@ echo "- Internet connection"
 echo ""
 echo -e "\n${RED}WARNING:${NC}"
 echo "Press 'no' when ML4W asks to reboot"
-echo "But if accidently rebooted, just skip it to resume to the next installation"
+echo "But if accidently rebooted, just skip it to resume the next installation"
 echo ""
 
 # Confirm installation
