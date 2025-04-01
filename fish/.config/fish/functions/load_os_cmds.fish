@@ -28,7 +28,7 @@ function load_os_cmds
 
             # pacman
             abbr -a p sudo pacman
-            abbr -a ps pacman -Ss # Search packages
+            # abbr -a ps pacman -Ss # Search packages # this overwrite 'ps' command
             abbr -a pi sudo pacman -S # Install
             abbr -a pr sudo pacman -Rns # Remove + deps
             abbr -a pu sudo pacman -Syu # Full system update
