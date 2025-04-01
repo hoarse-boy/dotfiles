@@ -30,6 +30,12 @@ Install [Hyprland](https://hyprland.org/) bootstraped by [ML4W](https://github.c
 bash <(curl -sL https://raw.githubusercontent.com/hoarse-boy/dotfiles/main/install.sh)
 ```
 
+the install.sh does the following:
+- install ML4W and its dotfiles.
+- stow dotfiles to home directory.
+- install packages.
+- run arch init scripts (systemd, setup commands, etc).
+
 ### macos
 
 #### 1. clone the repository
