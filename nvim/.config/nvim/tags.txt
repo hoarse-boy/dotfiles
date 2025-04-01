@@ -212,3 +212,5 @@ cool
 gore
 container
 setup
+kanata
+keyboard
