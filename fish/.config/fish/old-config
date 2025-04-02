@@ -1,0 +1,43 @@
+# obsidian dir
+# alias oto="cd ~/obsidian-syncthing/todos/ && $editor ."
+# alias oin="cd ~/obsidian-syncthing/inbox/ && $editor ."
+
+# git bare
+# alias cfg="/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
+# abbr cfgs 'cfg status'
+# abbr cfga 'cfg add -u'
+# abbr cfgd 'cfg diff' # make sure ~/.gitconfig has the correct config to use delta. check ~/.gitconfig.template
+# abbr cfgA 'cfg add .' # add new files inside dirs. for example add new file in nvim dir. carefull as this can add all files in the dir.
+# abbr cfgr 'cfg restore' # to remove modified git files.
+# abbr cfgps 'cfg push'
+# abbr cfgp 'cfg pull'
+# abbr cfgc "GIT_DIR=$HOME/dotfiles GIT_WORK_TREE=$HOME cz c" # commit using commitizen.
+
+# chezmoi abbr
+# abbr hc "cd ~/.local/share/chezmoi/dot_config/hypr && $editor userprefs.conf"
+# abbr fc "cd ~/.local/share/chezmoi/dot_config/fish && $editor config.fish"
+# abbr gc "cd ~/.local/share/chezmoi/dot_config/ghostty && $editor config"
+# abbr kc "cd ~/.local/share/chezmoi/dot_config/kitty && $editor kitty.conf"
+# abbr wc "cd ~/.local/share/chezmoi/dot_config/wezterm && $editor wezterm.lua"
+# abbr tc "cd ~/.local/share/chezmoi/dot_config/tmux && $editor tmux.conf"
+# abbr nc "cd ~/.local/share/chezmoi/dot_config/nvim && $editor lua/config/lazy.lua"
+# abbr de "cd ~/.local/share/chezmoi && $editor" # to edit chezmoi dotfiles using neovide
+# abbr cm chezmoi
+# abbr cma 'chezmoi add'
+# abbr cmA 'chezmoi apply'
+# abbr cmd 'chezmoi -v diff'
+# abbr cmU 'chezmoi update' # pull from git remote and apply
+# abbr cms 'chezmoi status'
+# abbr cme 'cd ~/.local/share/chezmoi && nvim' # edit
+# abbr cmc 'cd ~/.local/share/chezmoi' # dont use chezmoi cd as it is slow
+
+# set -Ux LUA_PATH "$HOME/lua5.1/share/lua/5.1/?.lua;./?.lua;$HOME/lua5.1/share/lua/5.1/?/init.lua;$HOME/.luarocks/share/lua/5.1/?.lua;$HOME/.luarocks/share/lua/5.1/?/init.lua"
+# set -Ux LUA_CPATH "./?.so;$HOME/lua5.1/lib/lua/5.1/?.so;$HOME/lua5.1/lib/lua/5.1/loadall.so;$HOME/.luarocks/lib/lua/5.1/?.so"
+
+# pacman
+# abbr -a p sudo pacman
+# abbr -a ps pacman -Ss # Search packages # this overwrite 'ps' command
+# abbr -a pi sudo pacman -S # Install
+# abbr -a pr sudo pacman -Rns # Remove + deps
+# abbr -a pu sudo pacman -Syu # Full system update
+
