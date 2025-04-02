@@ -1,23 +1,30 @@
-;; TODO: find out about vim like leader key.
+(defcfg
+  log-layer-changes no
+)
+
+(defvar
+  tap-timeout   100
+  hold-timeout  250
+  tt $tap-timeout
+  ht $hold-timeout
+)
 
 (defalias
-  nav (tap-hold 0 200 spc (layer-while-held navigation))
+  nav (tap-hold 0 $ht spc (layer-while-held navigation))
 
   ;; home row left side. NOTE: alt, meta, shift, ctrl.
-  alt_a (tap-hold 0 200 a lalt)
-  met_s (tap-hold 0 200 s lmet)
-  sft_d (tap-hold 0 200 d lsft)
-  ctl_f (tap-hold 0 200 f lctl)
+  alt_a (tap-hold 0 $ht a lalt)
+  met_s (tap-hold 0 $ht s lmet)
+  sft_d (tap-hold 0 $ht d lsft)
+  ctl_f (tap-hold 0 $ht f lctl)
 
-   ;; FIX:  change below
-  ;; home row right side
   ;; NOTE: this makes j, k and l to not have any repetition pressing. 
-  ctl_j (tap-hold 0 200 j rctl)
-  sft_k (tap-hold 0 200 k rsft)
-  met_l (tap-hold 0 200 l rmet) ;; it uses lalt becuase some keyboards has different behavior of lalt and ralt.
-  alt_; (tap-hold 0 200 ; lalt)
-  changeLayer (tap-dance 200 (lctl (layer-toggle navigation))) ;; this makes xremap lctrl shift h and l to be a tab 
-  caps_esc_ctl (tap-hold 0 200 esc lctl)
+  ctl_j (tap-hold 0 $ht j rctl)
+  sft_k (tap-hold 0 $ht k rsft)
+  met_l (tap-hold 0 $ht l rmet) ;; it uses lalt becuase some keyboards has different behavior of lalt and ralt.
+  alt_; (tap-hold 0 $ht ; lalt)
+  changeLayer (tap-dance $ht (lctl (layer-toggle navigation))) ;; this makes xremap lctrl shift h and l to be a tab 
+  esc_ctl (tap-hold 0 $ht esc lctl)
 
   ;; tab navigation
   tabLeft (multi lctl lsft tab)
@@ -39,24 +46,22 @@
 ;; which is very annoying as it shows massive delay. the outcome should be ' e'.
 (deflayer base
   esc
-  grv               1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab               q    w    e    r    t    y    u    i    o    p    [    ]    \    
-  @caps_esc_ctl   @alt_a @met_s @sft_d @ctl_f g h  @ctl_j @sft_k @met_l @alt_; '  ret
-  lsft              z    x    c    v    b    n    m    ,    .    /    rsft     up
-  lctl  lmet lalt           @nav            ralt rmet rctl    left down right
+  grv          1      2    3      4    5    6    7      8    9      0      -    =    bspc
+  tab          q      w    e      r    t    y    u      i    o      p      [    ]    \    
+  @esc_ctl @alt_a @met_s @sft_d @ctl_f g    h  @ctl_j @sft_k @met_l @alt_; '  ret
+  lsft         z      x    c      v    b    n    m      ,    .      /    rsft  up
+  lctl        lmet   lalt           @nav            ralt rmet rctl    left down right
 )
 
-;; TODO: make mouse movement and click in this layer. use awsd
-;; add tab movement that uses macro of 'tab shift and ctrl' or 'tab ctrl'
+;; TODO: 
 ;; add end and home keys
 ;; add delete and backspace keys
-;; add print screen
 (deflayer navigation
   esc
   grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
   tab  esc  w    e    r    t    y    u    i    o    p    [    ]    \
   caps a    s    d    f    g    left down up right  ;    '    ret
-  lsft z    x    c    v    b    @tabLeft @tabRight ,    .    /    rsft     up
+  lsft z    x    c    v    b    @tabLeft @tabRight ,    rpt-any    /    rsft     up
   lctl lmet lalt           spc            ralt rmet rctl    left down right
 )
 
