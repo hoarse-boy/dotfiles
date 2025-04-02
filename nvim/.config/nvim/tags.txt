@@ -215,3 +215,8 @@ setup
 kanata
 keyboard
 newsql
+tools
+cli
+program
+package
+fuzzy_finder
