@@ -17,21 +17,18 @@ function load_os_cmds
         case Linux
             # echo "Linux detected"
             # Linux specific commands
+
+            fastfetch --config examples/13
+
             set -gx editor "neovide --fork --wayland_app_id neovide" # or "nvim"
 
             # Personal
-            alias fastfetch="fastfetch --logo-type kitty"
+            # alias fastfetch="fastfetch --logo-type kitty"
 
             abbr nv 'neovide --fork --wayland_app_id neovide' # no no-multigrid has better animation but will make the floating window to have dark background.
             abbr pwd 'pwd && pwd | wl-copy'
             abbr dol 'nohup dolphin . > /dev/null 2>&1 &' # open dolphin for the current dir, quits terminal will not quit dolphin.
-
-            # pacman
-            abbr -a p sudo pacman
-            # abbr -a ps pacman -Ss # Search packages # this overwrite 'ps' command
-            abbr -a pi sudo pacman -S # Install
-            abbr -a pr sudo pacman -Rns # Remove + deps
-            abbr -a pu sudo pacman -Syu # Full system update
+            abbr open 'setsid nautilus .'
 
             # yay
             abbr -a y yay
@@ -44,11 +41,11 @@ function load_os_cmds
             # systemd
             abbr -a s systemctl
             abbr -a sia systemctl --user is-active
-            abbr -a ss systemctl --user status
-            abbr -a sr systemctl --user restart
-            abbr -a se systemctl --user enable
-            abbr -a sd systemctl --user disable
-            abbr -a sst systemctl --user start
+            abbr -a sst systemctl --user status
+            abbr -a sre systemctl --user restart
+            abbr -a sen systemctl --user enable
+            abbr -a sdi systemctl --user disable
+            abbr -a sstr systemctl --user start
             abbr -a sstp systemctl --user stop
             abbr -a log journalctl --user -u
             abbr -a jc journalctl --user -xe # Show full system logs
