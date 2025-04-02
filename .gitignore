@@ -86,3 +86,5 @@ syncthing/.config/syncthing/.syncthing.tmp.*
 ghostty/.config/ghostty/arch
 ghostty/.config/ghostty/arch.toml
 bin/.local/bin/bunx
+bin/.local/bin/balena-etcher
+bin/.local/bin/etcher
