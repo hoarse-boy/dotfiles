@@ -327,9 +327,8 @@ return {
       opts.code = {
         enabled = true,
         sign = false,
-        style = "full",
-        position = "left",
-        -- position = "right",
+        style = "full", -- none, normal, language, full
+        position = "left", -- left, right
         language_pad = 0,
         disable_background = { "diff" },
         left_margin = 0,
@@ -337,11 +336,11 @@ return {
         min_width = 45,
         left_pad = 2,
         right_pad = 4,
-        border = "thin",
+        border = "thick", -- thin, thick
         -- above = "█",
         -- below = "█",
         above = "▄",
-        below = "▀", -- NOTE: has different color in neovide.
+        below = "▀", -- has different color in neovide. it is working fine in arch hyprland
         highlight = "RenderMarkdownCode",
         highlight_inline = "RenderMarkdownCodeInline",
       }
