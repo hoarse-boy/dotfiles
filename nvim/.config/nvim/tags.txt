@@ -220,3 +220,5 @@ cli
 program
 package
 fuzzy_finder
+bootable_drive
+virtual_machine
