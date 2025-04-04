@@ -1,12 +1,42 @@
-set -g fish_greeting
+# Set critical system paths FIRST
+set -gx PATH /usr/bin /usr/local/bin /usr/local/sbin
 
-if status is-interactive
+# Load basic utilities before anything else
+if command -q uname
+    load_os_cmds
+else
+    echo "Warning: uname not available yet" >&2
+end
+
+# Now set user paths (without duplicates)
+set -a PATH $HOME/.local/bin $HOME/lua5.1/bin $HOME/bin \
+    /usr/lib/jvm/default/bin /home/jho/.local/share/flatpak/exports/bin \
+    /usr/lib/rustup/bin
+
+# Ensure PATH is clean
+dedupe_path
+
+# Initialize tools only if available
+if command -q starship
     starship init fish | source
 end
 
-load_os_cmds
+if command -q zoxide
+    zoxide init fish | source
+end
 
-zoxide init fish | source
+# Ensure fish_user_paths is unique
+ensure_unique_path
+
+# Universal paths (only if commands exist)
+if command -q npm
+    set -Ua fish_user_paths (npm config get prefix)/bin
+end
+
+set -Ua fish_user_paths $HOME/.local/bin
+
+# Set fish greeting
+set -g fish_greeting
 
 # makes the cursor change shape when in vim insert mode and normal mode
 set -g fish_vi_force_cursor 1
@@ -14,7 +44,7 @@ set fish_cursor_default block
 set fish_cursor_insert line
 set fish_cursor_replace_one underscore
 
-# List Directory
+# Directory listing
 abbr ls lsd
 abbr l "lsd -l"
 abbr la "lsd -a"
@@ -41,22 +71,16 @@ abbr ssh 'TERM=xterm-256color ssh ' # need the env TERM for ghostty to work as t
 abbr kt 'kitten ssh'
 
 # wezterm 
-abbr ws 'wezterm connect unix & disown & exit' # re attached or create new wezterm session if not exist.
+abbr ws 'wezterm connect unix & disown & exit' # re-attached or create new wezterm session if not exist.
 
 # tmux 
 abbr t tmux
 abbr ta 'tmux attach-session -t'
 abbr tn 'tmux new-session -s'
 
-# other most used commands
+# most used commands
 abbr lg lazygit
-
-# TODO: add more for kubernetes
-# kubernetes
 abbr kb kubectl
-
-# TODO: add more for docker
-# docker
 abbr dc docker
 
 # config abbreviation
@@ -78,7 +102,7 @@ abbr .3 'cd ../../..'
 abbr .4 'cd ../../../..'
 abbr .5 'cd ../../../../..'
 
-# Always mkdir a path (this doesn't inhibit functionality to make a single dir)
+# Always mkdir a path
 abbr mkdir 'mkdir -p'
 
 # others
@@ -87,22 +111,10 @@ abbr c clear
 abbr vc 'code .'
 abbr sudo 'sudo -E'
 
-# modify vim mode binding. location at .functions/fish_user_key_bindings.fish
+# modify vim mode binding
 set fish_key_bindings fish_user_key_bindings
 
-set -Ux EDITOR nvim # currently only used when running crontab -e to open using nvim
-
-# all of my files inside /bin is bash file and is an executable
-set -x PATH "$HOME/bin/" $PATH
+set -Ux EDITOR nvim # used for crontab -e
 
 # opam configuration
 source /home/jho/.opam/opam-init/init.fish >/dev/null 2>/dev/null; or true
-
-# npm
-set -U fish_user_paths (npm config get prefix)/bin $fish_user_paths
-
-set -U fish_user_paths $HOME/.local/bin $fish_user_paths
-
-# for luarock package magick to display image in nvim
-set -x PATH $HOME/lua5.1/bin $PATH
-

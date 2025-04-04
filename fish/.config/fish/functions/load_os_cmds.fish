@@ -1,71 +1,63 @@
-function load_os_cmds
+function load_os_cmds --description "Load OS-specific commands"
+    if not command -q uname
+        echo "Error: uname command not found" >&2
+        return 1
+    end
+
     set -l os (uname)
     switch $os
         case Darwin
-            # echo "macOS detected"
-            # macOS specific commands
             source ~/.config/fish/macos.fish
-
             set -gx editor "neovide --frame buttonless --fork"
-
             abbr pwd 'pwd && pwd | pbcopy'
             abbr tree 'tree | pbcopy && tree'
             abbr nv 'neovide --frame buttonless --fork'
-
             set -Ux fish_user_paths (rbenv root)/shims $fish_user_paths
 
         case Linux
-            # echo "Linux detected"
-            # Linux specific commands
+            set -gx editor "neovide --fork --wayland_app_id neovide"
 
-            fastfetch --config examples/13
-
-            set -gx editor "neovide --fork --wayland_app_id neovide" # or "nvim"
-
-            # Personal
-            # alias fastfetch="fastfetch --logo-type kitty"
-
-            abbr nv 'neovide --fork --wayland_app_id neovide' # no no-multigrid has better animation but will make the floating window to have dark background.
+            abbr nv 'neovide --fork --wayland_app_id neovide'
             abbr pwd 'pwd && pwd | wl-copy'
-            abbr dol 'nohup dolphin . > /dev/null 2>&1 &' # open dolphin for the current dir, quits terminal will not quit dolphin.
+            abbr dol 'nohup dolphin . > /dev/null 2>&1 &'
             abbr open 'setsid nautilus .'
 
-            # yay
-            abbr -a y yay
-            abbr -a ys yay -S # Install from AUR
-            abbr -a yr yay -Rns # Remove AUR package
-            abbr -a yu yay -Syu # Update everything (AUR + official)
+            # yay package manager
+            abbr y yay
+            abbr ys 'yay -S'
+            abbr yr 'yay -Rns'
+            abbr yu 'yay -Syu'
 
             abbr tree 'tree | wl-copy && tree'
 
             # systemd
-            abbr -a s systemctl
-            abbr -a sia systemctl --user is-active
-            abbr -a sst systemctl --user status
-            abbr -a sre systemctl --user restart
-            abbr -a sen systemctl --user enable
-            abbr -a sdi systemctl --user disable
-            abbr -a sstr systemctl --user start
-            abbr -a sstp systemctl --user stop
-            abbr -a log journalctl --user -u
-            abbr -a jc journalctl --user -xe # Show full system logs
+            abbr s systemctl
+            abbr sia 'systemctl --user is-active'
+            abbr sst 'systemctl --user status'
+            abbr sre 'systemctl --user restart'
+            abbr sen 'systemctl --user enable'
+            abbr sdi 'systemctl --user disable'
+            abbr sstr 'systemctl --user start'
+            abbr sstp 'systemctl --user stop'
+            abbr log 'journalctl --user -u'
+            abbr jc 'journalctl --user -xe'
 
             # hyprland
-            abbr -a h hyprctl
-            abbr -a hd hyprctl dispatch # Dispatch commands (e.g., hd killactive)
-            abbr -a hk hyprctl keyword # Change Hyprland settings
-            abbr -a hr hyprctl reload # Reload config
-            # abbr -a hw hyprpaper  # Hyprland wallpaper tool
-            abbr -a wl wlogout # Wayland logout menu
-            abbr -a clip wl-copy # Copy to clipboard
-            abbr -a paste wl-paste # Paste from clipboard
+            abbr h hyprctl
+            abbr hd 'hyprctl dispatch'
+            abbr hk 'hyprctl keyword'
+            abbr hr 'hyprctl reload'
+            abbr wl wlogout
+            abbr clip wl-copy
+            abbr paste wl-paste
 
-            # trah-cli better rm. avoid deleting files to void.
+            # safer rm, better grep and find
             alias rm trash-put
-            alias grep="rg"
-            alias find="fd"
+            alias grep rg
+            alias find fd
 
-        case '*'
-            echo "Unknown OS"
+            # npm
+            alias cz czg
+            set -gx PATH $HOME/.npm-global/bin $PATH
     end
 end
