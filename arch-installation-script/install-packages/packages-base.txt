@@ -1,3 +1,4 @@
+coreutils
 neovim
 lazygit
 kanata
@@ -39,3 +40,4 @@ xf86-video-qxl
 virglrenderer
 mesa
 mesa-utils
+yazi
