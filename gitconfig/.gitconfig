@@ -2,13 +2,13 @@
 	name = hoarse-boy
 	email = jourdymagoofficial@gmail.com
 
-[include]
-    path = ~/.gitconfig_local
+; [include]
+  ; path = ~/.gitconfig_local
 
 [core]
-    pager = delta --dark --paging=never
-    excludesfile = ~/.gitignore_global
-    fileMode = true
+  pager = delta --dark --paging=never
+  excludesfile = ~/.gitignore_global
+  fileMode = true
 
 [delta]
   features = side-by-side
@@ -16,18 +16,18 @@
   syntax-theme = Monokai Extended
 
 [interactive]
-    diffFilter = delta --color-only
+  diffFilter = delta --color-only
 
 [delta "diff"]
-    syntax-highlighting = true
+  syntax-highlighting = true
 
 [delta "side-by-side"]
-    ; width = 80
+  ; width = 80
 
 [merge]
-    conflictstyle = diff3
-    git = delta
-    tool = delta
+  conflictstyle = diff3
+  git = delta
+  tool = delta
 
 [init]
 	defaultBranch = main
