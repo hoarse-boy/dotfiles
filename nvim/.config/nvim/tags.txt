@@ -222,3 +222,11 @@ package
 fuzzy_finder
 bootable_drive
 virtual_machine
+loop
+iteration
+swith_case
+if_statement
+function
+oop
+misc
+create_note
