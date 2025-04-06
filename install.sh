@@ -18,14 +18,22 @@ NC='\033[0m' # No Color
 # -------------------------------
 # Functions
 # -------------------------------
-check_path() {
-  if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-    echo -e "${YELLOW}⚠️  ~/.local/bin is not in your PATH${NC}"
-    echo "Add this to your shell config (.bashrc/.zshrc):"
-    echo -e "${GREEN}export PATH=\"\$HOME/.local/bin:\$PATH\"${NC}"
-    return 1
+
+# -------------------------------
+# Ensure ~/.local/bin is in PATH
+# -------------------------------
+ensure_local_bin_in_path() {
+  if ! grep -q 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.bashrc"; then
+    echo -e "${YELLOW}➕ Adding ~/.local/bin to PATH in .bashrc...${NC}"
+    echo '' >> "$HOME/.bashrc"
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
+    echo -e "${GREEN}✅ .bashrc updated!${NC}"
+  else
+    echo -e "${GREEN}✅ ~/.local/bin already in PATH${NC}"
   fi
-  return 0
+
+  # Source .bashrc to update the PATH in current session
+  export PATH="$HOME/.local/bin:$PATH"
 }
 
 install_ml4w() {
@@ -112,19 +120,14 @@ install_ml4w
 clone_repo
 verify_binaries
 
+# Add ~/.local/bin to PATH automatically
+ensure_local_bin_in_path
+
 # Execute configuration scripts
 echo -e "\n${GREEN}⚙️  Running configuration...${NC}"
-if check_path; then
-  "$BIN_DIR/stow-all" && \
-  "$BIN_DIR/manage-ml4w-config" && \
-  "$INSTALL_DIR/arch-installation-script/arch-fresh-machine-setup"
-else
-  echo -e "\n${YELLOW}⚠️  Manual configuration required${NC}"
-  echo "After adding ~/.local/bin to your PATH, run:"
-  echo -e "${GREEN}$BIN_DIR/stow-all${NC}"
-  echo -e "${GREEN}$BIN_DIR/manage-ml4w-config${NC}"
-  echo -e "${GREEN}$INSTALL_DIR/arch-installation-script/scripts/arch-fresh-machine-setup${NC}"
-fi
+"$BIN_DIR/stow-all" && \
+"$BIN_DIR/manage-ml4w-config" && \
+"$INSTALL_DIR/arch-installation-script/arch-fresh-machine-setup"
 
 echo -e "\n${GREEN}✅ Base installation complete!${NC}"
 
