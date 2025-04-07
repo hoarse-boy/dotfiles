@@ -1,101 +1,89 @@
 #!/usr/bin/env bash
-# Podman Rootless Setup Script
+# podman rootless setup script
 
-# Configuration
-set -uo pipefail  # Safer than set -e
+# configuration
+set -uo pipefail # safer than set -e
 
-# Colors and logging
+# append to failed scripts list
+SCRIPT_NAME="$(basename "$0")"
+
+# colors and logging
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+NC='\033[0m' # no color
 
 log_separator() {
   echo -e "\n${BLUE}══════════════════════════════════════════════════${NC}\n"
 }
 
-# Initialize
-HAD_ERRORS=false
+fail_or_exit() {
+  echo -e "${RED}❌ $1${NC}"
+  echo "$SCRIPT_NAME" >>/tmp/b-failed.txt
+  exit 1
+}
 
-# --- Main Execution ---
+# --- main execution ---
 log_separator
-echo -e "${GREEN}🚀 Setting up Podman for rootless operation...${NC}"
+echo -e "${GREEN}🚀 setting up podman for rootless operation...${NC}"
 log_separator
 
-# --- Kernel Configuration ---
-echo -e "${YELLOW}🐧 Configuring kernel for rootless containers...${NC}"
+# --- kernel configuration ---
+echo -e "${YELLOW}🐧 configuring kernel for rootless containers...${NC}"
 
-if sudo mkdir -p /etc/sysctl.d && \
-   echo "kernel.unprivileged_userns_clone=1" | sudo tee /etc/sysctl.d/99-userns.conf >/dev/null && \
-   sudo sysctl -p /etc/sysctl.d/99-userns.conf >/dev/null; then
-  echo -e "${GREEN}✓ Kernel namespaces configured${NC}"
-else
-  echo -e "${RED}❌ Failed to configure kernel namespaces${NC}"
-  HAD_ERRORS=true
-fi
+sudo mkdir -p /etc/sysctl.d &&
+  echo "kernel.unprivileged_userns_clone=1" | sudo tee /etc/sysctl.d/99-userns.conf >/dev/null &&
+  sudo sysctl -p /etc/sysctl.d/99-userns.conf >/dev/null &&
+  echo -e "${GREEN}✓ kernel namespaces configured${NC}" ||
+  fail_or_exit "failed to configure kernel namespaces"
 
-# --- User Namespace Setup ---
+# --- user namespace setup ---
 log_separator
-echo -e "${YELLOW}👤 Setting up subuids/subgids...${NC}"
+echo -e "${YELLOW}👤 setting up subuids/subgids...${NC}"
 
-if sudo touch /etc/subuid /etc/subgid && \
-   sudo usermod --add-subuids 100000-165535 --add-subgids 100000-165535 "$USER"; then
-  echo -e "${GREEN}✓ User namespace ranges configured${NC}"
-else
-  echo -e "${RED}❌ Failed to configure user namespace ranges${NC}"
-  HAD_ERRORS=true
-fi
+sudo touch /etc/subuid /etc/subgid &&
+  sudo usermod --add-subuids 100000-165535 --add-subgids 100000-165535 "$USER" &&
+  echo -e "${GREEN}✓ user namespace ranges configured${NC}" ||
+  fail_or_exit "failed to configure user namespace ranges"
 
-# --- Storage Configuration ---
+# --- storage configuration ---
 log_separator
-echo -e "${YELLOW}💾 Configuring rootless storage...${NC}"
+echo -e "${YELLOW}💾 configuring rootless storage...${NC}"
 
-if mkdir -p \
-   ~/.config/containers \
-   ~/.local/share/containers/storage && \
-   echo 'driver = "overlay"' > ~/.config/containers/storage.conf; then
-  echo -e "${GREEN}✓ Storage directories configured${NC}"
-else
-  echo -e "${RED}❌ Failed to configure storage${NC}"
-  HAD_ERRORS=true
-fi
+mkdir -p \
+  ~/.config/containers \
+  ~/.local/share/containers/storage &&
+  echo 'driver = "overlay"' >~/.config/containers/storage.conf &&
+  echo -e "${GREEN}✓ storage directories configured${NC}" ||
+  fail_or_exit "failed to configure storage"
 
-# --- Service Configuration ---
+# --- service configuration ---
 log_separator
-echo -e "${YELLOW}⚙️  Configuring user services...${NC}"
+echo -e "${YELLOW}⚙️  configuring user services...${NC}"
 
 if ! command -v loginctl >/dev/null; then
   echo -e "${YELLOW}⚠️  systemd-logind not found - cannot enable linger${NC}"
-  HAD_ERRORS=true
-elif loginctl enable-linger "$USER"; then
-  echo -e "${GREEN}✓ Linger enabled for user services${NC}"
 else
-  echo -e "${RED}❌ Failed to enable linger${NC}"
-  HAD_ERRORS=true
+  loginctl enable-linger "$USER" &&
+    echo -e "${GREEN}✓ linger enabled for user services${NC}" ||
+    fail_or_exit "failed to enable linger"
 fi
 
-# --- Verification ---
+# --- verification ---
 log_separator
-echo -e "${YELLOW}🔍 Verifying setup...${NC}"
+echo -e "${YELLOW}🔍 verifying setup...${NC}"
 
-if podman info --format '{{.Host.Security.Rootless}}' | grep -q "true"; then
-  echo -e "${GREEN}✔ Rootless mode configured successfully${NC}"
-else
-  echo -e "${RED}✖ Rootless setup verification failed${NC}"
-  HAD_ERRORS=true
-fi
+podman info --format '{{.Host.Security.Rootless}}' | grep -q "true" &&
+  echo -e "${GREEN}✔ rootless mode configured successfully${NC}" ||
+  fail_or_exit "rootless setup verification failed"
 
-# --- Completion ---
+# --- completion ---
 log_separator
-if [ "$HAD_ERRORS" = true ]; then
-  echo -e "${YELLOW}⚠️  Setup completed with some errors - check above messages${NC}"
-else
-  echo -e "${GREEN}✅ Podman rootless setup completed successfully!${NC}"
-fi
+echo -e "${GREEN}✅ podman rootless setup completed successfully!${NC}"
 
-echo -e "\n${BLUE}Next steps:${NC}"
-echo "1. Log out and back in for changes to take effect"
-echo "2. Test with: ${YELLOW}podman run --rm docker.io/library/hello-world${NC}"
-echo -e "\n${YELLOW}Note:${NC} You may need to reboot if user namespace changes don't take effect"
+echo -e "\n${BLUE}next steps:${NC}"
+echo "1. log out and back in for changes to take effect"
+echo -e "2. test with: ${YELLOW}podman run --rm docker.io/library/hello-world${NC}"
+echo -e "\n${YELLOW}note:${NC} you may need to reboot if user namespace changes don't take effect"
 log_separator

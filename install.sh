@@ -1,5 +1,5 @@
 #!/bin/bash
-# Arch X Hyprland Dotfiles Installer bootstraped by ML4W
+# Arch X Hyprland Dotfiles Installer bootstrapped by ML4W
 
 # -------------------------------
 # Configuration
@@ -9,25 +9,31 @@ ML4W_INSTALL_URL="https://raw.githubusercontent.com/mylinuxforwork/dotfiles/main
 INSTALL_DIR="$HOME/my-dotfiles"
 BIN_DIR="$INSTALL_DIR/bin/.local/bin"
 
-# At the start of your install.sh:
 LOG_FILE="$INSTALL_DIR/installation.log"
 MAX_LOG_SIZE=1048576 # 1MB
 
-# Rotate log if too large
+# -------------------------------
+# Log Rotation
+# -------------------------------
 if [ -f "$LOG_FILE" ] && [ $(stat -c%s "$LOG_FILE") -gt $MAX_LOG_SIZE ]; then
   mv "$LOG_FILE" "$LOG_FILE.old"
 fi
 
-# Start new log with header
 echo -e "\n\n=== Installation started $(date) ===\n" >>"$LOG_FILE"
 
+# -------------------------------
 # Colors
+# -------------------------------
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Add this separator function:
+# -------------------------------
+# Global Error Log
+# -------------------------------
+ERROR_LOG=""
+
 log_separator() {
   echo -e "\n${YELLOW}══════════════════════════════════════════════════${NC}\n"
 }
@@ -35,12 +41,8 @@ log_separator() {
 # -------------------------------
 # Functions
 # -------------------------------
-
-# -------------------------------
-# Ensure ~/.local/bin is in PATH
-# -------------------------------
 ensure_local_bin_in_path() {
-  if ! grep -q 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.bashrc"; then
+  if ! grep -q 'export PATH="\$HOME/.local/bin:\$PATH"' "$HOME/.bashrc"; then
     echo -e "${YELLOW}➕ Adding ~/.local/bin to PATH in .bashrc...${NC}"
     echo '' >>"$HOME/.bashrc"
     echo 'export PATH="$HOME/.local/bin:$PATH"' >>"$HOME/.bashrc"
@@ -49,30 +51,23 @@ ensure_local_bin_in_path() {
     echo -e "${GREEN}✅ ~/.local/bin already in PATH${NC}"
   fi
 
-  # Source .bashrc to update the PATH in current session
   export PATH="$HOME/.local/bin:$PATH"
 }
 
 install_ml4w() {
   echo -e "\n${GREEN}🚀 Installing ML4W base system...${NC}"
-  bash <(curl -s "$ML4W_INSTALL_URL") || {
-    echo -e "${RED}❌ ML4W installation failed${NC}"
-    exit 1
-  }
+  bash <(curl -s "$ML4W_INSTALL_URL")
 }
 
 clone_repo() {
   if [ ! -d "$INSTALL_DIR" ]; then
     echo -e "\n${GREEN}📦 Cloning dotfiles repository...${NC}"
-    git clone --recursive "$REPO_URL" "$INSTALL_DIR" || {
-      echo -e "${RED}❌ Repository clone failed${NC}"
-      exit 1
-    }
+    git clone --recursive "$REPO_URL" "$INSTALL_DIR"
   else
     echo -e "\n${YELLOW}ℹ️  Dotfiles already exist at $INSTALL_DIR${NC}"
     read -rp "Update repository? [y/N] " answer
     if [[ "$answer" =~ [yY] ]]; then
-      cd "$INSTALL_DIR" || exit
+      cd "$INSTALL_DIR" || return 1
       git pull && git submodule update --init --recursive
     fi
   fi
@@ -83,22 +78,22 @@ verify_binaries() {
 
   if [ ! -d "$BIN_DIR" ]; then
     echo -e "${RED}❌ Critical error: Binaries directory not found${NC}"
-    exit 1
+    return 1
   fi
 
-  cd "$BIN_DIR" || exit
+  cd "$BIN_DIR" || return 1
 
   for script in stow-all manage-ml4w-config; do
     if [ ! -f "$script" ]; then
       echo -e "${RED}❌ Missing required script: $script${NC}"
-      exit 1
+      return 1
     fi
     chmod +x "$script"
   done
 }
 
 # -------------------------------
-# Installation Flow
+# Installer Entry Point
 # -------------------------------
 clear
 cat <<"EOF"
@@ -109,7 +104,6 @@ cat <<"EOF"
 EOF
 echo -e "${GREEN}Arch Hyprland Installer${NC}\n"
 
-# Show installation plan
 echo -e "${YELLOW}This will:${NC}"
 echo "1. Install ML4W base system"
 echo "2. Clone your dotfiles repository"
@@ -119,46 +113,72 @@ echo -e "\n${YELLOW}Requirements:${NC}"
 echo "- curl, git installed"
 echo "- Internet connection"
 
-echo ""
 echo -e "\n${RED}WARNING:${NC}"
 echo "Press 'no' when ML4W asks to reboot"
-echo "But if accidently rebooted, just skip it to resume the next installation"
-echo ""
+echo "But if accidentally rebooted, just skip it to resume the next installation by following these steps:"
+echo "1. Press 'y' to continue"
+echo "2. Press 'n' to cancel the 'ML4W Dotfiles for Hyprland' to skip it"
 
-# Confirm installation
 read -rp $'\nDo you want to continue? [y/N] ' answer
 if [[ ! "$answer" =~ [yY] ]]; then
   echo -e "${RED}❌ Installation canceled${NC}"
   exit 0
 fi
 
-# Run installation steps
-install_ml4w
-log_separator
-
-clone_repo
-log_separator
-
-verify_binaries
-log_separator
-
-# Add ~/.local/bin to PATH automatically
-ensure_local_bin_in_path
-log_separator
-
-# Execute configuration scripts
-echo -e "\n${GREEN}⚙️  Running configuration...${NC}"
-if "$BIN_DIR/stow-all" &&
-  "$BIN_DIR/manage-ml4w-config" &&
-  "$INSTALL_DIR/arch-installation-script/arch-fresh-machine-setup"; then
-  echo -e "\n${GREEN}✅ All components installed successfully!${NC}"
-else
-  echo -e "\n${YELLOW}⚠️  Installation completed with some errors${NC}"
-  echo -e "Check individual component logs above"
-
-  # If arch-fresh-machine-setup ran, it will have already printed detailed errors
-  if [ -f "$INSTALL_DIR/arch-installation-script/setup.log" ]; then
-    echo -e "\n${YELLOW}Component error summary:${NC}"
-    grep -E '❌|FAILED|ERROR' "$INSTALL_DIR/arch-installation-script/setup.log" | uniq
-  fi
+# -------------------------------
+# Run Each Step with Error Capture
+# -------------------------------
+if ! install_ml4w; then
+  ERROR_LOG+="❌ ML4W installation failed\n"
 fi
+log_separator
+
+if ! clone_repo; then
+  ERROR_LOG+="❌ Failed to clone or update dotfiles repo\n"
+fi
+log_separator
+
+if ! verify_binaries; then
+  ERROR_LOG+="❌ Required binaries missing or setup failed\n"
+fi
+log_separator
+
+if ! ensure_local_bin_in_path; then
+  ERROR_LOG+="❌ Failed to update PATH with ~/.local/bin\n"
+fi
+log_separator
+
+echo -e "\n${GREEN}⚙️  Running configuration...${NC}"
+
+if ! "$BIN_DIR/stow-all"; then
+  ERROR_LOG+="❌ Failed running stow-all\n"
+fi
+
+if ! "$BIN_DIR/manage-ml4w-config"; then
+  ERROR_LOG+="❌ Failed running manage-ml4w-config\n"
+fi
+
+if ! "$INSTALL_DIR/arch-installation-script/arch-fresh-machine-setup"; then
+  ERROR_LOG+="❌ Failed running arch-fresh-machine-setup\n"
+fi
+
+# also include failed scripts from arch-fresh-machine-setup
+if [[ -f /tmp/b-failed.txt ]]; then
+  mapfile -t FAILED_B_SCRIPTS </tmp/b-failed.txt
+  ERROR_LOG+="\n❌ Failed scripts inside arch-fresh-machine-setup:\n"
+  for failed_script in "${FAILED_B_SCRIPTS[@]}"; do
+    ERROR_LOG+="  - $failed_script\n"
+  done
+fi
+
+# -------------------------------
+# Final Summary
+# -------------------------------
+if [[ -n "$ERROR_LOG" ]]; then
+  echo -e "\n${RED}❌ Installation finished with errors:${NC}"
+  echo -e "$ERROR_LOG"
+  echo -e "$ERROR_LOG" >>"$LOG_FILE"
+else
+  echo -e "\n${GREEN}✅ All components installed successfully!${NC}"
+fi
+# -------------------------------
