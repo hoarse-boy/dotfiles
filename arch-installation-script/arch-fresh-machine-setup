@@ -1,144 +1,177 @@
 #!/usr/bin/env bash
+# Arch Linux Fresh Machine Setup Script
 
-# -e: Exit immediately on error
-# -u: Treat unset variables as error
-# -o pipefail: Consider pipeline errors
-set -euo pipefail
+# -------------------------------
+# Configuration
+# -------------------------------
+set -uo pipefail
 
-# Get script directory (absolute path)
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Color codes
+# Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Log file
-LOG_FILE="${SCRIPT_DIR}/setup.log"
-exec > >(tee -a "$LOG_FILE") 2>&1
+# Directories
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+INSTALL_DIR="${INSTALL_DIR:-$HOME/my-dotfiles}"
+LOG_DIR="$INSTALL_DIR/logs"
+mkdir -p "$LOG_DIR"
+LOG_FILE="$LOG_DIR/setup-$(date +%Y%m%d-%H%M%S).log"
 
-# Function to check for ml4w dotfiles
+# -------------------------------
+# Logging Setup
+# -------------------------------
+{
+  echo -e "\n=== START: $(date) ==="
+  echo "Installation log: $LOG_FILE"
+
+  # Save original stdout/stderr
+  exec 3>&1 4>&2
+
+  # Tee output to log file (without color codes)
+  exec > >(
+    tee -i >(
+      while IFS= read -r line; do
+        printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" \
+          "$(echo "$line" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g")"
+      done >>"$LOG_FILE"
+    )
+  ) 2>&1
+}
+
+# -------------------------------
+# Functions
+# -------------------------------
+log_separator() {
+  echo -e "\n${BLUE}══════════════════════════════════════════════════${NC}\n"
+}
+
 check_ml4w_dotfiles() {
   local dotfiles_dir="$HOME/.ml4w-hyprland"
-  local hook_file="$dotfiles_dir/hook.sh"
 
-  if [[ ! -f "$hook_file" ]]; then
-    echo -e "${YELLOW}⚠️  WARNING: ml4w dotfiles not found!${NC}"
-    echo -e "Expected file: ${BLUE}${hook_file}${NC}"
-    echo ""
-    echo -e "This setup is designed to work with ml4w dotfiles configuration."
-    echo -e "Run bash scripts in root of 'my-dotfiles' to create the symlinks."
+  if [[ ! -f "$dotfiles_dir" ]]; then
+    echo -e "${YELLOW}⚠️ WARNING: ml4w dotfiles not found!${NC}"
     echo ""
     echo -e "${RED}Continuing without it may cause unexpected behavior.${NC}"
-    echo ""
 
-    while true; do
-      read -rp $'\e[33mChoose action:\n1) Continue anyway (not recommended)\n2) Abort and setup dotfiles first\nYour choice [1/2]: \e[0m' choice
-
+    select choice in "Continue" "Abort"; do
       case "$choice" in
-      1)
-        echo -e "${YELLOW}Continuing without ml4w dotfiles...${NC}"
-        return 0
-        ;;
-      2)
-        echo -e "${RED}Aborting. Please set up 'ml4w' first.${NC}"
-        exit 1
-        ;;
-      *)
-        echo -e "${RED}Invalid choice. Please enter 1 or 2.${NC}"
-        ;;
+      "Continue") return 0 ;;
+      "Abort") exit 1 ;;
+      *) echo "Invalid choice" ;;
       esac
     done
   else
-    echo -e "${GREEN}✅ Found ml4w dotfiles at: ${BLUE}${dotfiles_dir}${NC}"
+    echo -e "${GREEN}✅ Found ml4w dotfiles${NC}"
   fi
 }
 
-# Function to run package installation
 install_packages() {
   echo -e "\n${BLUE}=== Installing Packages ===${NC}"
   local pkg_script="${SCRIPT_DIR}/install-packages/install-packages.sh"
 
   if [[ -f "$pkg_script" ]]; then
-    echo -e "${GREEN}Running package installer...${NC}"
-    bash "$pkg_script"
+    if bash "$pkg_script"; then
+      echo -e "${GREEN}✓ Packages installed${NC}"
+    else
+      echo -e "${RED}❌ Package installation failed${NC}"
+      return 1
+    fi
   else
-    echo -e "${RED}Error: Package installer not found at ${pkg_script}${NC}"
-    exit 1
+    echo -e "${RED}❌ Package installer missing${NC}"
+    return 1
   fi
 }
 
-# Function to source environment scripts
-source_scripts() {
-  echo -e "\n${BLUE}=== Sourcing Environment Scripts ===${NC}"
+run_scripts() {
+  echo -e "\n${BLUE}=== Running Configuration Scripts ===${NC}"
+  local error_count=0
+
   for script in "${SCRIPT_DIR}/scripts/"*.sh; do
     if [[ -f "$script" ]]; then
-      echo -e "${GREEN}🔹 Sourcing: ${BLUE}$(basename "$script")${NC}"
-      # shellcheck disable=SC1090
-      source "$script" || {
-        echo -e "${YELLOW}⚠️  Warning: Failed to source ${script} - continuing...${NC}"
-        continue
-      }
-    fi
-  done
-}
+      script_name=$(basename "$script")
 
-# Function to execute setup scripts
-run_scripts() {
-  echo -e "\n${BLUE}=== Running Setup Scripts ===${NC}"
-  for script in "${SCRIPT_DIR}/scripts/"*.sh; do
-    if [[ -f "$script" && -x "$script" ]]; then
-      echo -e "${GREEN}🚀 Running: ${BLUE}$(basename "$script")${NC}"
+      # Skip test scripts unless debugging
+      [[ "$script_name" == *"test.sh" && "${DEBUG:-false}" != "true" ]] && continue
 
-      # Skip test scripts unless in debug mode
-      if [[ "$script" == *"test.sh" && "${DEBUG:-false}" != "true" ]]; then
-        echo -e "${YELLOW}🟡 Skipping test script${NC}"
-        continue
-      fi
+      echo -e "${YELLOW}➡️ Running: ${script_name}${NC}"
 
       if ! bash "$script"; then
-        echo -e "${YELLOW}⚠️  Warning: Script ${script} exited with error${NC}"
-        echo -e "${YELLOW}Would you like to:${NC}"
+        echo -e "${RED}❌ Failed: ${script_name}${NC}"
+        ((error_count++))
+
         select choice in "Continue" "Retry" "Abort"; do
           case $choice in
-          "Continue")
-            break
-            ;;
+          "Continue") break ;;
           "Retry")
-            bash "$script" && break || {
-              echo -e "${RED}Retry failed for ${script}${NC}"
-              continue
-            }
+            if bash "$script"; then
+              ((error_count--))
+              break
+            fi
             ;;
-          "Abort")
-            echo -e "${RED}Aborting setup...${NC}"
-            exit 1
-            ;;
-          *)
-            echo -e "${RED}Invalid option${NC}"
-            ;;
+          "Abort") exit 1 ;;
+          *) echo "Invalid option" ;;
           esac
         done
       fi
     fi
   done
+
+  return $error_count
 }
 
-# Main execution
+# -------------------------------
+# Main Execution
+# -------------------------------
 main() {
-  echo -e "${BLUE}🔧 Starting ML4W System Setup...${NC}"
-  echo -e "Logging output to: ${BLUE}${LOG_FILE}${NC}"
+  local critical_errors=0
 
-  check_ml4w_dotfiles # Verify dotfiles exist
-  install_packages    # Install system packages first
-  source_scripts      # Source environment scripts
-  run_scripts         # Run configuration scripts
+  echo -e "${GREEN}🔧 Starting System Setup 🔧${NC}"
+  log_separator
 
-  echo -e "\n${GREEN}✅ Setup complete!${NC}"
-  echo -e "Review log file for details: ${BLUE}${LOG_FILE}${NC}"
+  # Phase 1: Pre-installation checks
+  check_ml4w_dotfiles || ((critical_errors++))
+  log_separator
+
+  # Phase 2: Package installation
+  install_packages || ((critical_errors++))
+  log_separator
+
+  # Phase 3: Configuration scripts
+  run_scripts || ((critical_errors++))
+  log_separator
+
+  # Final status
+  if [[ $critical_errors -eq 0 ]]; then
+    echo -e "${GREEN}✅ Setup completed successfully!${NC}"
+  else
+    echo -e "${RED}❌ Setup completed with ${critical_errors} error(s)${NC}"
+  fi
+
+  echo -e "\n${BLUE}=== Installation Summary ==="
+  echo -e "Log file: ${LOG_FILE}"
+  echo -e "Completed: $(date)${NC}"
+
+  return $critical_errors
 }
 
-# Run main function
+# -------------------------------
+# Execution with proper logging
+# -------------------------------
 main
+result=$?
+
+# Restore original output
+exec 1>&3 2>&4
+
+# Final colored output
+if [[ $result -eq 0 ]]; then
+  echo -e "${GREEN}✅ Success! View full log: ${LOG_FILE}${NC}"
+else
+  echo -e "${RED}❌ Completed with ${result} error(s)${NC}"
+  echo -e "View errors: grep -E 'ERROR|FAIL|WARN' ${LOG_FILE}"
+fi
+
+exit $result

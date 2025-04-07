@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# find a random image from all subfolders of ~/my-wallpaper
+wallpaper=$(find ~/my-wallpaper -type f \( -iname '*.jpg' -o -iname '*.png' -o -iname '*.jpeg' -o -iname '*.webp' \) | shuf -n 1)
+
+# set it with transition
+swww img "$wallpaper" --transition-type any --transition-duration 2

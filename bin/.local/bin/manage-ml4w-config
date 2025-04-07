@@ -1,7 +1,25 @@
 #!/bin/bash
+# Dotfiles Symlink Manager
 
+# -------------------------------
 # Configuration
-DOTFILES_ROOT="$HOME/my-dotfiles"
+# -------------------------------
+set -uo pipefail # Safer error handling
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Paths
+DOTFILES_ROOT="${DOTFILES_ROOT:-$HOME/my-dotfiles}"
+LOG_DIR="$DOTFILES_ROOT/logs"
+mkdir -p "$LOG_DIR"
+LOG_FILE="$LOG_DIR/stow-$(date +%Y%m%d-%H%M%S).log"
+
+# Operations
 STOW_OPERATIONS=(
   "hypr/.config/hypr/conf/keybindings:~/.config/hypr/conf/keybindings"
   "hypr/.config/hypr/scripts:~/.config/hypr/scripts"
@@ -9,47 +27,115 @@ STOW_OPERATIONS=(
   # Add more as: "package_path:target_path"
 )
 
-# Unified stow/unstow function
+# -------------------------------
+# Logging Setup
+# -------------------------------
+{
+  echo -e "\n=== START: $(date) ==="
+  echo "Stow operation log: $LOG_FILE"
+
+  # Save original stdout/stderr
+  exec 3>&1 4>&2
+
+  # Tee output to log file (without color codes)
+  exec > >(
+    tee -i >(
+      while IFS= read -r line; do
+        printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" \
+          "$(echo "$line" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g")"
+      done >>"$LOG_FILE"
+    )
+  ) 2>&1
+}
+
+# -------------------------------
+# Functions
+# -------------------------------
+log_separator() {
+  echo -e "\n${BLUE}══════════════════════════════════════════════════${NC}\n"
+}
+
 stow_operation() {
   local mode=$1 # "stow" or "unstow"
+  local error_count=0
+  local total_operations=${#STOW_OPERATIONS[@]}
+  local success_count=0
 
-  echo "${mode^}ing items..."
+  log_separator
+  echo -e "${GREEN}🔄 ${mode^}ing $total_operations items...${NC}"
+  log_separator
 
   for operation in "${STOW_OPERATIONS[@]}"; do
     IFS=':' read -r package_rel_path target_path <<<"$operation"
     local package_path="$DOTFILES_ROOT/$package_rel_path"
     local stow_flags=""
+    local expanded_target="${target_path/#\~/$HOME}"
 
-    if [ "$mode" = "unstow" ]; then
-      stow_flags="-D"
-    fi
+    [ "$mode" = "unstow" ] && stow_flags="-D"
 
     if [ -d "$package_path" ]; then
-      echo "→ ${mode^}ing $package_rel_path to $target_path"
-      (cd "$(dirname "$package_path")" &&
-        stow $stow_flags --target="${target_path/#\~/$HOME}" -v "$(basename "$package_path")")
+      echo -e "${BLUE}→ Processing: ${package_rel_path} → ${expanded_target}${NC}"
+
+      if (cd "$(dirname "$package_path")" &&
+        stow $stow_flags --target="$expanded_target" -v "$(basename "$package_path")"); then
+        echo -e "${GREEN}✓ Successfully ${mode}ed${NC}"
+        ((success_count++))
+      else
+        echo -e "${RED}✗ Failed to ${mode}${NC}"
+        ((error_count++))
+      fi
     else
-      echo "⚠ Skipping: $package_path does not exist"
+      echo -e "${YELLOW}⚠ Skipping: $package_path does not exist${NC}"
+      ((error_count++))
     fi
+    echo ""
   done
 
-  echo "✅ ${mode^}ing complete!"
-  return 0
+  log_separator
+  echo -e "${GREEN}✅ ${mode^}ing complete!${NC}"
+  echo -e "Success: $success_count, Failed: $error_count"
+  log_separator
+
+  return $error_count
 }
 
-# Main menu
-echo ""
-echo "Dotfiles Manager"
-echo "1) Stow all"
-echo "2) Unstow all"
-echo "3) Exit"
-read -rp "Choose an option [1-3]: " choice
+show_menu() {
+  echo -e "\n${BLUE}══════════════════════════════════════════════════${NC}"
+  echo -e "${GREEN} Dotfiles Manager ${NC}"
+  echo -e "${BLUE}══════════════════════════════════════════════════${NC}"
+  echo -e "1) Stow all (create symlinks)"
+  echo -e "2) Unstow all (remove symlinks)"
+  echo -e "3) Exit"
+  echo -e "${BLUE}══════════════════════════════════════════════════${NC}"
+}
 
-case "$choice" in
-1) stow_operation "stow" ;;
-2) stow_operation "unstow" ;;
-3) exit 0 ;;
-*) echo "Invalid option" ;;
-esac
+# -------------------------------
+# Main Execution
+# -------------------------------
+main() {
+  while true; do
+    show_menu
+    read -rp "Choose an option [1-3]: " choice
 
+    case "$choice" in
+    1) stow_operation "stow" ;;
+    2) stow_operation "unstow" ;;
+    3) break ;;
+    *) echo -e "${RED}Invalid option${NC}" ;;
+    esac
+
+    read -rp $'\nPress Enter to continue...'
+  done
+}
+
+# -------------------------------
+# Run with proper logging
+# -------------------------------
+main
+
+# Restore original output
+exec 1>&3 2>&4
+
+echo -e "\n${GREEN}Operation complete.${NC}"
+echo -e "Log file: ${BLUE}${LOG_FILE}${NC}"
 exit 0

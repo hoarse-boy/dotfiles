@@ -3,6 +3,7 @@ rustup
 go
 deno
 nodejs
+npm
 bun-bin
 python
 zig

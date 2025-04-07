@@ -1,19 +1,68 @@
 #!/bin/bash
 
-cd ~/my-dotfiles || exit 1 # exit if cd fails
+set -uo pipefail
 
-EXCLUDE=("hypr" "arch-installation-script" ".git") # list of directories to exclude
+# -------------------------------
+# Color codes
+# -------------------------------
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
 
-echo ""
-for package in */; do
-  package_name="${package%/}" # remove trailing slash
+# -------------------------------
+# Logging separator
+# -------------------------------
+log_separator() {
+  echo -e "\n${BLUE}══════════════════════════════════════════════════${NC}\n"
+}
 
-  # improved exclusion check
-  if printf '%s\n' "${EXCLUDE[@]}" | grep -Fxq "$package_name"; then
-    echo "Skipping excluded package: $package_name"
-    continue
+# -------------------------------
+# Silent cleanup for Neovim config
+# -------------------------------
+cleanup_nvim() {
+  NVIM_PATH="$HOME/.config/nvim"
+
+  if [[ -d "$NVIM_PATH" ]]; then
+    echo -e "${YELLOW}⚠️  Removing existing Neovim config at ${NVIM_PATH}${NC}"
+    rm -rf "$NVIM_PATH"
+    echo -e "${GREEN}✓ Removed old Neovim config.${NC}"
   fi
+}
 
-  echo "Stowing: $package_name"
-  stow -v "$package_name"
-done
+# -------------------------------
+# Stow packages
+# -------------------------------
+run_stow() {
+  cd ~/my-dotfiles || {
+    echo -e "${RED}✘ Failed to cd into ~/my-dotfiles${NC}"
+    return 1
+  }
+
+  EXCLUDE=("hypr" "arch-installation-script" ".git") # list of dirs to exclude
+
+  log_separator
+  echo -e "${GREEN}📦 Stowing dotfiles...${NC}"
+  log_separator
+
+  for package in */; do
+    package_name="${package%/}" # remove trailing slash
+
+    if printf '%s\n' "${EXCLUDE[@]}" | grep -Fxq "$package_name"; then
+      echo -e "${YELLOW}→ Skipping excluded package: ${package_name}${NC}"
+      continue
+    fi
+
+    echo -e "${BLUE}→ Stowing: ${package_name}${NC}"
+    stow -v "$package_name"
+  done
+
+  echo -e "${GREEN}✅ All applicable packages stowed.${NC}"
+}
+
+# -------------------------------
+# Main
+# -------------------------------
+cleanup_nvim
+run_stow

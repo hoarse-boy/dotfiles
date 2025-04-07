@@ -1,86 +1,166 @@
 #!/bin/bash
+# Dotfiles Cleanup Manager
 
-EXCLUDE=("hypr" "arch-installation-script" ".git") # list of directories to exclude
+# -------------------------------
+# Configuration
+# -------------------------------
+set -uo pipefail
 
-echo ""
-echo "Choose an operation for the actual dotfiles in your home directory:"
-echo "1) Remove (permanent deletion)"
-echo "2) Rename (backup)"
-echo "3) Unstow"
-echo "4) Cancel"
-read -r raw_choice
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
 
-# Trim whitespace from the choice
-choice="$(echo "$raw_choice" | xargs)"
+# Paths
+DOTFILES_ROOT="${DOTFILES_ROOT:-$HOME/my-dotfiles}"
+LOG_DIR="$DOTFILES_ROOT/logs"
+mkdir -p "$LOG_DIR"
+LOG_FILE="$LOG_DIR/cleanup-$(date +%Y%m%d-%H%M%S).log"
 
-if [[ $choice == "4" ]]; then
-  echo "Operation cancelled."
-  exit 0
-fi
+# Exclusions
+EXCLUDE=("hypr" "arch-installation-script" ".git")
 
-for package in ~/my-dotfiles/*/; do
-  package_name="${package%/}"        # remove trailing slash
-  package_name="${package_name##*/}" # extract folder name
+# -------------------------------
+# Logging Setup
+# -------------------------------
+{
+  echo -e "\n=== START: $(date) ==="
+  echo "Cleanup operation log: $LOG_FILE"
 
-  # Skip excluded packages
-  if printf '%s\n' "${EXCLUDE[@]}" | grep -Fxq "$package_name"; then
-    echo "Skipping excluded package: $package_name"
-    continue
-  fi
+  exec 3>&1 4>&2
 
-  # Determine the correct target path dynamically
-  if [[ -d "$package/.config" ]]; then
-    # If the package contains a .config directory, place it in ~/.config
-    target="$HOME/.config/$package_name"
-  else
-    # Otherwise, place it directly in the home directory
-    target="$HOME/.$package_name"
-  fi
+  exec > >(
+    tee -i >(
+      while IFS= read -r line; do
+        printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" \
+          "$(echo "$line" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g")"
+      done >>"$LOG_FILE"
+    )
+  ) 2>&1
+}
 
-  # Debugging: Print the target being checked
-  echo "Checking target: $target"
+# -------------------------------
+# Functions
+# -------------------------------
+log_separator() {
+  echo -e "\n${BLUE}══════════════════════════════════════════════════${NC}\n"
+}
 
-  if [[ $choice == "1" ]]; then
-    if [[ -e "$target" || -L "$target" ]]; then
-      echo "Are you sure you want to permanently delete $target? (y/N)"
-      read -r raw_confirm
-      confirm="$(echo "$raw_confirm" | xargs | tr '[:upper:]' '[:lower:]')"
-      if [[ "$confirm" == "y" || "$confirm" == "yes" ]]; then
-        echo "Removing: $target"
-        rm -rf "$target" # Using rm -rf for both files/dirs and symlinks safely
+cleanup_operation() {
+  local choice=$1
+  local error_count=0
+  local success_count=0
+
+  log_separator
+  echo -e "${GREEN}🔧 Performing cleanup operation: $choice${NC}"
+  log_separator
+
+  for package in "$DOTFILES_ROOT"/*/; do
+    package_name="${package%/}"
+    package_name="${package_name##*/}"
+
+    if printf '%s\n' "${EXCLUDE[@]}" | grep -Fxq "$package_name"; then
+      echo -e "${YELLOW}⚠ Skipping excluded package: $package_name${NC}"
+      continue
+    fi
+
+    if [[ -d "$package/.config" ]]; then
+      target="$HOME/.config/$package_name"
+    else
+      target="$HOME/.$package_name"
+    fi
+
+    echo -e "${BLUE}→ Checking: $target${NC}"
+
+    if [[ $choice == "1" ]]; then
+      if [[ -e "$target" || -L "$target" ]]; then
+        echo "Are you sure you want to permanently delete $target? (y/N)"
+        read -r raw_confirm
+        confirm="$(echo "$raw_confirm" | xargs | tr '[:upper:]' '[:lower:]')"
+        if [[ "$confirm" == "y" || "$confirm" == "yes" ]]; then
+          echo -e "${RED}Removing: $target${NC}"
+          rm -rf "$target" && ((success_count++)) || ((error_count++))
+        else
+          echo -e "${YELLOW}Skipped removal of $target${NC}"
+        fi
       else
-        echo "Skipping removal of $target"
+        echo -e "${YELLOW}Skipping $target (not found)${NC}"
       fi
-    else
-      echo "Skipping $target (not found)"
+
+    elif [[ $choice == "2" ]]; then
+      if [[ -e "$target" || -L "$target" ]]; then
+        timestamp=$(date +"%Y%m%d_%H%M%S")
+        new_name="${target}_old_${timestamp}"
+        counter=1
+        while [[ -e "$new_name" || -L "$new_name" ]]; do
+          new_name="${target}_old_${timestamp}_${counter}"
+          ((counter++))
+        done
+
+        echo -e "${GREEN}Renaming: $target → $new_name${NC}"
+        mv "$target" "$new_name" && ((success_count++)) || ((error_count++))
+      else
+        echo -e "${YELLOW}Skipping $target (not found)${NC}"
+      fi
+
+    elif [[ $choice == "3" ]]; then
+      echo -e "${GREEN}Unstowing package: $package_name${NC}"
+      if (cd "$DOTFILES_ROOT" && stow -D "$package_name"); then
+        echo -e "${GREEN}✓ Successfully unstowed${NC}"
+        ((success_count++))
+      else
+        echo -e "${RED}✗ Failed to unstow${NC}"
+        ((error_count++))
+      fi
     fi
 
-  elif [[ $choice == "2" ]]; then
-    if [[ -e "$target" || -L "$target" ]]; then
-      timestamp=$(date +"%Y%m%d_%H%M%S") # generate unique timestamp
-      new_name="${target}_old_${timestamp}"
+    echo ""
+  done
 
-      # Ensure uniqueness in case of duplicate timestamps
-      counter=1
-      while [[ -e "$new_name" || -L "$new_name" ]]; do
-        new_name="${target}_old_${timestamp}_${counter}"
-        ((counter++))
-      done
+  log_separator
+  echo -e "${GREEN}✅ Cleanup operation complete!${NC}"
+  echo -e "Success: $success_count, Failed: $error_count"
+  log_separator
 
-      echo "Renaming $target -> $new_name"
-      mv "$target" "$new_name"
-
-    else
-      echo "Skipping $target (not found)"
-    fi
-
-  elif [[ $choice == "3" ]]; then
-    # Unstow the package using stow -D
-    echo "Unstowing package: $package_name"
-    stow -D "$package_name"
+  if [[ $choice != "3" ]]; then
+    echo -e "${YELLOW}💡 Run stow-all.sh to restore dotfiles.${NC}"
   fi
-done
 
-if [[ $choice != "3" ]]; then
-  echo "Run stow-all.sh to restore dotfiles."
-fi
+  return $error_count
+}
+
+# -------------------------------
+# Main Execution
+# -------------------------------
+main() {
+  echo ""
+  echo -e "${GREEN}Choose an operation for the actual dotfiles in your home directory:${NC}"
+  echo -e "1) ${RED}Remove (permanent deletion)${NC}"
+  echo -e "2) ${YELLOW}Rename (backup)${NC}"
+  echo -e "3) ${BLUE}Unstow${NC}"
+  echo -e "4) Cancel"
+
+  read -rp "Your choice: " raw_choice
+  choice="$(echo "$raw_choice" | xargs)"
+
+  case "$choice" in
+    1|2|3) cleanup_operation "$choice" ;;
+    4)
+      echo -e "${YELLOW}Operation cancelled.${NC}"
+      ;;
+    *)
+      echo -e "${RED}Invalid option. Exiting.${NC}"
+      ;;
+  esac
+}
+
+main
+
+# Restore original output
+exec 1>&3 2>&4
+
+echo -e "\n${GREEN}Done.${NC}"
+echo -e "Log file: ${BLUE}${LOG_FILE}${NC}"
+

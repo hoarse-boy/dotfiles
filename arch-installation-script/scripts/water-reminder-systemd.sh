@@ -10,3 +10,4 @@ systemctl --user enable --now water-reminder.timer
 systemctl --user list-timers --all | grep water-reminder
 
 echo "Water reminder activated successfully!"
+echo

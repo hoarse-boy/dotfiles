@@ -41,3 +41,4 @@ virglrenderer
 mesa
 mesa-utils
 yazi
+ventoy-bin

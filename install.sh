@@ -9,11 +9,28 @@ ML4W_INSTALL_URL="https://raw.githubusercontent.com/mylinuxforwork/dotfiles/main
 INSTALL_DIR="$HOME/my-dotfiles"
 BIN_DIR="$INSTALL_DIR/bin/.local/bin"
 
+# At the start of your install.sh:
+LOG_FILE="$INSTALL_DIR/installation.log"
+MAX_LOG_SIZE=1048576 # 1MB
+
+# Rotate log if too large
+if [ -f "$LOG_FILE" ] && [ $(stat -c%s "$LOG_FILE") -gt $MAX_LOG_SIZE ]; then
+  mv "$LOG_FILE" "$LOG_FILE.old"
+fi
+
+# Start new log with header
+echo -e "\n\n=== Installation started $(date) ===\n" >>"$LOG_FILE"
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
+
+# Add this separator function:
+log_separator() {
+  echo -e "\n${YELLOW}══════════════════════════════════════════════════${NC}\n"
+}
 
 # -------------------------------
 # Functions
@@ -25,8 +42,8 @@ NC='\033[0m' # No Color
 ensure_local_bin_in_path() {
   if ! grep -q 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.bashrc"; then
     echo -e "${YELLOW}➕ Adding ~/.local/bin to PATH in .bashrc...${NC}"
-    echo '' >> "$HOME/.bashrc"
-    echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
+    echo '' >>"$HOME/.bashrc"
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >>"$HOME/.bashrc"
     echo -e "${GREEN}✅ .bashrc updated!${NC}"
   else
     echo -e "${GREEN}✅ ~/.local/bin already in PATH${NC}"
@@ -84,7 +101,7 @@ verify_binaries() {
 # Installation Flow
 # -------------------------------
 clear
-cat << "EOF"
+cat <<"EOF"
    ____         __       ____
   /  _/__  ___ / /____ _/ / /__ ____
  _/ // _ \(_-</ __/ _ `/ / / -_) __/
@@ -117,17 +134,31 @@ fi
 
 # Run installation steps
 install_ml4w
+log_separator
+
 clone_repo
+log_separator
+
 verify_binaries
+log_separator
 
 # Add ~/.local/bin to PATH automatically
 ensure_local_bin_in_path
+log_separator
 
 # Execute configuration scripts
 echo -e "\n${GREEN}⚙️  Running configuration...${NC}"
-"$BIN_DIR/stow-all" && \
-"$BIN_DIR/manage-ml4w-config" && \
-"$INSTALL_DIR/arch-installation-script/arch-fresh-machine-setup"
+if "$BIN_DIR/stow-all" &&
+  "$BIN_DIR/manage-ml4w-config" &&
+  "$INSTALL_DIR/arch-installation-script/arch-fresh-machine-setup"; then
+  echo -e "\n${GREEN}✅ All components installed successfully!${NC}"
+else
+  echo -e "\n${YELLOW}⚠️  Installation completed with some errors${NC}"
+  echo -e "Check individual component logs above"
 
-echo -e "\n${GREEN}✅ Base installation complete!${NC}"
-
+  # If arch-fresh-machine-setup ran, it will have already printed detailed errors
+  if [ -f "$INSTALL_DIR/arch-installation-script/setup.log" ]; then
+    echo -e "\n${YELLOW}Component error summary:${NC}"
+    grep -E '❌|FAILED|ERROR' "$INSTALL_DIR/arch-installation-script/setup.log" | uniq
+  fi
+fi

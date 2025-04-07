@@ -1,0 +1,112 @@
+#!/bin/bash
+# GitHub Authentication Setup
+
+# -------------------------------
+# Configuration
+# -------------------------------
+set -uo pipefail
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# -------------------------------
+# Functions
+# -------------------------------
+log_separator() {
+  echo -e "\n${BLUE}══════════════════════════════════════════════════${NC}\n"
+}
+
+setup_git() {
+  log_separator
+  echo -e "${GREEN}⚙️  GitHub Authentication Setup${NC}"
+  log_separator
+
+  # Prompt user
+  echo -e "Do you want to set up GitHub authentication? [Y/n]"
+  read -r ADD_GITHUB
+  ADD_GITHUB=${ADD_GITHUB:-Y}
+
+  if [[ ! "$ADD_GITHUB" =~ ^[Yy]$ ]]; then
+    echo -e "${YELLOW}❌ Skipping GitHub authentication setup.${NC}"
+    return 0
+  fi
+
+  echo ""
+
+  # Defaults
+  DEFAULT_USER="hoarse-boy"
+  DEFAULT_EMAIL="jourdymagoofficial@gmail.com"
+
+  # Input user details
+  echo -e "Enter your GitHub username [${DEFAULT_USER}]:"
+  read -r GITHUB_USER
+  GITHUB_USER=${GITHUB_USER:-$DEFAULT_USER}
+
+  echo -e "Enter your GitHub email [${DEFAULT_EMAIL}]:"
+  read -r GITHUB_EMAIL
+  GITHUB_EMAIL=${GITHUB_EMAIL:-$DEFAULT_EMAIL}
+
+  # Apply global config
+  git config --global user.name "$GITHUB_USER"
+  git config --global user.email "$GITHUB_EMAIL"
+  git config --global init.defaultBranch main
+  git config --global credential.helper store
+
+  echo -e "${GREEN}✓ Git config set for ${GITHUB_USER} (${GITHUB_EMAIL})${NC}"
+
+  # Choose method
+  echo -e "\nChoose authentication method:"
+  echo -e "1) HTTPS (with PAT)"
+  echo -e "2) SSH"
+  read -r AUTH_METHOD
+
+  if [[ "$AUTH_METHOD" == "1" ]]; then
+    echo -e "Enter your GitHub Personal Access Token (PAT):"
+    read -rs GITHUB_PAT
+
+    echo "https://${GITHUB_USER}:${GITHUB_PAT}@github.com" >~/.git-credentials
+    chmod 600 ~/.git-credentials
+
+    echo -e "${GREEN}✓ HTTPS authentication configured!${NC}"
+
+  elif [[ "$AUTH_METHOD" == "2" ]]; then
+    SSH_KEY_PATH="$HOME/.ssh/id_rsa"
+
+    if [[ -f "$SSH_KEY_PATH" ]]; then
+      echo -e "${YELLOW}✔ SSH key already exists at $SSH_KEY_PATH${NC}"
+    else
+      echo -e "Generating SSH key..."
+      ssh-keygen -t rsa -b 4096 -C "$GITHUB_EMAIL" -f "$SSH_KEY_PATH" -N ""
+      eval "$(ssh-agent -s)"
+      ssh-add "$SSH_KEY_PATH"
+
+      echo -e "${BLUE}→ Copy the following SSH public key to GitHub (Settings > SSH and GPG keys):${NC}"
+      echo ""
+      cat "$SSH_KEY_PATH.pub"
+      echo ""
+      read -rp "Press Enter after adding the SSH key..."
+    fi
+
+    echo -e "Testing SSH connection to GitHub..."
+    ssh -T git@github.com || echo -e "${RED}⚠ SSH connection test failed.${NC}"
+  else
+    echo -e "${RED}Invalid authentication method selected.${NC}"
+  fi
+
+  log_separator
+  echo -e "${GREEN}✅ GitHub authentication setup complete.${NC}"
+  log_separator
+
+  return 0
+}
+
+# -------------------------------
+# Main Execution
+# -------------------------------
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  setup_git
+fi
