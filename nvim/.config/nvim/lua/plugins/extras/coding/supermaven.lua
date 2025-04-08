@@ -1,7 +1,7 @@
 return {
   {
     "supermaven-inc/supermaven-nvim",
-    event = "VeryLazy",
+    -- event = "VeryLazy",   -- make supermaven to not be lazy-loaded to make the highligther work
     build = ":SupermavenUseFree", -- this line is optional, remove if you are using pro
     config = function()
       require("supermaven-nvim").setup({
@@ -15,10 +15,11 @@ return {
         -- ignore_filetypes = { cpp = true },
         color = {
           -- suggestion_color = "#cfcccc",
-          -- cterm = 244,
+          cterm = 244,
           -- -- NOTE: temp fix. https://github.com/supermaven-inc/supermaven-nvim/pull/53
-          suggestion_color = vim.api.nvim_get_hl(0, { name = "NonText" }).fg,
-          cterm = vim.api.nvim_get_hl(0, { name = "NonText" }).cterm,
+          -- suggestion_color = vim.api.nvim_get_hl(0, { name = "NonText" }).fg,
+          suggestion_color = "#4D4B49",
+          -- cterm = vim.api.nvim_get_hl(0, { name = "NonText" }).cterm,
         },
         log_level = "info", -- set to "off" to disable logging completely
         disable_inline_completion = false, -- disables inline completion for use with cmp

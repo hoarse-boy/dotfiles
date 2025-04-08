@@ -169,14 +169,15 @@ return {
     },
   },
 
-  {
-    "supermaven-inc/supermaven-nvim",
-    event = "VeryLazy",
-    dependencies = { "saghen/blink.cmp" },
-    opts = {
-      -- Add SuperMaven options here
-    },
-  },
+  -- make supermaven to not be lazy-loaded to make the highligther work
+  -- {
+  --   "supermaven-inc/supermaven-nvim",
+  --   event = "VeryLazy",
+  --   dependencies = { "saghen/blink.cmp" },
+  --   opts = {
+  --     -- Add SuperMaven options here
+  --   },
+  -- },
 
   {
     "catppuccin",
