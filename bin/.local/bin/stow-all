@@ -40,7 +40,7 @@ run_stow() {
     return 1
   }
 
-  EXCLUDE=("hypr" "arch-installation-script" ".git") # list of dirs to exclude
+  EXCLUDE=("hypr" "arch-installation-script" ".git" "logs")
 
   log_separator
   echo -e "${GREEN}📦 Stowing dotfiles...${NC}"
