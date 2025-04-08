@@ -1,3 +1,12 @@
+local left_separator = ""
+local right_separator = ""
+
+-- make empty seperator as neovide makes this "" shrinked to like 70%
+if vim.g.neovide then
+  left_separator = ""
+  right_separator = ""
+end
+
 local colors = {
   blue = "#80a0ff",
   cyan = "#79dac8",
@@ -119,7 +128,7 @@ return {
       opts.options = {
         theme = bubbles_theme,
         component_separators = "",
-        section_separators = { left = "", right = "" },
+        section_separators = { left = right_separator, right = left_separator },
         -- disabled_filetypes = { statusline = { "dashboard", "alpha", "starter" } },
         -- TODO: lualine is active in dap-ui. happen only in tmux session. now it happens in non tmux too. if that error occurs, it still shows lualine in non dap-ui windows.
         -- after closing and opening the ui, dapui_console and dapui_watches are still active. even when it is disabled below.
@@ -127,7 +136,7 @@ return {
         globalstatus = true,
       }
 
-      opts.sections.lualine_a = { { "mode", separator = { left = "" }, right_padding = 2 } } -- init value from lazyvim is just { "mode" }. so we need to overwrite it.
+      opts.sections.lualine_a = { { "mode", separator = { left = left_separator }, right_padding = 2 } } -- init value from lazyvim is just { "mode" }. so we need to overwrite it.
       opts.sections.lualine_y = { { "location", padding = { left = 1, right = 1 } } }
 
       -- table.insert(opts.sections.lualine_x, 1, lsp) -- takes too much space. need to be refined to return only one client.
@@ -138,7 +147,7 @@ return {
           function()
             return "  " .. os.date("%X")
           end,
-          separator = { right = "" },
+          separator = { right = right_separator },
         },
       }
 
