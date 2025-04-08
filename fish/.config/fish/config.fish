@@ -59,6 +59,7 @@ abbr sf 'source ~/.config/fish/config.fish'
 
 # delta
 abbr delta 'delta --pager=never'
+abbr diff 'delta --pager=never'
 
 # nvim
 abbr v nvim
@@ -110,6 +111,8 @@ abbr e exit
 abbr c clear
 abbr vc 'code .'
 abbr sudo 'sudo -E'
+abbr ch 'chmod +x'
+abbr dot 'cd ~/my-dotfiles'
 
 # modify vim mode binding
 set fish_key_bindings fish_user_key_bindings

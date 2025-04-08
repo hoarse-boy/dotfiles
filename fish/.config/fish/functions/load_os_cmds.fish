@@ -51,10 +51,10 @@ function load_os_cmds --description "Load OS-specific commands"
             abbr clip wl-copy
             abbr paste wl-paste
 
-            # safer rm, better grep and find
+            # other commands
             alias rm trash-put
-            alias grep rg
-            alias find fd
+            # alias grep rg
+            # alias find fd
 
             # npm
             alias cz czg
