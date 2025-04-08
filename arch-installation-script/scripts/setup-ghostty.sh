@@ -49,7 +49,7 @@ else
   cat >"$CONFIG_FILE" <<EOF
 font-size = 14
 # font-family = JetBrains Mono NL Bold Nerd Font Complete Mono
-background-opacity = 0.93
+background-opacity = 1
 EOF
 
   [[ $? -eq 0 ]] || fail_or_exit "failed to create configuration file"
