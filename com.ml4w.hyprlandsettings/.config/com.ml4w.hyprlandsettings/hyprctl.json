@@ -9,7 +9,7 @@
     },
     {
         "key": "general:no_border_on_floating",
-        "value": true
+        "value": "true"
     },
     {
         "key": "general:border_size",
@@ -37,11 +37,11 @@
     },
     {
         "key": "decoration:dim_inactive",
-        "value": true
+        "value": "true"
     },
     {
         "key": "decoration:dim_strength",
-        "value": 0.3
+        "value": 0.4
     },
     {
         "key": "decoration:fullscreen_opacity",
@@ -57,7 +57,7 @@
     },
     {
         "key": "decoration:dim_special",
-        "value": 0.3
+        "value": 0.6
     },
     {
         "key": "decoration:dim_around",
@@ -89,7 +89,7 @@
     },
     {
         "key": "decoration:shadow:enabled",
-        "value": true
+        "value": "true"
     },
     {
         "key": "decoration:blur:contrast",
@@ -102,5 +102,29 @@
     {
         "key": "general:hover_icon_on_border",
         "value": true
+    },
+    {
+        "key": "input:mouse_refocus",
+        "value": false
+    },
+    {
+        "key": "cursor:hide_on_key_press",
+        "value": "true"
+    },
+    {
+        "key": "binds:movefocus_cycles_fullscreen",
+        "value": "true"
+    },
+    {
+        "key": "misc:exit_window_retains_fullscreen",
+        "value": "true"
+    },
+    {
+        "key": "misc:focus_on_activate",
+        "value": "true"
+    },
+    {
+        "key": "misc:new_window_takes_over_fullscreen",
+        "value": 1
     }
 ]
