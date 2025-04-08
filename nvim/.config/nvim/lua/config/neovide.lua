@@ -8,6 +8,7 @@ M.setup = function()
   if vim.g.neovide then
     -- TODO: lualine "" and "" characters color is different in neovide. need to fix it.
     -- it is fine arch hyprland
+    -- in latest ml4w 2.9 or so, neovide has this "" shrinked to like 70%
 
     opt.guifont = "JetBrainsMono Nerd Font:h16.00:Medium" -- the font used in graphical neovim applications
 
@@ -35,8 +36,8 @@ M.setup = function()
     local os_name = os_util.get_os_name()
 
     if os_name == os_util.LINUX then
-      opt.guifont = "JetBrainsMono Nerd Font:h12.5:Bold" -- the font used in graphical neovim applications
-      -- opt.guifont = "JetBrainsMono Nerd Font:h12.5:Medium" -- the font used in graphical neovim applications
+      opt.guifont = "JetBrainsMono Nerd Font:h15:Medium" -- the font used in graphical neovim applications
+      -- opt.guifont = "JetBrainsMono Nerd Font:h12.5:Bold" -- the font used in graphical neovim applications
       -- opt.guifont = "FiraCode Nerd Font Mono:h12.15:Medium" -- the font used in graphical neovim applications
 
       -- stylua: ignore start
@@ -72,12 +73,12 @@ M.setup = function()
     end
 
     vim.g.neovide_hide_mouse_when_typing = true
-    vim.g.neovide_cursor_vfx_mode = "ripple" -- wireframe, sonicboom, pixiedust, railgun
-    -- vim.g.neovide_cursor_vfx_particle_curl = 1.5 -- only for railgun
-    vim.g.neovide_cursor_vfx_particle_density = 25.0
-    vim.g.neovide_cursor_vfx_opacity = 300.0 
-    vim.g.neovide_cursor_vfx_particle_lifetime = 13.5
-    vim.g.neovide_cursor_vfx_particle_speed = 100.0
+    vim.g.neovide_cursor_vfx_mode = "railgun" -- wireframe, sonicboom, pixiedust, railgun, ripple
+    vim.g.neovide_cursor_vfx_particle_curl = 2.5 -- only for railgun
+    vim.g.neovide_cursor_vfx_particle_density = 1.5
+    -- vim.g.neovide_cursor_vfx_opacity = 300.0 
+    -- vim.g.neovide_cursor_vfx_particle_lifetime = 13.5
+    -- vim.g.neovide_cursor_vfx_particle_speed = 100.0
   end
 end
 
