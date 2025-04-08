@@ -232,3 +232,14 @@ misc
 create_note
 npm
 jsx
+time_and_date
+bluetooth
+tws
+audio
+cat
+deprecated
+ventoy
+waypaper
+hyprpaper
+swww
+wallpaper
