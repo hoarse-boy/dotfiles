@@ -7,7 +7,7 @@ if [[ ${#active} -gt 0 ]]; then
   hyprctl dispatch togglespecialworkspace "$active"
 
   # If moving left or right, stop after hiding Quick-note
-  if [[ "$1" == "left" || "$1" == "right" ]]; then
+  if [[ "$1" == "left" || "$1" == "right" || "$1" == "down" ]]; then
     exit 0
   fi
 fi
@@ -19,4 +19,6 @@ elif [[ "$1" == "left" ]]; then
   hyprctl dispatch workspace r-1
 elif [[ "$1" == "right" ]]; then
   hyprctl dispatch workspace r+1
+elif [[ "$1" == "down" ]]; then
+  hyprctl dispatch workspace empty
 fi
