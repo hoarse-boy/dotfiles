@@ -26,6 +26,29 @@ autocmd("FileType", {
   end,
 })
 
+-- options.lua is not working. this is a workaround.
+-- opt.wrap = false
+-- vim.wo.wrap = false
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "text" },
+  callback = function()
+    vim.opt_local.wrap = false
+  end,
+})
+
+-- for indentation. currently, makes my go code to have 4 tabs instead of 2.
+-- opt.shiftwidth = 4 -- this is to make indentation work properly.
+-- opt.tabstop = 4 -- Tabs are displayed as 4 spaces even when it is not. if the actual tab width is 4, it will be displayed the same.
+-- NOTE: if the file has 4 spaces, add that to the lua table below in 'pattern'.
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "typescript", "go", "fish" },
+  callback = function()
+    vim.bo.tabstop = 4
+    vim.bo.shiftwidth = 4
+    -- vim.bo.softtabstop = 4
+  end,
+})
+
 -- NOTE: disable this in favor of the yanky plugin
 -- -- make yank animation to be blazingly fast
 -- local yank_group = augroup("HighlightYank", {})
@@ -78,25 +101,3 @@ autocmd("FileType", {
 --     vim.fn.writefile({log_message}, log_file, "a")
 --   end
 -- })
-
--- options.lua is not working. this is a workaround.
--- opt.wrap = false
--- vim.wo.wrap = false
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "markdown", "text" },
-  callback = function()
-    vim.opt_local.wrap = false
-  end,
-})
-
--- -- for indentation. currently, makes my go code to have 4 tabs instead of 2.
--- opt.shiftwidth = 4 -- this is to make indentation work properly.
--- opt.tabstop = 4 -- Tabs are displayed as 4 spaces even when it is not. if the actual tab width is 4, it will be displayed the same.
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "typescript", "go" },
-  callback = function()
-    vim.bo.tabstop = 4
-    vim.bo.shiftwidth = 4
-    -- vim.bo.softtabstop = 4
-  end,
-})
