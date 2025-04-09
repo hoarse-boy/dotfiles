@@ -113,6 +113,7 @@ abbr vc 'code .'
 abbr sudo 'sudo -E'
 abbr ch 'chmod +x'
 abbr dot 'cd ~/my-dotfiles'
+abbr con 'cd ~/.config'
 
 # modify vim mode binding
 set fish_key_bindings fish_user_key_bindings
