@@ -243,3 +243,4 @@ waypaper
 hyprpaper
 swww
 wallpaper
+gimp
