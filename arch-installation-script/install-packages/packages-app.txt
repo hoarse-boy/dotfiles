@@ -4,4 +4,4 @@ dbeaver
 postman-bin
 spotify
 neovide
-parsec-bin
+gimp
