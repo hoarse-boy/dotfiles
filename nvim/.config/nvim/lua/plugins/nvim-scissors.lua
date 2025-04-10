@@ -18,7 +18,8 @@ return {
           keymaps = {
             -- if not mentioned otherwise, the keymaps apply to normal mode
             cancel = "q",
-            saveChanges = "<CR>", -- alternatively, can also use `:w`
+            saveChanges = ":w", -- alternatively, can also use `:w`
+            -- saveChanges = "<CR>", -- alternatively, can also use `:w`
             goBackToSearch = "<ESC>",
             deleteSnippet = "<Leader>D", -- it does not have prompt before deletion. proceed with caution
             duplicateSnippet = "<Leader>c", -- "<C-d>",
