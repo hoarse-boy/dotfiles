@@ -1,9 +1,5 @@
 local autocmd = vim.api.nvim_create_autocmd
-local augroup = vim.api.nvim_create_augroup
 local printf = require("plugins.util.printf").printf
-
--- rust keymaps
-local rust_keymaps = augroup("rust_keymaps", {})
 
 return {
   -- Extend auto completion
@@ -38,34 +34,38 @@ return {
   {
     "folke/which-key.nvim",
     opts = function(_, _)
-      autocmd("Filetype", {
+      local wk = require("which-key")
+      local augroup = vim.api.nvim_create_augroup
+      local rust_keymaps = augroup("rust_keymaps", {})
+
+      autocmd("BufEnter", {
         group = rust_keymaps,
-        pattern = { "rust" },
-        callback = function()
-          vim.schedule(function()
+        pattern = "*.rs", -- ex. for markdown use "*.md"
+        callback = function(args)
+          if vim.bo[args.buf].filetype ~= "rust" then
+            return
+          end
+          local mapping = {
             -- TODO: RustSSR [query]
             -- RustViewCrateGraph [backend [output]]
 
-            local wk = require("which-key")
-            local mappings = {
-              { "<leader>l", icon = "󱘗", group = printf("lsp (rust-tools)"), mode = "n", buffer = 0 },
-              { "<leader>lm", icon = "󱘗", group = printf("move items"), mode = "n", buffer = 0 },
+            { "<leader>l", icon = "󱘗", group = printf("lsp (rust-tools)"), mode = "n", buffer = 0 },
+            { "<leader>lm", icon = "󱘗", group = printf("move items"), mode = "n", buffer = 0 },
 
-              -- stylua: ignore start
-              { "K", "<cmd>RustHoverActions<cr>", icon = "󱘗", desc = printf("Hover Actions (Rust)"), mode = "n", buffer = 0 },
-              { "<leader>la", "<cmd>RustCodeAction<cr>", icon = "󱘗", desc = printf("Code Action (Rust)"), mode = "n", buffer = 0 },
-              { "<leader>dr", "<cmd>RustDebuggables<cr>", icon = "󱘗", desc = printf("Run Debuggables (Rust)"), mode = "n", buffer = 0 },
-              { "<leader>lc", "<cmd>RustOpenCargo<cr>", icon = "󱘗", desc = printf("Open Cargo (Rust)"), mode = "n", buffer = 0 },
-              { "<leader>lmu", "<cmd>RustMoveItemUp<cr>", icon = "󱘗", desc = printf("Move Item Up (Rust)"), mode = "n", buffer = 0 },
-              { "<leader>lmd", "<cmd>RustMoveItemDown<cr>", icon = "󱘗", desc = printf("Move Item Down (Rust)"), mode = "n", buffer = 0 },
-              { "<leader>lr", "<cmd>RustHoverRange<cr>", icon = "󱘗", desc = printf("Hover Range (Rust)"), mode = "n", buffer = 0 },
-              { "<leader>lp", "<cmd>RustParentModule<cr>", icon = "󱘗", desc = printf "Go to Parent Module (Rust)", mode = "n", buffer = 0 },
-              { "<leader>lj", "<cmd>RustJoinLines<cr>", icon = "󱘗", desc = printf("Join Line(Rust)"), mode = "n", buffer = 0 },
-              -- stylua: ignore end
-            }
-
-            wk.add(mappings)
-          end)
+            -- stylua: ignore start
+            { "K", "<cmd>RustHoverActions<cr>", icon = "󱘗", desc = printf("Hover Actions (Rust)"), mode = "n", buffer = 0 },
+            { "<leader>la", "<cmd>RustCodeAction<cr>", icon = "󱘗", desc = printf("Code Action (Rust)"), mode = "n", buffer = 0 },
+            { "<leader>dr", "<cmd>RustDebuggables<cr>", icon = "󱘗", desc = printf("Run Debuggables (Rust)"), mode = "n", buffer = 0 },
+            { "<leader>lc", "<cmd>RustOpenCargo<cr>", icon = "󱘗", desc = printf("Open Cargo (Rust)"), mode = "n", buffer = 0 },
+            { "<leader>lmu", "<cmd>RustMoveItemUp<cr>", icon = "󱘗", desc = printf("Move Item Up (Rust)"), mode = "n", buffer = 0 },
+            { "<leader>lmd", "<cmd>RustMoveItemDown<cr>", icon = "󱘗", desc = printf("Move Item Down (Rust)"), mode = "n", buffer = 0 },
+            { "<leader>lr", "<cmd>RustHoverRange<cr>", icon = "󱘗", desc = printf("Hover Range (Rust)"), mode = "n", buffer = 0 },
+            { "<leader>lp", "<cmd>RustParentModule<cr>", icon = "󱘗", desc = printf "Go to Parent Module (Rust)", mode = "n", buffer = 0 },
+            { "<leader>lj", "<cmd>RustJoinLines<cr>", icon = "󱘗", desc = printf("Join Line(Rust)"), mode = "n", buffer = 0 },
+            -- stylua: ignore end
+          }
+          wk.add(mapping)
+          -- end)
         end,
       })
     end,

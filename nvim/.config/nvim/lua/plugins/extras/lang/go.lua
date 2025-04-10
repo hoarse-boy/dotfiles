@@ -2,9 +2,17 @@
 -- no hassle with duplicate gopls server in memory
 -- https://github.com/ray-x/go.nvim?ref=morioh.com&utm_source=morioh.com
 
-local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
-local go_keymaps = augroup("go_keymaps", {})
+local autocmd = vim.api.nvim_create_autocmd
+
+-- to make go to have 4 spaces instead of 2. and matches other filetypes.
+autocmd("FileType", {
+  pattern = "go",
+  callback = function()
+    vim.bo.tabstop = 4
+    vim.bo.shiftwidth = 4
+  end,
+})
 
 local format_sync_grp = augroup("GoReminderPersonal", {})
 autocmd("BufWritePre", {
@@ -129,64 +137,66 @@ return {
     },
   },
 
-  -- create dynamic keymaps for go.
+  -- create dynamic keymaps for go only buffer
   {
     "folke/which-key.nvim",
     opts = function(_, _)
+      local wk = require("which-key")
       local printf = require("plugins.util.printf").printf
+      local go_keymaps = augroup("go_keymaps", {})
 
-      autocmd("Filetype", {
+      autocmd("BufEnter", {
         group = go_keymaps,
-        pattern = { "go", "gomod" },
-        callback = function()
-          vim.schedule(function()
-            local wk = require("which-key")
-            local mappings = {
-              { "<leader>l", icon = "󰟓", group = printf("lsp (go.nvim)"), mode = "n", buffer = 0 },
-              { "<leader>lt", icon = "󰟓", group = printf("tags"), mode = "n", buffer = 0 },
-              -- { "<leader>lt", icon = "󰟓", group = printf("test"), mode = "n", buffer = 0 },
-              { "<leader>lp", icon = "󰟓", group = printf("goplay.nvim"), mode = "n", buffer = 0 },
+        pattern = { "*.go", "go.mod", "go.sum", "go.work" },
+        callback = function(args)
+          if vim.bo[args.buf].filetype ~= "go" then
+            return
+          end
+          local mapping = {
+            { "<leader>l", icon = "󰟓", group = printf("lsp (go.nvim)"), mode = "n", buffer = 0 },
+            { "<leader>lt", icon = "󰟓", group = printf("tags"), mode = "n", buffer = 0 },
+            -- { "<leader>lt", icon = "󰟓", group = printf("test"), mode = "n", buffer = 0 },
+            { "<leader>lp", icon = "󰟓", group = printf("goplay.nvim"), mode = "n", buffer = 0 },
 
-              -- Code actions
-              { "<leader>la", "<cmd>GoCodeAction<cr>", mode = { "n" }, desc = printf("Code Action"), buffer = 0 },
-              { "<leader>ls", "<cmd>GoFillStruct<cr>", mode = { "n" }, desc = printf("Fill Struct"), buffer = 0 },
-              { "<leader>lr", vim.lsp.buf.rename, mode = { "n" }, desc = printf("Rename"), buffer = 0 },
+            -- Code actions
+            { "<leader>la", "<cmd>GoCodeAction<cr>", mode = { "n" }, desc = printf("Code Action"), buffer = 0 },
+            { "<leader>ls", "<cmd>GoFillStruct<cr>", mode = { "n" }, desc = printf("Fill Struct"), buffer = 0 },
+            { "<leader>lr", vim.lsp.buf.rename, mode = { "n" }, desc = printf("Rename"), buffer = 0 },
 
-              -- Go tags
-              { "<leader>ltj", "<cmd>GoModifyTag -add-tags json -transform snakecase -add-options json=<cr>", mode = { "n" }, desc = printf("Add Tags snakecase No 'omitempty'"), buffer = 0 },
-              { "<leader>lta", "<cmd>GoModifyTag -add-tags json -transform camelcase -add-options json=<cr>", mode = { "n" }, desc = printf("Add Tags No 'omitempty'"), buffer = 0 },
-              { "<leader>ltA", "<cmd>GoModifyTag -add-tags json -transform camelcase<cr>", mode = { "n" }, desc = printf("Add Tags"), buffer = 0 },
-              { "<leader>ltr", "<cmd>GoRename<cr>", mode = { "n" }, desc = printf("Remove Tags"), buffer = 0 },
+            -- Go tags
+            { "<leader>ltj", "<cmd>GoModifyTag -add-tags json -transform snakecase -add-options json=<cr>", mode = { "n" }, desc = printf("Add Tags snakecase No 'omitempty'"), buffer = 0 },
+            { "<leader>lta", "<cmd>GoModifyTag -add-tags json -transform camelcase -add-options json=<cr>", mode = { "n" }, desc = printf("Add Tags No 'omitempty'"), buffer = 0 },
+            { "<leader>ltA", "<cmd>GoModifyTag -add-tags json -transform camelcase<cr>", mode = { "n" }, desc = printf("Add Tags"), buffer = 0 },
+            { "<leader>ltr", "<cmd>GoRename<cr>", mode = { "n" }, desc = printf("Remove Tags"), buffer = 0 },
 
-              -- Go tests. uses neotest plugin
-              -- { "<leader>lta", "<cmd>GoAddTest<cr>", mode = { "n" }, desc = printf("Add Test for Current Func"), buffer = 0 },
-              -- { "<leader>ltA", "<cmd>GoAddAllTest<cr>", mode = { "n" }, desc = printf("Add Test for all Func"), buffer = 0 },
-              -- { "<leader>lte", "<cmd>GoAddExpTest<cr>", mode = { "n" }, desc = printf("Add Exported Func"), buffer = 0 },
-              -- { "<leader>ltT", "<cmd>GoTest<cr>", mode = { "n" }, desc = printf("Test All"), buffer = 0 },
-              -- { "<leader>ltt", "<cmd>GoTestFunc<cr>", mode = { "n" }, desc = printf("Test a Func"), buffer = 0 },
-              -- { "<leader>ltF", "<cmd>GoTestFile<cr>", mode = { "n" }, desc = printf("Test All Func in the File"), buffer = 0 },
-              -- { "<leader>ltP", "<cmd>GoTestPkg<cr>", mode = { "n" }, desc = printf("Test Package"), buffer = 0 },
-              -- { "<leader>ltc", "<cmd>GoCoverage<cr>", mode = { "n" }, desc = printf("Test -coverprofile"), buffer = 0 },
+            -- Go tests. uses neotest plugin
+            -- { "<leader>lta", "<cmd>GoAddTest<cr>", mode = { "n" }, desc = printf("Add Test for Current Func"), buffer = 0 },
+            -- { "<leader>ltA", "<cmd>GoAddAllTest<cr>", mode = { "n" }, desc = printf("Add Test for all Func"), buffer = 0 },
+            -- { "<leader>lte", "<cmd>GoAddExpTest<cr>", mode = { "n" }, desc = printf("Add Exported Func"), buffer = 0 },
+            -- { "<leader>ltT", "<cmd>GoTest<cr>", mode = { "n" }, desc = printf("Test All"), buffer = 0 },
+            -- { "<leader>ltt", "<cmd>GoTestFunc<cr>", mode = { "n" }, desc = printf("Test a Func"), buffer = 0 },
+            -- { "<leader>ltF", "<cmd>GoTestFile<cr>", mode = { "n" }, desc = printf("Test All Func in the File"), buffer = 0 },
+            -- { "<leader>ltP", "<cmd>GoTestPkg<cr>", mode = { "n" }, desc = printf("Test Package"), buffer = 0 },
+            -- { "<leader>ltc", "<cmd>GoCoverage<cr>", mode = { "n" }, desc = printf("Test -coverprofile"), buffer = 0 },
 
-              -- Go documentation and utilities
-              { "<leader>ld", "<cmd>GoDoc<cr>", mode = { "n" }, desc = printf("Go Doc"), buffer = 0 },
-              { "<leader>le", "<cmd>GoIfErr<cr>", mode = { "n" }, desc = printf("Auto Generate 'if err'"), buffer = 0 },
-              { "<leader>ll", "<cmd>GoLint<cr>", mode = { "n" }, desc = printf("Run 'golangci_lint'"), buffer = 0 },
-              { "<leader>lm", "<cmd>Gomvp<cr>", mode = { "n" }, desc = printf("Rename Module name"), buffer = 0 },
-              { "<leader>lc", "<cmd>GoCheat<cr>", mode = { "n" }, desc = printf("Cheatsheet"), buffer = 0 },
-              { "<leader>lC", "<cmd>GoCmt<cr>", mode = { "n" }, desc = printf("Go Generate Func Comments"), buffer = 0 },
+            -- Go documentation and utilities
+            { "<leader>ld", "<cmd>GoDoc<cr>", mode = { "n" }, desc = printf("Go Doc"), buffer = 0 },
+            { "<leader>le", "<cmd>GoIfErr<cr>", mode = { "n" }, desc = printf("Auto Generate 'if err'"), buffer = 0 },
+            { "<leader>ll", "<cmd>GoLint<cr>", mode = { "n" }, desc = printf("Run 'golangci_lint'"), buffer = 0 },
+            { "<leader>lm", "<cmd>Gomvp<cr>", mode = { "n" }, desc = printf("Rename Module name"), buffer = 0 },
+            { "<leader>lc", "<cmd>GoCheat<cr>", mode = { "n" }, desc = printf("Cheatsheet"), buffer = 0 },
+            { "<leader>lC", "<cmd>GoCmt<cr>", mode = { "n" }, desc = printf("Go Generate Func Comments"), buffer = 0 },
 
-              -- goplay.nvim keymaps
-              { "<leader>lpo", ":GPOpen<CR>", mode = { "n" }, desc = printf("Open Goplay"), buffer = 0 },
-              { "<leader>lpt", ":GPToggle<CR>", mode = { "n" }, desc = printf("Toggle Goplay"), buffer = 0 },
-              { "<leader>lpe", ":GPExec<CR>", mode = { "n" }, desc = printf("Execute"), buffer = 0 },
-              { "<leader>lpE", ":GPExecFile<CR>", mode = { "n" }, desc = printf("Execute File"), buffer = 0 },
-              { "<leader>lpc", ":GPClose<CR>", mode = { "n" }, desc = printf("Close Goplay"), buffer = 0 },
-              { "<leader>lpC", ":GPClear<CR>", mode = { "n" }, desc = printf("Clear Goplay"), buffer = 0 },
-            }
-
-            wk.add(mappings)
-          end)
+            -- goplay.nvim keymaps
+            { "<leader>lpo", ":GPOpen<CR>", mode = { "n" }, desc = printf("Open Goplay"), buffer = 0 },
+            { "<leader>lpt", ":GPToggle<CR>", mode = { "n" }, desc = printf("Toggle Goplay"), buffer = 0 },
+            { "<leader>lpe", ":GPExec<CR>", mode = { "n" }, desc = printf("Execute"), buffer = 0 },
+            { "<leader>lpE", ":GPExecFile<CR>", mode = { "n" }, desc = printf("Execute File"), buffer = 0 },
+            { "<leader>lpc", ":GPClose<CR>", mode = { "n" }, desc = printf("Close Goplay"), buffer = 0 },
+            { "<leader>lpC", ":GPClear<CR>", mode = { "n" }, desc = printf("Clear Goplay"), buffer = 0 },
+          }
+          wk.add(mapping)
+          -- end)
         end,
       })
     end,

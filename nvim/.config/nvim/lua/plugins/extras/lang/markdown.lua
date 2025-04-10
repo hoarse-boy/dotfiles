@@ -233,14 +233,14 @@ return {
       }
       wk.add(mapping)
 
-      autocmd("Filetype", {
-        group = markdown_keymaps,
-        pattern = { "md", "markdown" }, -- README.md will have buggy keymaps. find the fix or rename it other than README.md
-        callback = function()
-          vim.schedule(function()
-            -- local util = require("plugins.util.util")
+      autocmd("BufEnter", {
+        pattern = "*.md",
+        callback = function(args)
+          if vim.bo[args.buf].filetype ~= "markdown" then
+            return
+          end
 
-            local l_mapping = {
+          local l_mapping = {
               -- stylua: ignore start
               { "<leader>l", group = printf("lsp (markdown)"), icon = "󰍔", mode = { "v", "n" }, buffer = 0 },
 
@@ -278,11 +278,10 @@ return {
               -- formatter
               { "<leader>lj", ":!prettier --parser json<CR>",mode = "v", desc = printf("Format JSON code"), buffer = 0 }, -- TODO: find a better one
 
-              -- stylua: ignore end
-            }
+            -- stylua: ignore end
+          }
 
-            wk.add(l_mapping)
-          end)
+          wk.add(l_mapping)
         end,
       })
     end,
@@ -522,10 +521,9 @@ return {
   {
     "williamboman/mason.nvim",
     opts = function(_, opts)
-      -- Install markdown-oxide LSP through Mason
-      -- if used markdown-oxide, do not install marksman. it will conflict with markdown-oxide.
-      -- such as creating double lsp info.
-      vim.list_extend(opts.ensure_installed, { "markdown-oxide", "prettier" })
+      -- if used markdown-oxide, do not install marksman. it will conflict with markdown-oxide. such as creating double lsp info.
+      vim.list_extend(opts.ensure_installed, { "markdown-oxide", "dprint" })
+      -- vim.list_extend(opts.ensure_installed, { "markdown-oxide", "prettier" })
     end,
   },
 
@@ -534,7 +532,8 @@ return {
     optional = true,
     opts = {
       formatters_by_ft = {
-        ["markdown"] = { "prettier" },
+        ["markdown"] = { "dprint" },
+        -- ["markdown"] = { "prettier" },
       },
     },
   },

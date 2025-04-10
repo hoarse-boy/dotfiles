@@ -36,12 +36,15 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- for indentation. currently, makes my go code to have 4 tabs instead of 2.
+-- for indentation. currently, makes my fish code to have 4 tabs instead of 2.
 -- opt.shiftwidth = 4 -- this is to make indentation work properly.
 -- opt.tabstop = 4 -- Tabs are displayed as 4 spaces even when it is not. if the actual tab width is 4, it will be displayed the same.
--- NOTE: if the file has 4 spaces, add that to the lua table below in 'pattern'.
+-- NOTE: to make it simple.
+-- if the file has 4 spaces,
+-- go to its own plugin file and copy the autcmd below
+-- else add that to the lua table below in 'pattern'.
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "typescript", "go", "fish" },
+  pattern = { "fish" },
   callback = function()
     vim.bo.tabstop = 4
     vim.bo.shiftwidth = 4
