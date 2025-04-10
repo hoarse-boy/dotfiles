@@ -126,5 +126,17 @@
     {
         "key": "misc:new_window_takes_over_fullscreen",
         "value": 1
+    },
+    {
+        "key": "input:float_switch_override_focus",
+        "value": 2
+    },
+    {
+        "key": "general:no_focus_fallback",
+        "value": false
+    },
+    {
+        "key": "binds:allow_workspace_cycles",
+        "value": "true"
     }
 ]
