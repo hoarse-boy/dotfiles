@@ -7,18 +7,30 @@ if [[ ${#active} -gt 0 ]]; then
   hyprctl dispatch togglespecialworkspace "$active"
 
   # If moving left or right, stop after hiding Quick-note
-  if [[ "$1" == "left" || "$1" == "right" || "$1" == "down" ]]; then
+  case "$1" in
+  "left" | "right" | "down")
     exit 0
-  fi
+    ;;
+  esac
 fi
 
-# If a specific workspace is given, switch to it
-if [[ "$1" =~ ^[0-9]+$ ]]; then
+# Handle workspace switching based on input
+case "$1" in
+[[:digit:]]*) # If starts with a digit (number)
   hyprctl dispatch workspace "$1"
-elif [[ "$1" == "left" ]]; then
+  ;;
+"left")
   hyprctl dispatch workspace r-1
-elif [[ "$1" == "right" ]]; then
+  ;;
+"right")
   hyprctl dispatch workspace r+1
-elif [[ "$1" == "down" ]]; then
+  ;;
+"down")
   hyprctl dispatch workspace empty
-fi
+  ;;
+*)
+  notify-send "Toggle-workspace-hyprland" "Invalid argument $1" -t 4000
+  echo "Invalid argument: $1" >&2
+  exit 1
+  ;;
+esac
