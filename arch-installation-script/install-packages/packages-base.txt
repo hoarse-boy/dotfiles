@@ -42,3 +42,6 @@ mesa
 mesa-utils
 yazi
 ventoy-bin
+dprint-bin
+jdownloader2
+yt-dlp
