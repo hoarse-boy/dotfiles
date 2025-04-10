@@ -57,7 +57,14 @@ function load_os_cmds --description "Load OS-specific commands"
             # alias find fd
 
             # npm
-            alias cz czg
             set -gx PATH $HOME/.npm-global/bin $PATH
+            alias cz czg
+
+            # yt-dlp (youtube downloader)
+            abbr yt 'yt-dlp -P ~/Downloads/youtube-videos'
+            abbr ytsd "yt-dlp -P ~/Downloads/youtube-videos -f 'bestvideo[height<=480][fps<=30]+bestaudio/best[height<=480][fps<=30]'"
+            abbr ythd "yt-dlp -P ~/Downloads/youtube-videos -f 'bestvideo[height<=720]+bestaudio/best[height<=720]'"
+            abbr ytfhd "yt-dlp -P ~/Downloads/youtube-videos -f 'bestvideo[height<=1080][fps<=60]+bestaudio/best[height<=1080][fps<=60]'"
+            abbr ytmp3 'yt-dlp -x --audio-format mp3 -P ~/Downloads/youtube-music'
     end
 end
