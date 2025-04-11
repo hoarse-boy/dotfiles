@@ -454,7 +454,7 @@ return {
           return image_name .. "-" .. date_suffix
         end,
 
-        -- NOTE: img-clip is very slow but it is very much needed to downsize the image (3 seconds).
+        -- NOTE: img-clip is very slow but it is very much needed to downsize the image (up to 1 second).
         -- it can achieve:
         -- 1,334,554 bytes → 45 KB → ~96.6% smaller (img-clip png convertion. took 1 seconds)
         -- 2,094,203 bytes → 45 KB → ~97.85% smaller (obsidian image pasting. lightning fast)
