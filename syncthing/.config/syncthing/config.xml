@@ -4,13 +4,7 @@
         <device id="CLA5IY3-OOTQYQX-KZ2WOCN-JIC7RPO-PBVPHXP-RRAR6OH-KDLMNWZ-BSHNTQU" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
-        <device id="HKXRBAL-R2AL557-TMX2HSJ-SB47G7L-DDKCEAU-NOGEN3E-HT325QX-6AMNGA7" introducedBy="">
-            <encryptionPassword></encryptionPassword>
-        </device>
         <device id="3TD6BXZ-KZK3Y5L-LUJJZVY-FO56DE2-7KPLTFS-FPGF424-RXFPINE-6RS5ZAU" introducedBy="">
-            <encryptionPassword></encryptionPassword>
-        </device>
-        <device id="5TS6JM7-DVXSYNT-3GPLUCA-HNAMWQY-YZE3H6E-XXFHNWL-JZDB3PO-5GDT2QZ" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
         <device id="6TJ3PJM-SFP65LC-J457TYK-WCXO65O-UZFELRJ-O6AYHTC-6ZHHNDQ-LDE44AB" introducedBy="CLA5IY3-OOTQYQX-KZ2WOCN-JIC7RPO-PBVPHXP-RRAR6OH-KDLMNWZ-BSHNTQU">
@@ -18,8 +12,102 @@
         </device>
         <minDiskFree unit="%">1</minDiskFree>
         <versioning type="simple">
-            <param key="cleanoutDays" val="0"></param>
+            <param key="cleanoutDays" val="5"></param>
             <param key="keep" val="5"></param>
+            <cleanupIntervalS>3600</cleanupIntervalS>
+            <fsPath></fsPath>
+            <fsType>basic</fsType>
+        </versioning>
+        <copiers>0</copiers>
+        <pullerMaxPendingKiB>0</pullerMaxPendingKiB>
+        <hashers>0</hashers>
+        <order>random</order>
+        <ignoreDelete>false</ignoreDelete>
+        <scanProgressIntervalS>0</scanProgressIntervalS>
+        <pullerPauseS>0</pullerPauseS>
+        <maxConflicts>10</maxConflicts>
+        <disableSparseFiles>false</disableSparseFiles>
+        <disableTempIndexes>false</disableTempIndexes>
+        <paused>false</paused>
+        <weakHashThresholdPct>25</weakHashThresholdPct>
+        <markerName>.stfolder</markerName>
+        <copyOwnershipFromParent>false</copyOwnershipFromParent>
+        <modTimeWindowS>0</modTimeWindowS>
+        <maxConcurrentWrites>2</maxConcurrentWrites>
+        <disableFsync>false</disableFsync>
+        <blockPullOrder>standard</blockPullOrder>
+        <copyRangeMethod>standard</copyRangeMethod>
+        <caseSensitiveFS>false</caseSensitiveFS>
+        <junctionsAsDirs>false</junctionsAsDirs>
+        <syncOwnership>false</syncOwnership>
+        <sendOwnership>false</sendOwnership>
+        <syncXattrs>false</syncXattrs>
+        <sendXattrs>false</sendXattrs>
+        <xattrFilter>
+            <maxSingleEntrySize>1024</maxSingleEntrySize>
+            <maxTotalSize>4096</maxTotalSize>
+        </xattrFilter>
+    </folder>
+    <folder id="qx2da-9k39o" label="syncthing-temp-folder" path="~/syncthing-temp-folder" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" fsWatcherTimeoutS="0" ignorePerms="false" autoNormalize="true">
+        <filesystemType>basic</filesystemType>
+        <device id="CLA5IY3-OOTQYQX-KZ2WOCN-JIC7RPO-PBVPHXP-RRAR6OH-KDLMNWZ-BSHNTQU" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <device id="3TD6BXZ-KZK3Y5L-LUJJZVY-FO56DE2-7KPLTFS-FPGF424-RXFPINE-6RS5ZAU" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <device id="6TJ3PJM-SFP65LC-J457TYK-WCXO65O-UZFELRJ-O6AYHTC-6ZHHNDQ-LDE44AB" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <minDiskFree unit="%">1</minDiskFree>
+        <versioning>
+            <cleanupIntervalS>3600</cleanupIntervalS>
+            <fsPath></fsPath>
+            <fsType>basic</fsType>
+        </versioning>
+        <copiers>0</copiers>
+        <pullerMaxPendingKiB>0</pullerMaxPendingKiB>
+        <hashers>0</hashers>
+        <order>random</order>
+        <ignoreDelete>false</ignoreDelete>
+        <scanProgressIntervalS>0</scanProgressIntervalS>
+        <pullerPauseS>0</pullerPauseS>
+        <maxConflicts>10</maxConflicts>
+        <disableSparseFiles>false</disableSparseFiles>
+        <disableTempIndexes>false</disableTempIndexes>
+        <paused>false</paused>
+        <weakHashThresholdPct>25</weakHashThresholdPct>
+        <markerName>.stfolder</markerName>
+        <copyOwnershipFromParent>false</copyOwnershipFromParent>
+        <modTimeWindowS>0</modTimeWindowS>
+        <maxConcurrentWrites>2</maxConcurrentWrites>
+        <disableFsync>false</disableFsync>
+        <blockPullOrder>standard</blockPullOrder>
+        <copyRangeMethod>standard</copyRangeMethod>
+        <caseSensitiveFS>false</caseSensitiveFS>
+        <junctionsAsDirs>false</junctionsAsDirs>
+        <syncOwnership>false</syncOwnership>
+        <sendOwnership>false</sendOwnership>
+        <syncXattrs>false</syncXattrs>
+        <sendXattrs>false</sendXattrs>
+        <xattrFilter>
+            <maxSingleEntrySize>1024</maxSingleEntrySize>
+            <maxTotalSize>4096</maxTotalSize>
+        </xattrFilter>
+    </folder>
+    <folder id="yrlqq-5xnje" label="Music/sync-music" path="~/Music/sync-music" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" fsWatcherTimeoutS="0" ignorePerms="false" autoNormalize="true">
+        <filesystemType>basic</filesystemType>
+        <device id="CLA5IY3-OOTQYQX-KZ2WOCN-JIC7RPO-PBVPHXP-RRAR6OH-KDLMNWZ-BSHNTQU" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <device id="3TD6BXZ-KZK3Y5L-LUJJZVY-FO56DE2-7KPLTFS-FPGF424-RXFPINE-6RS5ZAU" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <device id="6TJ3PJM-SFP65LC-J457TYK-WCXO65O-UZFELRJ-O6AYHTC-6ZHHNDQ-LDE44AB" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <minDiskFree unit="%">1</minDiskFree>
+        <versioning>
             <cleanupIntervalS>3600</cleanupIntervalS>
             <fsPath></fsPath>
             <fsType>basic</fsType>
@@ -59,13 +147,7 @@
         <device id="CLA5IY3-OOTQYQX-KZ2WOCN-JIC7RPO-PBVPHXP-RRAR6OH-KDLMNWZ-BSHNTQU" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
-        <device id="HKXRBAL-R2AL557-TMX2HSJ-SB47G7L-DDKCEAU-NOGEN3E-HT325QX-6AMNGA7" introducedBy="">
-            <encryptionPassword></encryptionPassword>
-        </device>
         <device id="3TD6BXZ-KZK3Y5L-LUJJZVY-FO56DE2-7KPLTFS-FPGF424-RXFPINE-6RS5ZAU" introducedBy="">
-            <encryptionPassword></encryptionPassword>
-        </device>
-        <device id="5TS6JM7-DVXSYNT-3GPLUCA-HNAMWQY-YZE3H6E-XXFHNWL-JZDB3PO-5GDT2QZ" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
         <minDiskFree unit="%">1</minDiskFree>
@@ -115,29 +197,7 @@
         <remoteGUIPort>0</remoteGUIPort>
         <numConnections>0</numConnections>
     </device>
-    <device id="HKXRBAL-R2AL557-TMX2HSJ-SB47G7L-DDKCEAU-NOGEN3E-HT325QX-6AMNGA7" name="archlinux" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
-        <address>dynamic</address>
-        <paused>false</paused>
-        <autoAcceptFolders>false</autoAcceptFolders>
-        <maxSendKbps>0</maxSendKbps>
-        <maxRecvKbps>0</maxRecvKbps>
-        <maxRequestKiB>0</maxRequestKiB>
-        <untrusted>false</untrusted>
-        <remoteGUIPort>0</remoteGUIPort>
-        <numConnections>0</numConnections>
-    </device>
     <device id="3TD6BXZ-KZK3Y5L-LUJJZVY-FO56DE2-7KPLTFS-FPGF424-RXFPINE-6RS5ZAU" name="archlinux" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
-        <address>dynamic</address>
-        <paused>false</paused>
-        <autoAcceptFolders>false</autoAcceptFolders>
-        <maxSendKbps>0</maxSendKbps>
-        <maxRecvKbps>0</maxRecvKbps>
-        <maxRequestKiB>0</maxRequestKiB>
-        <untrusted>false</untrusted>
-        <remoteGUIPort>0</remoteGUIPort>
-        <numConnections>0</numConnections>
-    </device>
-    <device id="5TS6JM7-DVXSYNT-3GPLUCA-HNAMWQY-YZE3H6E-XXFHNWL-JZDB3PO-5GDT2QZ" name="archlinux" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
         <address>dynamic</address>
         <paused>false</paused>
         <autoAcceptFolders>false</autoAcceptFolders>
@@ -223,13 +283,7 @@
     <defaults>
         <folder id="" label="" path="~" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" fsWatcherTimeoutS="0" ignorePerms="false" autoNormalize="true">
             <filesystemType>basic</filesystemType>
-            <device id="HKXRBAL-R2AL557-TMX2HSJ-SB47G7L-DDKCEAU-NOGEN3E-HT325QX-6AMNGA7" introducedBy="">
-                <encryptionPassword></encryptionPassword>
-            </device>
             <device id="3TD6BXZ-KZK3Y5L-LUJJZVY-FO56DE2-7KPLTFS-FPGF424-RXFPINE-6RS5ZAU" introducedBy="">
-                <encryptionPassword></encryptionPassword>
-            </device>
-            <device id="5TS6JM7-DVXSYNT-3GPLUCA-HNAMWQY-YZE3H6E-XXFHNWL-JZDB3PO-5GDT2QZ" introducedBy="">
                 <encryptionPassword></encryptionPassword>
             </device>
             <minDiskFree unit="%">1</minDiskFree>
