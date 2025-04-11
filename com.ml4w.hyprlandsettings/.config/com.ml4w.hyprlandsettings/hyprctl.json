@@ -138,5 +138,9 @@
     {
         "key": "binds:allow_workspace_cycles",
         "value": "true"
+    },
+    {
+        "key": "master:inherit_fullscreen",
+        "value": "false"
     }
 ]
