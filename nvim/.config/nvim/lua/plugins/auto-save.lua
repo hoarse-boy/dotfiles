@@ -168,7 +168,7 @@ return {
         -- I make a change, and a SQL query executed
         -- Run `:set filetype?` on a dadbod query to make sure of the filetype
         local filetype = vim.bo[buf].filetype
-        if filetype == "harpoon" or filetype == "mysql" then
+        if filetype == "harpoon" or filetype == "mysql" or filetype == "hyprlang" then
           return false
         end
 
@@ -183,7 +183,7 @@ return {
       -- Do not execute autocmds when saving
       -- If you set noautocmd = true, autosave won't trigger an auto format
       -- https://github.com/okuuva/auto-save.nvim/issues/55
-      noautocmd = false, 
+      noautocmd = false,
       lockmarks = false, -- lock marks when saving, see `:h lockmarks` for more details
       -- delay after which a pending save is executed (default 1000)
       debounce_delay = 2000,
