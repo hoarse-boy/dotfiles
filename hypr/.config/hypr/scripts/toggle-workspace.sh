@@ -26,7 +26,9 @@ case "$1" in
   hyprctl dispatch workspace r+1
   ;;
 "down")
-  hyprctl dispatch workspace empty
+  # hyprctl dispatch workspace empty
+  # script below has the same effect when enabling hyprland's binds { workspace_back_and_forth = true } but only form empty workspaces.
+  ~/.config/hypr/scripts/toggle-empty-ws.sh
   ;;
 *)
   notify-send "Toggle-workspace-hyprland" "Invalid argument $1" -t 4000
