@@ -264,3 +264,7 @@ hack
 jdownloader2
 download
 jdownloader
+f-droid
+file_manager
+neovide
+ghostty
