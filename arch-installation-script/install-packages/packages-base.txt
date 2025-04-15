@@ -45,3 +45,5 @@ ventoy-bin
 dprint-bin
 jdownloader2
 yt-dlp
+lsof
+gnome-disk-utility

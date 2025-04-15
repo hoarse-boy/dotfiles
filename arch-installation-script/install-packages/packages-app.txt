@@ -2,6 +2,6 @@ syncthing
 ghostty
 dbeaver
 postman-bin
-spotify
 neovide
 gimp
+telegram-desktop-bin
