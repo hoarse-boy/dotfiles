@@ -24,7 +24,7 @@ function load_os_cmds --description "Load OS-specific commands"
 
             # yay package manager
             abbr y yay
-            abbr ys 'yay -S'
+            abbr ys 'yay -S --noconfirm'
             abbr yr 'yay -Rns'
             abbr yu 'yay -Syu'
 
