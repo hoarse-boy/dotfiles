@@ -33,7 +33,7 @@
     },
     {
         "key": "decoration:blur:xray",
-        "value": true
+        "value": "true"
     },
     {
         "key": "decoration:dim_inactive",
@@ -57,7 +57,7 @@
     },
     {
         "key": "decoration:dim_special",
-        "value": 0.6
+        "value": 0.0
     },
     {
         "key": "decoration:dim_around",
@@ -65,15 +65,15 @@
     },
     {
         "key": "animations:enabled",
-        "value": true
+        "value": "true"
     },
     {
         "key": "decoration:blur:ignore_opacity",
-        "value": true
+        "value": "true"
     },
     {
         "key": "decoration:blur:passes",
-        "value": 2
+        "value": 0
     },
     {
         "key": "decoration:blur:size",
@@ -81,11 +81,11 @@
     },
     {
         "key": "decoration:blur:enabled",
-        "value": false
+        "value": "true"
     },
     {
         "key": "decoration:blur:popups",
-        "value": false
+        "value": "true"
     },
     {
         "key": "decoration:shadow:enabled",
@@ -93,7 +93,7 @@
     },
     {
         "key": "decoration:blur:contrast",
-        "value": 0.8
+        "value": 1.0
     },
     {
         "key": "general:resize_on_border",
@@ -142,5 +142,17 @@
     {
         "key": "master:inherit_fullscreen",
         "value": "false"
+    },
+    {
+        "key": "misc:close_special_on_empty",
+        "value": "true"
+    },
+    {
+        "key": "decoration:blur:special",
+        "value": "false"
+    },
+    {
+        "key": "decoration:blur:new_optimizations",
+        "value": "true"
     }
 ]
