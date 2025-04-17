@@ -5,4 +5,4 @@ postman-bin
 neovide
 gimp
 telegram-desktop-bin
-google-chrome
+chromium
