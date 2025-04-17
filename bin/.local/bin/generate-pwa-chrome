@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# list of urls with optional custom names after |
+urls=(
+  "https://chat.deepseek.com/|Deepseek"
+  "https://chatgpt.com/|ChatGPT"
+  "https://www.youtube.com/"
+  "https://mail.google.com/mail/|Gmail"
+)
+
+# name + id will be based on domain
+base="$HOME/.local/share/webapps"
+desktop_target="$HOME/.local/share/applications"
+
+mkdir -p "$base" "$desktop_target"
+
+for entry in "${urls[@]}"; do
+  # Split entry into URL and custom name if pipe exists
+  IFS='|' read -r url custom_name <<<"$entry"
+
+  domain=$(echo "$url" | awk -F/ '{print $3}' | sed 's/www\.//')
+
+  # Use custom name if provided, otherwise generate from domain
+  if [[ -n "$custom_name" ]]; then
+    name="$custom_name"
+  else
+    name=$(echo "$domain" | awk -F. '{print toupper(substr($1,1,1)) substr($1,2)}')
+  fi
+
+  id=$(echo "$domain" | sed 's/[^a-zA-Z0-9]/_/g')
+  appdir="$base/$id"
+
+  mkdir -p "$appdir"
+
+  # Special case for ProtonMail
+  if [[ "$domain" == "mail.proton.me" ]]; then
+    # Try direct favicon URL first
+    wget -q "https://mail.proton.me/favicon.ico" -O "$appdir/icon.png" || \
+    wget -q "https://www.google.com/s2/favicons?sz=128&domain_url=$url" -O "$appdir/icon.png"
+  else
+    # Normal case for other sites
+    wget -q "https://www.google.com/s2/favicons?sz=128&domain_url=$url" -O "$appdir/icon.png"
+  fi
+
+  # fallback if icon fetch fails
+  if [[ ! -s "$appdir/icon.png" ]]; then
+    cp /usr/share/icons/hicolor/128x128/apps/web-browser.png "$appdir/icon.png" 2>/dev/null || \
+    convert -size 128x128 xc:white -fill black -pointsize 20 -gravity center -draw "text 0,0 '$name'" "$appdir/icon.png"
+  fi
+
+  # create .desktop file
+  desktop_file="$desktop_target/$id.desktop"
+  cat >"$desktop_file" <<EOF
+[Desktop Entry]
+Name=$name
+Exec=chromium --app=$url
+Terminal=false
+Type=Application
+Icon=$appdir/icon.png
+Categories=Network;
+StartupWMClass=$name
+EOF
+
+  chmod +x "$desktop_file"
+done
+
+echo "✅ Web apps installed! Check your app launcher."
