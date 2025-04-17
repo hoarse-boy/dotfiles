@@ -192,6 +192,7 @@
         <autoAcceptFolders>false</autoAcceptFolders>
         <maxSendKbps>0</maxSendKbps>
         <maxRecvKbps>0</maxRecvKbps>
+        <ignoredFolder time="2025-04-12T12:27:18.941Z" id="mzzgs-mnhu3" label="temp folder (del if not used)"></ignoredFolder>
         <maxRequestKiB>0</maxRequestKiB>
         <untrusted>false</untrusted>
         <remoteGUIPort>0</remoteGUIPort>
