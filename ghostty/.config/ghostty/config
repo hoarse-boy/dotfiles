@@ -24,3 +24,7 @@ config-file = "other"
 
 # to unbind that closes ghostty (tab closing)
 keybind = control+shift+w=ignore
+
+# overwrite default ghostty keybindings to use ctrl+tab and ctrl+shift+tab like regular keys
+keybind = ctrl+tab=csi:2;5I
+keybind = ctrl+shift+tab=csi:2;6I
