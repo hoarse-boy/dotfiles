@@ -1,0 +1,45 @@
+# [Created by task 3.4.1 4/11/2025 16:44:12]
+data.location=/home/jho/.task
+news.version=3.4.1
+
+# example
+# Define a 'hacking' context (shows +hacking and project:dev)
+# context.hacking=project:dev and +hacking
+
+# Define a 'work' context (only shows +work tasks)
+context.work=+work
+
+# Define a 'personal' context (excludes +work)
+context.personal=+personal
+
+
+# To use the default location of the XDG directories,
+# move this configuration file from ~/.taskrc to ~/.config/task/taskrc and update location config as follows:
+
+#data.location=~/.local/share/task
+#hooks.location=~/.config/task/hooks
+
+# Color theme (uncomment one to use)
+#include light-16.theme
+#include light-256.theme
+#include bubblegum-256.theme
+#include dark-16.theme
+#include dark-256.theme
+#include dark-red-256.theme
+#include dark-green-256.theme
+#include dark-blue-256.theme
+#include dark-violets-256.theme
+#include dark-yellow-green.theme
+#include dark-gray-256.theme
+#include dark-gray-blue-256.theme
+#include solarized-dark-256.theme
+#include solarized-light-256.theme
+#include no-color.theme
+
+
+uda.taskwarrior-tui.selection.bold=no
+uda.taskwarrior-tui.selection.italic=no
+uda.taskwarrior-tui.selection.dim=yes
+uda.taskwarrior-tui.selection.reverse=yes
+
+context=personal
