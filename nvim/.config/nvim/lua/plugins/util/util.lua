@@ -4,16 +4,28 @@ util.WEZTERM = "wezterm"
 util.KITTY = "kitty"
 util.UNKNOWN = "unknown"
 
-function util.get_terminal_emulator_by_term()
-  local term_program = vim.fn.getenv("TERM_PROGRAM")
-  local term = vim.fn.getenv("TERM")
+-- function util.get_terminal_emulator_by_term()
+--   local term_program = vim.fn.getenv("TERM_PROGRAM")
+--   local term = vim.fn.getenv("TERM")
 
-  if term_program == "WezTerm" then
-    return WEZTERM
-  elseif term == "xterm-kitty" then
-    return KITTY
+--   if term_program == "WezTerm" then
+--     return WEZTERM
+--   elseif term == "xterm-kitty" then
+--     return KITTY
+--   else
+--     return UNKNOWN
+--   end
+-- end
+
+function util.get_terminal()
+  if vim.fn.getenv("KITTY_WINDOW_ID") ~= vim.NIL then
+    return "kitty"
+  elseif vim.fn.getenv("GHOSTTY_WINDOW_ID") ~= vim.NIL then
+    return "ghostty"
+  elseif vim.fn.getenv("WEZTERM_EXECUTABLE") ~= vim.NIL then
+    return "wezterm"
   else
-    return UNKNOWN
+    return vim.fn.getenv("TERM") or "unknown"
   end
 end
 
@@ -136,49 +148,49 @@ function util.remove_dashboard_item(dashboard_keys_table, key_to_remove)
   end
 end
 
- -- FIX: . 
+-- FIX: .
 function util.check_or_create_launch_json()
-   -- Get the current working directory
-   local cwd = vim.fn.getcwd()
-   local launch_path = cwd .. "/.vscode/launch.json"
+  -- Get the current working directory
+  local cwd = vim.fn.getcwd()
+  local launch_path = cwd .. "/.vscode/launch.json"
 
-   -- Check if .vscode/launch.json exists
-   if vim.fn.filereadable(launch_path) == 1 then
-       -- File exists, open it
-       vim.cmd('edit ' .. launch_path)
-       return
-   end
+  -- Check if .vscode/launch.json exists
+  if vim.fn.filereadable(launch_path) == 1 then
+    -- File exists, open it
+    vim.cmd("edit " .. launch_path)
+    return
+  end
 
-   -- Ask user if they want to create the file
-   local confirm = vim.fn.input(string.format("Create launch.json in %s? (y/n): ", cwd))
-   
-   if confirm:lower() ~= 'y' then
-       print("\nOperation cancelled")
-       return
-   end
+  -- Ask user if they want to create the file
+  local confirm = vim.fn.input(string.format("Create launch.json in %s? (y/n): ", cwd))
 
-   -- Create .vscode directory if it doesn't exist
-   local vscode_dir = cwd .. "/.vscode"
-   if vim.fn.isdirectory(vscode_dir) == 0 then
-       vim.fn.mkdir(vscode_dir, "p")
-   end
+  if confirm:lower() ~= "y" then
+    print("\nOperation cancelled")
+    return
+  end
 
-   -- Create empty file and open it
-   local file = io.open(launch_path, "w")
-   if file then
-       file:close()
-       vim.cmd('edit ' .. launch_path)
-       print("\nCreated launch.json")
-   else
-       print("\nError: Could not create launch.json")
-   end
+  -- Create .vscode directory if it doesn't exist
+  local vscode_dir = cwd .. "/.vscode"
+  if vim.fn.isdirectory(vscode_dir) == 0 then
+    vim.fn.mkdir(vscode_dir, "p")
+  end
+
+  -- Create empty file and open it
+  local file = io.open(launch_path, "w")
+  if file then
+    file:close()
+    vim.cmd("edit " .. launch_path)
+    print("\nCreated launch.json")
+  else
+    print("\nError: Could not create launch.json")
+  end
 end
 
--- M.setup = function() -- DEL: DELETE LINES LATER 
+-- M.setup = function() -- DEL: DELETE LINES LATER
 --    vim.api.nvim_create_user_command('LaunchJson', function()
 --        M.check_or_create_launch_json()
 --    end, {})
 -- end
--- return M -- DEL: DELETE LINES LATER 
+-- return M -- DEL: DELETE LINES LATER
 
 return util

@@ -3,6 +3,11 @@ if vim.g.neovide then
   enabled = false
 end
 
+local is_kitty = require("plugins.util.util").get_terminal() == "kitty"
+if is_kitty then
+  enabled = false -- kitty has mouse tralinign animation like neovide
+end
+
 return {
   {
     "folke/snacks.nvim",
