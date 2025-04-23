@@ -302,3 +302,7 @@ resume
 cv
 plugin
 extention
+terminal_emulator
+kitty
+wezterm
+screenshot
