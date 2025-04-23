@@ -305,5 +305,7 @@ extention
 terminal_emulator
 kitty
 wezterm
+gitconfig
+config
 screenshot
 starship
