@@ -6,6 +6,7 @@ urls=(
   "https://chatgpt.com/|ChatGPT"
   "https://www.youtube.com/"
   "https://mail.google.com/mail/|Gmail"
+  "https://app.filen.io/|Filen"
 )
 
 # name + id will be based on domain
@@ -45,7 +46,7 @@ for entry in "${urls[@]}"; do
   # fallback if icon fetch fails
   if [[ ! -s "$appdir/icon.png" ]]; then
     cp /usr/share/icons/hicolor/128x128/apps/web-browser.png "$appdir/icon.png" 2>/dev/null || \
-    convert -size 128x128 xc:white -fill black -pointsize 20 -gravity center -draw "text 0,0 '$name'" "$appdir/icon.png"
+    magick -size 128x128 xc:white -fill black -pointsize 20 -gravity center -draw "text 0,0 '$name'" "$appdir/icon.png"
   fi
 
   # create .desktop file
