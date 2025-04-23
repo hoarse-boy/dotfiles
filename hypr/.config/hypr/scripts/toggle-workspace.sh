@@ -6,6 +6,8 @@ active=$(hyprctl -j monitors | jq --raw-output '.[] | select(.focused==true).spe
 if [[ ${#active} -gt 0 ]]; then
   hyprctl dispatch togglespecialworkspace "$active"
 
+  # eww close special-ws
+
   # If moving left or right, stop after hiding Quick-note
   case "$1" in
   "left" | "right" | "down")

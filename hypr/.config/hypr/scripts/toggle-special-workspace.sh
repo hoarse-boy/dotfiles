@@ -23,6 +23,8 @@ toggle_app_in_special_ws() {
 
   # Switch to the special workspace
   hyprctl dispatch togglespecialworkspace "$ws_name"
+
+  # eww open --toggle special-ws
 }
 
 # Example usage:
