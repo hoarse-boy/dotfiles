@@ -9,7 +9,6 @@ news.version=3.4.1
 # Define a 'work' context (only shows +work tasks)
 context.work=+work
 
-# Define a 'personal' context (excludes +work)
 context.personal=+personal
 
 
@@ -19,13 +18,13 @@ context.personal=+personal
 #data.location=~/.local/share/task
 #hooks.location=~/.config/task/hooks
 
-# Color theme (uncomment one to use)
+# Color theme (uncomment one to use). NOTE: will make selection highlight to not visible or working.
 #include light-16.theme
 #include light-256.theme
 #include bubblegum-256.theme
 #include dark-16.theme
-#include dark-256.theme
-#include dark-red-256.theme
+# include dark-256.theme
+# include dark-red-256.theme
 #include dark-green-256.theme
 #include dark-blue-256.theme
 #include dark-violets-256.theme
@@ -41,5 +40,12 @@ uda.taskwarrior-tui.selection.bold=no
 uda.taskwarrior-tui.selection.italic=no
 uda.taskwarrior-tui.selection.dim=yes
 uda.taskwarrior-tui.selection.reverse=yes
+
+
+# shortcut scripts
+uda.taskwarrior-tui.shortcuts.1=~/.config/taskwarrior-tui/shortcut-script/create-child-task.sh
+uda.taskwarrior-tui.shortcuts.2=~/.config/taskwarrior-tui/shortcut-script/create-personal-task.sh
+uda.taskwarrior-tui.shortcuts.3=~/.config/taskwarrior-tui/shortcut-script/create-work-task.sh
+uda.taskwarrior-tui.shortcuts.4=~/.config/taskwarrior-tui/shortcut-script/toggle-personal-tag.sh
 
 context=personal
