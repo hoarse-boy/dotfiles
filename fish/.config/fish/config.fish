@@ -1,17 +1,9 @@
-# Set critical system paths FIRST
-set -gx PATH /usr/bin /usr/local/bin /usr/local/sbin
-
 # Load basic utilities before anything else
 if command -q uname
     load_os_cmds
 else
     echo "Warning: uname not available yet" >&2
 end
-
-# Now set user paths (without duplicates)
-set -a PATH $HOME/.local/bin $HOME/lua5.1/bin $HOME/bin \
-    /usr/lib/jvm/default/bin /home/jho/.local/share/flatpak/exports/bin \
-    /usr/lib/rustup/bin
 
 # Ensure PATH is clean
 dedupe_path
@@ -122,4 +114,4 @@ set fish_key_bindings fish_user_key_bindings
 set -Ux EDITOR nvim # used for crontab -e
 
 # opam configuration
-source /home/jho/.opam/opam-init/init.fish >/dev/null 2>/dev/null; or true
+source $HOME/.opam/opam-init/init.fish >/dev/null 2>/dev/null; or true

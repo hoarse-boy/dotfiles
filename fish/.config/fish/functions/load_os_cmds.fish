@@ -12,9 +12,16 @@ function load_os_cmds --description "Load OS-specific commands"
             abbr pwd 'pwd && pwd | pbcopy'
             abbr tree 'tree | pbcopy && tree'
             abbr nv 'neovide --frame buttonless --fork'
-            set -Ux fish_user_paths (rbenv root)/shims $fish_user_paths
+            # set -Ux fish_user_paths (rbenv root)/shims $fish_user_paths
 
         case Linux
+            # Set critical system paths FIRST
+            set -gx PATH /usr/bin /usr/local/bin /usr/local/sbin
+
+            set -a PATH $HOME/.local/bin $HOME/lua5.1/bin $HOME/bin \
+                /usr/lib/jvm/default/bin $HOME/.local/share/flatpak/exports/bin \
+                /usr/lib/rustup/bin
+
             set -gx editor "neovide --fork --wayland_app_id neovide"
 
             abbr nv 'neovide --fork --wayland_app_id neovide'
