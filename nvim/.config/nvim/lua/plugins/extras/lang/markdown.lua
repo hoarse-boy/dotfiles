@@ -342,6 +342,9 @@ return {
         below = "▀", -- has different color in neovide. it is working fine in arch hyprland
         highlight = "RenderMarkdownCode",
         highlight_inline = "RenderMarkdownCodeInline",
+        highlight_language = nil,
+        highlight_border = "RenderMarkdownCodeBorder",
+        highlight_fallback = "RenderMarkdownCodeFallback",
       }
 
       vim.api.nvim_set_hl(0, "RenderMarkdownCode", {
