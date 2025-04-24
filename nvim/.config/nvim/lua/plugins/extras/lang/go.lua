@@ -155,7 +155,7 @@ return {
           local mapping = {
             { "<leader>l", icon = "󰟓", group = printf("lsp (go.nvim)"), mode = "n", buffer = 0 },
             { "<leader>lt", icon = "󰟓", group = printf("tags"), mode = "n", buffer = 0 },
-            -- { "<leader>lt", icon = "󰟓", group = printf("test"), mode = "n", buffer = 0 },
+            { "<leader>lT", icon = "󰟓", group = printf("test"), mode = "n", buffer = 0 },
             { "<leader>lp", icon = "󰟓", group = printf("goplay.nvim"), mode = "n", buffer = 0 },
 
             -- Code actions
@@ -169,15 +169,15 @@ return {
             { "<leader>ltA", "<cmd>GoModifyTag -add-tags json -transform camelcase<cr>", mode = { "n" }, desc = printf("Add Tags"), buffer = 0 },
             { "<leader>ltr", "<cmd>GoRename<cr>", mode = { "n" }, desc = printf("Remove Tags"), buffer = 0 },
 
-            -- Go tests. uses neotest plugin
-            -- { "<leader>lta", "<cmd>GoAddTest<cr>", mode = { "n" }, desc = printf("Add Test for Current Func"), buffer = 0 },
-            -- { "<leader>ltA", "<cmd>GoAddAllTest<cr>", mode = { "n" }, desc = printf("Add Test for all Func"), buffer = 0 },
-            -- { "<leader>lte", "<cmd>GoAddExpTest<cr>", mode = { "n" }, desc = printf("Add Exported Func"), buffer = 0 },
-            -- { "<leader>ltT", "<cmd>GoTest<cr>", mode = { "n" }, desc = printf("Test All"), buffer = 0 },
-            -- { "<leader>ltt", "<cmd>GoTestFunc<cr>", mode = { "n" }, desc = printf("Test a Func"), buffer = 0 },
-            -- { "<leader>ltF", "<cmd>GoTestFile<cr>", mode = { "n" }, desc = printf("Test All Func in the File"), buffer = 0 },
-            -- { "<leader>ltP", "<cmd>GoTestPkg<cr>", mode = { "n" }, desc = printf("Test Package"), buffer = 0 },
-            -- { "<leader>ltc", "<cmd>GoCoverage<cr>", mode = { "n" }, desc = printf("Test -coverprofile"), buffer = 0 },
+            -- Go tests. uses neotest plugin for running test.
+            { "<leader>lTa", "<cmd>GoAddTest<cr>", mode = { "n" }, desc = printf("Add Test for Current Func"), buffer = 0 },
+            { "<leader>lTA", "<cmd>GoAddAllTest<cr>", mode = { "n" }, desc = printf("Add Test for all Func"), buffer = 0 },
+            { "<leader>lTe", "<cmd>GoAddExpTest<cr>", mode = { "n" }, desc = printf("Add Exported Func"), buffer = 0 },
+            { "<leader>lTT", "<cmd>GoTest<cr>", mode = { "n" }, desc = printf("Test All"), buffer = 0 },
+            { "<leader>lTt", "<cmd>GoTestFunc<cr>", mode = { "n" }, desc = printf("Test a Func"), buffer = 0 },
+            { "<leader>lTF", "<cmd>GoTestFile<cr>", mode = { "n" }, desc = printf("Test All Func in the File"), buffer = 0 },
+            { "<leader>lTP", "<cmd>GoTestPkg<cr>", mode = { "n" }, desc = printf("Test Package"), buffer = 0 },
+            { "<leader>lTc", "<cmd>GoCoverage<cr>", mode = { "n" }, desc = printf("Test -coverprofile"), buffer = 0 },
 
             -- Go documentation and utilities
             { "<leader>ld", "<cmd>GoDoc<cr>", mode = { "n" }, desc = printf("Go Doc"), buffer = 0 },
