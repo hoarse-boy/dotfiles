@@ -91,7 +91,7 @@ set("v", "<C-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", {
 
 if os_name == os_util.LINUX then
   -- stylua: ignore
-  set({ "n", "v", "s", "x", "o", "i", "l", "c", "t" }, "<C-S-v>", function() vim.api.nvim_paste(vim.fn.getreg("+"), true, -1) end, { noremap = true, silent = true })
+  set({ "n", "v", "s", "x", "o", "i", "l", "c", "t" }, "<C-v>", function() vim.api.nvim_paste(vim.fn.getreg("+"), true, -1) end, { noremap = true, silent = true })
   -- NOTE: use ctrl-q for v-block mode
 end
 
