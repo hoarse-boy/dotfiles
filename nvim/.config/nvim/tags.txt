@@ -306,3 +306,4 @@ terminal_emulator
 kitty
 wezterm
 screenshot
+starship
