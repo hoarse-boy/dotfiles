@@ -1,44 +1,54 @@
 #!/usr/bin/env bash
 
-{
-  UUID="$1"
+clear
+echo
 
-  echo "=== $(date) - Running child task script ==="
-  echo "Input UUID: $UUID"
+# Colors
+GREEN="\033[1;32m"
+RED="\033[1;31m"
+YELLOW="\033[1;33m"
+CYAN="\033[1;36m"
+RESET="\033[0m"
 
-  if [ -z "$UUID" ]; then
-    echo "❌ No UUID passed."
-    exit 1
-  fi
+UUID="$1"
 
-  PROJECT=$(task _get "${UUID}.project")
-  TAGS_RAW=$(task _get "${UUID}.tags")
+echo -e "${CYAN}=== $(date) - Running child task script ===${RESET}"
+echo -e "${YELLOW}Input UUID:${RESET} $UUID"
 
-  echo "Parent project: $PROJECT"
-  echo "Parent tags: $TAGS_RAW"
+if [ -z "$UUID" ]; then
+  echo -e "${RED}❌ No UUID passed.${RESET}"
+  exit 1
+fi
 
-  # Prompt for new task description using rofi
-  DESCRIPTION=$(
-    rofi -dmenu \
-      -p "📝" \
-      -theme-str 'entry { placeholder: "Describe the new task..."; }'
-  )
+PROJECT=$(task _get "${UUID}.project")
+TAGS_RAW=$(task _get "${UUID}.tags")
 
-  # Handle cancel or empty input
-  if [ $? -ne 0 ] || [ -z "$DESCRIPTION" ]; then
-    echo "❌ Cancelled or no input provided. Exiting."
-    notify-send "❌ Cancelled or no input provided. Exiting."
-    exit 0
-  fi
+echo -e "${YELLOW}Parent project:${RESET} $PROJECT"
+echo -e "${YELLOW}Parent tags:${RESET} $TAGS_RAW"
 
-  TAG_ARGS=""
-  for TAG in $TAGS_RAW; do
-    TAG_ARGS+="+$TAG "
-  done
+# Prompt for new task description using Bash
+echo
+echo -e -n "${CYAN}📝 Describe the new child task: ${RESET}"
+read -r DESCRIPTION
 
-  if task add "$DESCRIPTION" project:"$PROJECT" $TAG_ARGS depends:$UUID; then
-    notify-send "✅ Created new child task" "task: $DESCRIPTION"
-  else
-    notify-send "❌ Failed to create task." "task: $DESCRIPTION"
-  fi
-} >/dev/null 2>&1
+# Handle cancel or empty input
+if [ -z "$DESCRIPTION" ]; then
+  echo -e "${RED}❌ Cancelled or no input provided. Exiting.${RESET}"
+  notify-send "❌ Cancelled or no input provided. Exiting."
+  exit 0
+fi
+
+# Build tags
+TAG_ARGS=""
+for TAG in $TAGS_RAW; do
+  TAG_ARGS+="+$TAG "
+done
+
+# Add the new child task
+if task add "$DESCRIPTION" project:"$PROJECT" $TAG_ARGS depends:$UUID; then
+  echo -e "${GREEN}✅ Created new child task: ${RESET}$DESCRIPTION"
+  notify-send "✅ Created new child task" "task: $DESCRIPTION"
+else
+  echo -e "${RED}❌ Failed to create task.${RESET}"
+  notify-send "❌ Failed to create task." "task: $DESCRIPTION"
+fi
