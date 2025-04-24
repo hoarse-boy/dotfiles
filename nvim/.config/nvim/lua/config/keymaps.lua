@@ -90,9 +90,9 @@ set("v", "<C-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc 
 set("v", "<C-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" }) -- has bug where the vim cmd will open in split second and then close
 
 if os_name == os_util.LINUX then
-  -- Paste from system clipboard in normal mode
-  set("n", "<C-v>", '"+p', { noremap = true, silent = true })
-  -- NOTE: use ctrl-q for visual block mode in linux
+  -- stylua: ignore
+  set({ "n", "v", "s", "x", "o", "i", "l", "c", "t" }, "<C-S-v>", function() vim.api.nvim_paste(vim.fn.getreg("+"), true, -1) end, { noremap = true, silent = true })
+  -- NOTE: use ctrl-q for v-block mode
 end
 
 -- stylua: ignore start
