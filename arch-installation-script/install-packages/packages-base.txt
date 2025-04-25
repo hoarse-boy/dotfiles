@@ -47,3 +47,4 @@ jdownloader2
 yt-dlp
 lsof
 gnome-disk-utility
+direnv
