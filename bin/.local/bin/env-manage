@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+set -e
+
+clear
+
+# Function to highlight text with color
+highlight() {
+  printf "\033[1;32m%s\033[0m\n" "$1"
+}
+
+# Function to normalize env var key
+normalize_key() {
+  local key="$1"
+  # Convert to uppercase, replace spaces/commas with underscores
+  echo "$key" | tr '[:lower:]' '[:upper:]' | tr -s ' ,' '_' | sed 's/[^A-Z0-9_]/_/g'
+}
+
+# Function to safely quote values
+quote_value() {
+  local value="$1"
+  # Trim whitespace
+  value=$(printf '%s' "$value" | awk '{$1=$1};1')
+  # Escape single quotes and wrap in single quotes
+  value=${value//\'/\'\\\'\'}
+  printf "'%s'" "$value"
+}
+
+# Determine root directory
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  ROOT_DIR=$(git rev-parse --show-toplevel)
+else
+  ROOT_DIR=$(pwd)
+fi
+
+cd "$ROOT_DIR" || exit 1
+
+ENVRC_FILE="$ROOT_DIR/.envrc"
+
+# Create .envrc if it doesn't exist
+if [[ ! -f "$ENVRC_FILE" ]]; then
+  printf '%s\n' '# .envrc for your environment variables' >"$ENVRC_FILE"
+  printf '✅ Created .envrc\n'
+fi
+
+# Main interaction loop
+printf '⚙️  Adding environment variables interactively (Ctrl+C to exit)\n'
+while true; do
+  printf '\nWhat would you like to do next?\n'
+  highlight "1. Enter env var (key=value or key,value or key value) to add to .envrc"
+  highlight "2. 'd' to Done (run 'direnv allow')"
+  highlight "3. 'e' to Edit in nvim and run 'direnv allow'"
+
+  read -r -p "Enter your choice: " input
+
+  case "$input" in
+  d)
+    direnv allow
+    printf '✅ direnv allowed.\n'
+    break
+    ;;
+  e)
+    if [ -n "${NVIM:-}" ]; then
+      printf '❌ Cannot open nvim inside an existing nvim session.\n'
+      exit 1
+    fi
+    nvim "$ENVRC_FILE"
+    direnv allow
+    printf '✅ Opened .envrc in nvim and ran direnv allow.\n'
+    break
+    ;;
+  *)
+    # Simplified regex matching
+    if [[ "$input" =~ ^([^=,]+)[=,](.*)$ ]] || [[ "$input" =~ ^([^[:space:]]+)[[:space:]]+(.*)$ ]]; then
+      raw_key=${BASH_REMATCH[1]}
+      raw_value=${BASH_REMATCH[2]}
+    elif [[ "$input" =~ ^([^=, ]+)$ ]]; then
+      read -r -p "Enter value for ${BASH_REMATCH[1]}: " raw_value
+      raw_key=${BASH_REMATCH[1]}
+    else
+      printf '❌ Invalid input format. Please use: key=value, key,value, or key value\n'
+      continue
+    fi
+
+    normalized_key=$(normalize_key "$raw_key")
+    quoted_value=$(quote_value "$raw_value")
+
+    printf 'export %s=%s\n' "$normalized_key" "$quoted_value" >>"$ENVRC_FILE"
+    printf '✅ Added: export %s=%s\n' "$normalized_key" "$quoted_value"
+    ;;
+  esac
+done
