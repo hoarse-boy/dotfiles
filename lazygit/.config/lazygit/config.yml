@@ -4,7 +4,7 @@ git:
     pager: delta --dark --paging=never
 customCommands:
   - key: "C"
-    command: "czg" # this uses commitizen node.js. use this for python version "git cz c". czg from npm is also available for alternative as npm commitizen is unuseable in linux.
+    command: "clear && czg" # this uses commitizen node.js. use this for python version "git cz c". czg from npm is also available for alternative as npm commitizen is unuseable in linux.
     description: "commit with commitizen"
     context: "files"
     loadingText: "opening commitizen commit tool"
