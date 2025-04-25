@@ -186,11 +186,4 @@ function util.check_or_create_launch_json()
   end
 end
 
--- M.setup = function() -- DEL: DELETE LINES LATER
---    vim.api.nvim_create_user_command('LaunchJson', function()
---        M.check_or_create_launch_json()
---    end, {})
--- end
--- return M -- DEL: DELETE LINES LATER
-
 return util
