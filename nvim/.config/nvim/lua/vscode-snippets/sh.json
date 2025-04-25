@@ -1,1 +1,1 @@
-{"shebang bash":{"prefix":"shebang bash","body":"#!/usr/bin/env bash"}}
+{"shellcheck disable":{"body":"# shellcheck disable=SC2034","prefix":"shellcheck disable"},"shebang bash":{"body":"#!\/usr\/bin\/env bash","prefix":"shebang bash"}}
