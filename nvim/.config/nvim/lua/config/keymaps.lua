@@ -97,5 +97,7 @@ end
 
 -- stylua: ignore start
 set("n", "<leader>ol", function () require("plugins.util.find-files").change_dir_and_find_files("~/.local/share/nvim/lazy/LazyVim/") end, { desc = printf("Open Lazyvim Config") }) 
+set("n", "<leader>oe", function () Snacks.terminal("fish -c env-manage") end, { desc = printf("Manage .envrc") })
+
 -- set("n", "<leader>oc", function () require("plugins.util.find-files").change_dir_and_find_files("~/.config/nvim/") end, { desc = printf("Open My Nvim Config") }) -- old, uses chezmoi dotfiles dir now
 -- stylua: ignore end

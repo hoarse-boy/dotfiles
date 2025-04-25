@@ -50,3 +50,9 @@ vim.g.lazyvim_prettier_needs_config = true -- makes prettier to use prettierrc.y
 -- vim.g.snacks_animate = false -- disable animations
 -- vim.g.snacks_animate_scroll = false -- disable scroll animations
 -- vim.g.lazyvim_cmp = "nvim-cmp" -- lazyvim 14.* reguired this if nvim-cmp is used, as blink.cmp is the default.
+
+vim.filetype.add({
+  pattern = {
+    [".envrc"] = "bash",  -- Treat .envrc as bash
+  },
+})
