@@ -3,40 +3,39 @@
 clear
 echo
 
-# Colors
-GREEN="\033[1;32m"
-RED="\033[1;31m"
-YELLOW="\033[1;33m"
-CYAN="\033[1;36m"
-RESET="\033[0m"
-
 UUID="$1"
 
-echo -e "${CYAN}=== $(date) - Running child task script ===${RESET}"
-echo -e "${YELLOW}Input UUID:${RESET} $UUID"
+gum style --border normal --padding "1 2" --foreground 14 "=== $(date) - Running child task script ==="
+gum style --foreground 11 "Input UUID: $UUID"
 
 if [ -z "$UUID" ]; then
-  echo -e "${RED}❌ No UUID passed.${RESET}"
+  gum style --foreground 9 "❌ No UUID passed."
   exit 1
 fi
 
 PROJECT=$(task _get "${UUID}.project")
 TAGS_RAW=$(task _get "${UUID}.tags")
 
-echo -e "${YELLOW}Parent project:${RESET} $PROJECT"
-echo -e "${YELLOW}Parent tags:${RESET} $TAGS_RAW"
+gum style --foreground 11 "Parent project: $PROJECT"
+gum style --foreground 11 "Parent tags: $TAGS_RAW"
 
-# Prompt for new task description using Bash
-echo
-echo -e -n "${CYAN}📝 Describe the new child task: ${RESET}"
-read -r DESCRIPTION
+# Ask for child task description
+DESCRIPTION=$(gum input --placeholder "Describe the new child task...")
+DESCRIPTION="${DESCRIPTION%%$'\n'*}"
 
-# Handle cancel or empty input
 if [ -z "$DESCRIPTION" ]; then
-  echo -e "${RED}❌ Cancelled or no input provided. Exiting.${RESET}"
+  gum style --foreground 9 "❌ Cancelled or no input provided. Exiting."
   notify-send "❌ Cancelled or no input provided. Exiting."
   exit 0
 fi
+
+# Optional: Confirm before creating
+# gum style --foreground 14 "📝 New task description: $DESCRIPTION"
+# if ! gum confirm "Create this child task?"; then
+#   gum style --foreground 9 "❌ Cancelled by user."
+#   notify-send "❌ Cancelled by user."
+#   exit 0
+# fi
 
 # Build tags
 TAG_ARGS=""
@@ -46,9 +45,10 @@ done
 
 # Add the new child task
 if task add "$DESCRIPTION" project:"$PROJECT" $TAG_ARGS depends:$UUID; then
-  echo -e "${GREEN}✅ Created new child task: ${RESET}$DESCRIPTION"
+  gum style --foreground 10 "✅ Created new child task: $DESCRIPTION"
   notify-send "✅ Created new child task" "task: $DESCRIPTION"
 else
-  echo -e "${RED}❌ Failed to create task.${RESET}"
+  gum style --foreground 9 "❌ Failed to create task: $DESCRIPTION"
   notify-send "❌ Failed to create task." "task: $DESCRIPTION"
 fi
+
