@@ -312,3 +312,7 @@ starship
 import
 echo
 log
+server
+nginx
+port_forward
+dbeaver
