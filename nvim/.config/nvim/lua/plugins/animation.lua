@@ -1,11 +1,12 @@
-local enabled = true
+local enableCursor = true
+local enabledAnimation = true
 if vim.g.neovide then
-  enabled = false
+  enabledAnimation = false
 end
 
 local is_kitty = require("plugins.util.util").get_terminal() == "kitty"
 if is_kitty then
-  enabled = false -- kitty has mouse tralinign animation like neovide
+  enableCursor = false -- kitty has mouse tralinign animation like neovide
 end
 
 return {
@@ -13,7 +14,7 @@ return {
     "folke/snacks.nvim",
     opts = {
       scroll = {
-        enabled = enabled,
+        enabled = enabledAnimation,
         animate = {
           duration = { step = 6, total = 100 },
           -- duration = { step = 15, total = 250 }, -- default. higher total value will makes `g` or `G` to be slower even with lower step value.
@@ -30,7 +31,7 @@ return {
   {
     "sphamba/smear-cursor.nvim",
     event = "VeryLazy",
-    enabled = enabled,
+    enabled = enableCursor,
     opts = {
       -- -- fire animation when moving cursor
       -- cursor_color = "#ff8800",
