@@ -316,3 +316,4 @@ server
 nginx
 port_forward
 dbeaver
+lazysql
