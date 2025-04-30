@@ -7,7 +7,7 @@
 
 [core]
   pager = delta --dark --paging=never
-  excludesfile = ~/.gitignore_global
+	excludesfile = ~/.gitignore_global
   fileMode = true
 
 [delta]
