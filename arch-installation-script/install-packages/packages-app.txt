@@ -6,3 +6,4 @@ neovide
 gimp
 telegram-desktop-bin
 chromium
+slack-desktop-wayland
