@@ -148,7 +148,6 @@ function util.remove_dashboard_item(dashboard_keys_table, key_to_remove)
   end
 end
 
--- FIX: .
 function util.check_or_create_launch_json()
   -- Get the current working directory
   local cwd = vim.fn.getcwd()
@@ -183,6 +182,63 @@ function util.check_or_create_launch_json()
     print("\nCreated launch.json")
   else
     print("\nError: Could not create launch.json")
+  end
+end
+
+function util.check_or_create_envrc()
+  -- Find project root by looking for .git or .envrc in parent directories
+  local current_file = vim.fn.expand("%:p")
+  local current_dir = current_file ~= "" and vim.fn.fnamemodify(current_file, ":h") or vim.fn.getcwd()
+  local root_dir = nil
+  local found_git = false
+
+  -- Search upwards for .git or .envrc
+  local dir = current_dir
+  while true do
+    -- Check for .git directory (preferred)
+    local git_path = vim.fn.glob(dir .. "/.git")
+    if git_path ~= "" and not found_git then
+      root_dir = dir
+      found_git = true
+      -- Don't break yet - there might be an .envrc higher up
+    end
+
+    -- Check for .envrc file
+    local envrc_path = vim.fn.glob(dir .. "/.envrc")
+    if envrc_path ~= "" then
+      root_dir = dir
+      break -- .envrc found, use this as root
+    end
+
+    -- Move to parent directory
+    local parent = vim.fn.fnamemodify(dir, ":h")
+    if parent == dir then -- Reached filesystem root
+      break
+    end
+    dir = parent
+  end
+
+  if root_dir and vim.fn.glob(root_dir .. "/.envrc") ~= "" then
+    -- .envrc exists, open it
+    local envrc_path = root_dir .. "/.envrc"
+    vim.cmd("edit " .. envrc_path)
+    return
+  end
+
+  -- Determine where to create .envrc
+  local create_dir = root_dir or current_dir
+  local prompt_msg = string.format("No .envrc found. Create one in %s? (Enter=Yes, n=No)", create_dir)
+
+  local response = vim.fn.input(prompt_msg)
+  if response == "" then
+    -- User pressed Enter - create the file
+    local envrc_path = create_dir .. "/.envrc"
+    vim.fn.writefile({}, envrc_path)
+    vim.cmd("edit " .. envrc_path)
+    vim.notify(string.format("Created .envrc in %s", create_dir), vim.log.levels.INFO)
+  elseif response:lower() == "n" then
+    -- User cancelled
+    vim.notify("Creation of .envrc cancelled", vim.log.levels.INFO)
   end
 end
 
