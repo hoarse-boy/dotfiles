@@ -317,3 +317,5 @@ nginx
 port_forward
 dbeaver
 lazysql
+outline
+vpn
