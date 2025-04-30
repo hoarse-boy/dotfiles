@@ -48,3 +48,4 @@ yt-dlp
 lsof
 gnome-disk-utility
 direnv
+gum
