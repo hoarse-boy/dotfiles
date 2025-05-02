@@ -71,7 +71,7 @@ return {
         },
 
         debug = {
-          scores = true, -- show scores in the list. debugging only
+          scores = false, -- `true` to show scores in the list. debugging only
         },
       },
 
