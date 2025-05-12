@@ -84,7 +84,7 @@ return {
         "nvim-treesitter/nvim-treesitter",
         opts = function(_, opts)
           if type(opts.ensure_installed) == "table" then
-            vim.list_extend(opts.ensure_installed, { "query" })
+            vim.list_extend(opts.ensure_installed, { "query", "sql" }) -- add more treesitter parsers to install
           end
 
           opts.auto_install = true
