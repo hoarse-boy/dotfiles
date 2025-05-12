@@ -320,3 +320,17 @@ dbeaver
 lazysql
 outline
 vpn
+bookstack
+teams
+regex
+raw_sql_query
+type_assertion
+number
+parse
+snippet
+text_snippet
+espanso
+pagination
+keyset_pagination
+string
+cronjob
