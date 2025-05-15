@@ -446,4 +446,122 @@ function M.insert_separator(with_todo)
   end
 end
 
+function M.insert_latest_screenshot()
+  -- Get paths
+  local screenshot_dir = os.getenv("HOME") .. "/Pictures/Screenshots"
+  local assets_dir = vim.fn.expand("~/jho-notes/assets")
+
+  -- Find latest AVIF screenshot
+  local handle = io.popen(string.format('ls -t "%s"/*.avif 2>/dev/null | head -n 1', screenshot_dir))
+  local latest_avif = handle:read("*a"):gsub("\n", "")
+  handle:close()
+
+  if latest_avif == "" then
+    vim.notify("No AVIF screenshots found in " .. screenshot_dir, vim.log.levels.WARN)
+    return
+  end
+
+  -- Prompt for image name
+  vim.ui.input({
+    prompt = "Image name (leave empty for 'image'): ",
+    default = "",
+  }, function(input)
+    if not input then
+      return
+    end -- User cancelled
+
+    local base_name = input:gsub("%s+", "-"):gsub("[^%w%-]", ""):lower()
+    if base_name == "" then
+      base_name = "image"
+    end
+
+    -- Generate filename with timestamp
+    local timestamp = os.date("%Y-%m-%d-%H-%M-%S")
+    local new_filename = base_name .. "-" .. timestamp .. ".avif"
+    local dest_path = assets_dir .. "/" .. new_filename
+
+    -- Copy file
+    os.execute(string.format('cp "%s" "%s"', latest_avif, dest_path))
+
+    -- Insert markdown link
+    local markdown_link = string.format("![%s](./assets/%s)", base_name, new_filename)
+    vim.api.nvim_put({ markdown_link }, "", false, true)
+
+    vim.notify("Inserted: " .. markdown_link)
+  end)
+end
+
+function M.screenshot_picker()
+  -- Configurable paths
+  local assets_dir = vim.fn.expand("~/jho-notes/assets")
+
+  -- Scan directories for AVIF files
+  local scan = require("plenary.scandir")
+  local images = {}
+
+  local function safe_scan(dir)
+    if vim.fn.isdirectory(dir) == 1 then
+      return scan.scan_dir(dir, {
+        hidden = false,
+        only_files = true,
+        search_pattern = "%.avif$",
+      }) or {}
+    end
+    return {}
+  end
+
+  vim.list_extend(images, safe_scan(assets_dir))
+
+  if #images == 0 then
+    vim.notify("No AVIF images found in:\n" .. assets_dir, vim.log.levels.WARN)
+    return
+  end
+
+  -- Prepare items for picker
+  local items = {}
+  for _, img_path in ipairs(images) do
+    local img_name = vim.fn.fnamemodify(img_path, ":t")
+    local clean_name = img_name:gsub("%.avif$", ""):gsub("%d%d%d%d%-%d%d%-%d%d%-%d%d%-%d%d%-%d%d", ""):gsub("^%-+", ""):gsub("%-+$", ""):gsub("%-+", " "):gsub("^%s*(.-)%s*$", "%1")
+
+    if clean_name == "" then
+      clean_name = "screenshot"
+    end
+
+    table.insert(items, {
+      display = img_name,
+      value = {
+        path = img_path,
+        rel_path = "./" .. vim.fn.fnamemodify(img_path, ":~:."),
+        clean_name = clean_name,
+      },
+    })
+  end
+
+  -- TODO: make it to show image preview like snacks.files
+  -- Show picker
+  require("snacks.picker").select(items, {
+    prompt = "Select Image:",
+    format_item = function(item)
+      return "🖼️ " .. item.display
+    end,
+    previewer = function(item)
+      return {
+        type = "text",
+        lines = {
+          "File: " .. item.display,
+          "Path: " .. item.value.path,
+          "Alt Text: " .. item.value.clean_name,
+          "",
+          "Press Enter to insert Markdown link",
+        },
+      }
+    end,
+  }, function(choice)
+    if choice then
+      local markdown_link = string.format("![%s](%s)", choice.value.clean_name, choice.value.rel_path)
+      vim.api.nvim_put({ markdown_link }, "", false, true)
+    end
+  end)
+end
+
 return M
