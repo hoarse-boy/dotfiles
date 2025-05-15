@@ -240,6 +240,23 @@ return {
             return
           end
 
+          local os_util = require("plugins.util.check-os")
+          local os_name = os_util.get_os_name()
+
+          local screenshot_mapping = {
+              -- stylua: ignore
+              {"<leader>lv", "<cmd>PasteImage<cr>" , mode = "n", desc = printf("Insert image from clipboard"), buffer = 0 },
+          }
+
+          if os_name == os_util.LINUX then
+            screenshot_mapping = {
+              -- stylua: ignore start
+              {"<leader>lv", function() markdown_func.insert_latest_screenshot() end , mode = "n", desc = printf("Insert image from screenshot folder"), buffer = 0 },
+              {"<leader>li", function() markdown_func.screenshot_picker() end , mode = "n", desc = printf("Select exiting image and generate image link"), buffer = 0 },
+              -- stylua: ignore end
+            }
+          end
+
           local l_mapping = {
               -- stylua: ignore start
               { "<leader>l", group = printf("lsp (markdown)"), icon = "󰍔", mode = { "v", "n" }, buffer = 0 },
@@ -253,7 +270,7 @@ return {
               {"<leader>lr", function() telekasten.rename_note() end,  mode = "n", desc = printf("Telekasten Rename Note (and its Backlink)"), buffer = 0 },
               -- {"<leader>lc", function() telekasten.show_calendar() end, mode = "n", desc = printf("Show calendar"), buffer = 0 },
 
-              {"<leader>lv", "<cmd>PasteImage<cr>" , mode = "n", desc = printf("Insert image from clipboard"), buffer = 0 },
+              screenshot_mapping,
               -- set("n", "<leader>lv", function() telekasten.paste_img_and_link() end, buffer = 0, desc = printf("Paste image and create link")) -- use img-clip's
               -- set("n", "<leader>lt", function() telekasten.toggle_todo() end, buffer = 0, desc = printf("Toggle todo")) -- use bullet.vim's
 
