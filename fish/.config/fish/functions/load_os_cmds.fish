@@ -22,6 +22,8 @@ function load_os_cmds --description "Load OS-specific commands"
                 /usr/lib/jvm/default/bin $HOME/.local/share/flatpak/exports/bin \
                 /usr/lib/rustup/bin
 
+            source ~/.config/fish/arch.fish
+
             set -gx editor "neovide --fork --wayland_app_id neovide"
 
             abbr nv 'neovide --fork --wayland_app_id neovide'
@@ -79,5 +81,10 @@ function load_os_cmds --description "Load OS-specific commands"
 
             # YouTube audio (MP3) downloads
             abbr ytmp3 "yt-dlp -x --audio-format mp3 -P $YT_MUSIC_DIR"
+
+            # outline-cli https://github.com/Kira-NT/outline-cli. need outline vpn added to work see the docs.
+            abbr cvpn "sudo -E vpn connect oktagon"
+            abbr dvpn "sudo -E vpn disconnect"
+            abbr svpn "sudo -E vpn status"
     end
 end
