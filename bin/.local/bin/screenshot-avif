@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+# Config
+SAVE_DIR="$HOME/Pictures/Screenshots"
+mkdir -p "$SAVE_DIR"
+TIMESTAMP=$(date +'%Y-%m-%d_%H-%M-%S')
+FILENAME="$SAVE_DIR/screenshot_$TIMESTAMP.avif"
+
+# Determine capture mode
+case "$1" in
+  "fullscreen")
+    CAPTURE_CMD="grim -t png -"
+    NOTIF_MSG="Full screen"
+    ;;
+  "window")
+    # Fixed jq command for Hyprland window geometry
+    WINDOW_GEOM=$(hyprctl activewindow -j | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')
+    if [ -z "$WINDOW_GEOM" ]; then
+      notify-send "Screenshot Failed" "Could not get window geometry" -t 2000
+      exit 1
+    fi
+    CAPTURE_CMD="grim -g \"$WINDOW_GEOM\" -t png -"
+    NOTIF_MSG="Active window"
+    ;;
+  "region")
+    CAPTURE_CMD="grim -g \"$(slurp)\" -t png -"
+    NOTIF_MSG="Selected region"
+    ;;
+  *)
+    echo "Usage: $0 [fullscreen|window|region]"
+    exit 1
+    ;;
+esac
+
+# Capture to temporary file
+if ! eval "$CAPTURE_CMD" > /tmp/screenshot.png; then
+  notify-send "Screenshot Failed" "Could not capture image" -t 2000
+  exit 1
+fi
+
+# Verify the captured image
+if ! file /tmp/screenshot.png | grep -q "PNG image"; then
+  notify-send "Screenshot Failed" "Invalid image captured" -t 2000
+  exit 1
+fi
+
+# Convert to AVIF (using default quality)
+if ! avifenc /tmp/screenshot.png -o "$FILENAME"; then
+  notify-send "Conversion Failed" "Could not convert to AVIF" -t 2000
+  exit 1
+fi
+
+# Copy PNG to clipboard
+wl-copy -t image/png < /tmp/screenshot.png
+
+# Cleanup
+# rm -f /tmp/screenshot.png
+
+# Notifications
+notify-send "Screenshot Captured" "$NOTIF_MSG saved as AVIF and copied as PNG" -i "$FILENAME"
+notify-send "Clipboard Content" "PNG version ready for pasting" -t 2000
+notify-send "Save Screenshot at" "$FILENAME" -t 2000
