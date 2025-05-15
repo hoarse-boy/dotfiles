@@ -90,3 +90,4 @@ bin/.local/bin/balena-etcher
 bin/.local/bin/etcher
 ghostty/.config/ghostty/other
 kitty/.config/kitty/arch.conf
+fish/.config/fish/arch.fish
