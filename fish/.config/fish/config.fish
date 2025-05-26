@@ -107,7 +107,6 @@ abbr ch 'chmod +x'
 abbr dot 'cd ~/my-dotfiles'
 abbr con 'cd ~/.config'
 abbr tt taskwarrior-tui
-abbr wk 'cd ~/work'
 
 # modify vim mode binding
 set fish_key_bindings fish_user_key_bindings

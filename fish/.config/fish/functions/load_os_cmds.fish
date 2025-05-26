@@ -14,6 +14,8 @@ function load_os_cmds --description "Load OS-specific commands"
             abbr nv 'neovide --frame buttonless --fork'
             # set -Ux fish_user_paths (rbenv root)/shims $fish_user_paths
 
+            abbr wk 'cd ~/sync-work'
+
         case Linux
             # Set critical system paths FIRST
             set -gx PATH /usr/bin /usr/local/bin /usr/local/sbin
@@ -30,6 +32,7 @@ function load_os_cmds --description "Load OS-specific commands"
             abbr pwd 'pwd && pwd | wl-copy'
             abbr dol 'nohup dolphin . > /dev/null 2>&1 &'
             abbr open 'setsid nautilus .'
+            abbr wk 'cd ~/work/sync-work'
 
             # yay package manager
             abbr y yay
