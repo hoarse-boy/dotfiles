@@ -267,20 +267,23 @@ return {
               {"<leader>lb", function() telekasten.show_backlinks() end,  mode = "n", desc = printf("Show backlinks"), buffer = 0 },
               {"<leader>ll", function() telekasten.follow_link() end,  mode = "n", desc = printf("Follow link under cursor"), buffer = 0 },
               {"<leader>lL", function() telekasten.insert_link() end, mode = "n", desc = printf("Insert link to note"), buffer = 0 }, -- can open image and link in browser.
-              {"<leader>lr", function() telekasten.rename_note() end,  mode = "n", desc = printf("Telekasten Rename Note (and its Backlink)"), buffer = 0 },
+              {"<leader>lR", function() telekasten.rename_note() end,  mode = "n", desc = printf("Telekasten Rename Note (and its Backlink)"), buffer = 0 },
               -- {"<leader>lc", function() telekasten.show_calendar() end, mode = "n", desc = printf("Show calendar"), buffer = 0 },
 
               screenshot_mapping,
+              {"<leader>ld", "<cmd>DeleteImage<cr>" , mode = "n", desc = printf("Delete image file and its references"), buffer = 0 },
+              {"<leader>lr", "<cmd>RenameImage<cr>" , mode = "n", desc = printf("Rename image file and its references"), buffer = 0 },
+              {"<leader>ls", "<cmd>ImageReferences<cr>" , mode = "n", desc = printf("Search image references"), buffer = 0 },
               -- set("n", "<leader>lv", function() telekasten.paste_img_and_link() end, buffer = 0, desc = printf("Paste image and create link")) -- use img-clip's
               -- set("n", "<leader>lt", function() telekasten.toggle_todo() end, buffer = 0, desc = printf("Toggle todo")) -- use bullet.vim's
 
               -- others
               { "<leader>lC", "<cmd>TOC<cr>", desc = printf("Generate Table of Contents"), buffer = 0 },
-              { "<leader>ld", function() markdown_func.toggle_is_done_in_buffer() end, desc = printf("Toggle is_done in buffer"), buffer = 0 },
               { "<leader>lp", "<cmd>MarkdownPreviewToggle<cr>", mode = "n", desc = printf("Markdown Preview"), buffer = 0 },
-              { "<leader>ld", function() markdown_func.toggle_is_done_in_buffer() end, mode = "n", desc = printf("Toggle is_done in buffer"), buffer = 0 },
-              { "<leader>lD", function() telekasten.delete_current_file() end, desc = printf("Delete current file"), buffer = 0 }, -- FIX: not working check linkarsu code
-              { "<leader>lI", function() markdown_func.delete_image_file() end, desc = printf("Delete image file"), buffer = 0 }, -- FIX: notworking
+              -- { "<leader>lI", function() markdown_func.delete_image_file() end, desc = printf("Delete image file"), buffer = 0 }, -- dont use this. not working
+              -- { "<leader>ld", function() markdown_func.toggle_is_done_in_buffer() end, desc = printf("Toggle is_done in buffer"), buffer = 0 },
+              -- { "<leader>ld", function() markdown_func.toggle_is_done_in_buffer() end, mode = "n", desc = printf("Toggle is_done in buffer"), buffer = 0 },
+              -- { "<leader>lD", function() telekasten.delete_current_file() end, desc = printf("Delete current file"), buffer = 0 }, -- FIX: not working check linkarsu code
 
               -- tags
               { "<leader>lt", group = printf("tags"), icon = "󰀅 ", mode = "n", desc = printf("Get Tags"), buffer = 0 },

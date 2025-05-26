@@ -564,4 +564,246 @@ function M.screenshot_picker()
   end)
 end
 
+-- TODO: make the othe rfunc above to use this config M.notes_dir etc.
+-- Config
+M.notes_dir = vim.fn.expand("~/jho-notes")
+M.assets_dir = M.notes_dir .. "/assets"
+
+local function get_current_datetime_suffix()
+  return os.date("%Y-%m-%d-%H-%M-%S")
+end
+
+local function get_image_path_under_cursor()
+  local line = vim.api.nvim_get_current_line()
+  local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 1-based index
+  -- Match markdown image pattern ![alt](path)
+  local pattern = "!%[.-%]%((.-)%)"
+
+  local start_pos = 1
+  while true do
+    local img_start, img_end, path = string.find(line, pattern, start_pos)
+    if not img_start then
+      return nil
+    end
+
+    if col >= img_start and col <= img_end then
+      -- Normalize path (handle ./assets/... paths)
+      if path:match("^%.%/assets/") then
+        path = path:gsub("^%.%/", "")
+      end
+      return path, img_start, img_end
+    end
+    start_pos = img_end + 1
+  end
+end
+
+local function confirm_action(prompt, callback)
+  vim.ui.select({ "Yes", "No" }, { prompt = prompt }, function(choice)
+    if choice == "Yes" then
+      callback()
+    else
+      print("Action cancelled")
+    end
+  end)
+end
+
+local function find_all_markdown_files()
+  local cmd = string.format('find "%s" -type f -name "*.md"', M.notes_dir)
+  local handle = io.popen(cmd)
+  if not handle then
+    return {}
+  end
+
+  local files = {}
+  for file in handle:lines() do
+    table.insert(files, file)
+  end
+  handle:close()
+
+  return files
+end
+
+function M.rename_image_under_cursor()
+  local path = get_image_path_under_cursor()
+  if not path then
+    print("No image found under cursor")
+    return
+  end
+
+  vim.ui.input({
+    prompt = "Rename image to: ",
+    default = vim.fn.fnamemodify(path, ":t:r"),
+  }, function(input)
+    if not input or input == "" then
+      return
+    end
+
+    local full_old_path = M.notes_dir .. "/" .. path
+    local ext = vim.fn.fnamemodify(path, ":e")
+    if ext ~= "" then
+      ext = "." .. ext
+    end
+
+    -- Clean up the new name (replace spaces with dashes)
+    local new_name = input:gsub("%s+", "-")
+
+    -- Add datetime suffix
+    local datetime = get_current_datetime_suffix()
+    local final_name = new_name .. "-" .. datetime
+    local full_new_path = string.format("%s/%s/%s%s", M.notes_dir, vim.fn.fnamemodify(path, ":h"), final_name, ext)
+    local new_path = vim.fn.fnamemodify(full_new_path, ":.")
+
+    -- Rename the file
+    os.rename(full_old_path, full_new_path)
+
+    -- Update references
+    local updated_files = 0
+    local updated_refs = 0
+    local files = find_all_markdown_files()
+
+    for _, file in ipairs(files) do
+      local content = table.concat(vim.fn.readfile(file), "\n")
+      local new_content, count = content:gsub(vim.pesc(path), new_path)
+
+      if count > 0 then
+        updated_files = updated_files + 1
+        updated_refs = updated_refs + count
+        vim.fn.writefile(vim.split(new_content, "\n"), file)
+
+        if vim.fn.expand("%:p") == file then
+          vim.schedule(function()
+            vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(new_content, "\n"))
+          end)
+        end
+      end
+    end
+
+    -- Force reload current buffer. to avoid buggy nvim prompt to reload the buffer.
+    vim.schedule(function()
+      vim.cmd("edit!")
+    end)
+
+    vim.print(string.format('Renamed "%s" to "%s"\nUpdated %d references across %d files', path, new_path, updated_refs, updated_files))
+  end)
+end
+
+function M.delete_image_under_cursor()
+  local path, start_pos, end_pos = get_image_path_under_cursor()
+  if not path then
+    print("No image found under cursor")
+    return
+  end
+
+  -- First count references in all files
+  local affected_files = 0
+  local total_refs = 0
+  local files = find_all_markdown_files()
+
+  for _, file in ipairs(files) do
+    local content = table.concat(vim.fn.readfile(file), "\n")
+    local _, count = content:gsub(vim.pesc(path), "")
+    if count > 0 then
+      affected_files = affected_files + 1
+      total_refs = total_refs + count
+    end
+  end
+
+  -- Show confirmation with reference count
+  confirm_action(string.format("Delete image? This will remove %d references across %d files", total_refs, affected_files), function()
+    -- Delete from all files
+    for _, file in ipairs(files) do
+      local content = table.concat(vim.fn.readfile(file), "\n")
+      local new_content = content:gsub(vim.pesc(path), "")
+      if new_content ~= content then
+        vim.fn.writefile(vim.split(new_content, "\n"), file)
+      end
+    end
+
+    -- Delete the file itself
+    local full_path = M.notes_dir .. "/" .. path
+    local use_trash = vim.fn.executable("trash-put") == 1 or vim.fn.executable("trash") == 1
+    local cmd = use_trash and "trash-put" or "rm"
+    if use_trash and vim.fn.executable("trash-put") ~= 1 then
+      cmd = "trash" -- fallback to 'trash' if 'trash-put' not available
+    end
+
+    os.execute(string.format('%s "%s"', cmd, full_path))
+
+    -- Remove from current buffer immediately
+    if start_pos and end_pos then
+      local line_num = vim.api.nvim_win_get_cursor(0)[1] - 1
+      vim.api.nvim_buf_set_text(0, line_num, start_pos - 1, line_num, end_pos, { "" })
+    end
+
+    -- Force reload current buffer. to avoid buggy nvim prompt to reload the buffer.
+    vim.schedule(function()
+      vim.cmd("edit!")
+    end)
+
+    vim.print(string.format('Deleted "%s"\nRemoved %d references across %d files', path, total_refs, affected_files))
+  end)
+end
+
+-- TODO: file preview still not working. need to fix it.
+function M.show_image_references()
+  local path = get_image_path_under_cursor()
+  if not path then
+    vim.notify("No image found under cursor", vim.log.levels.WARN)
+    return
+  end
+
+  -- prepare two escaped patterns: one with "./" and one without
+  local pat1 = vim.pesc(path)
+  local rel = "./" .. vim.fn.fnamemodify(path, ":.")
+  local pat2 = vim.pesc(rel)
+
+  -- Gather references
+  local references = {}
+  for _, file in ipairs(find_all_markdown_files()) do
+    local lines = vim.fn.readfile(file)
+    for lnum, line in ipairs(lines) do
+      if line:find(pat1) or line:find(pat2) then
+        table.insert(references, {
+          filename = file,
+          lnum = lnum,
+          text = line:gsub("^%s+", ""):sub(1, 60) .. (line:len() > 60 and "…" or ""),
+        })
+      end
+    end
+  end
+
+  if vim.tbl_isempty(references) then
+    vim.notify(("No references found for %q"):format(path), vim.log.levels.INFO)
+    return
+  end
+
+  -- Build picker items
+  local items = vim.tbl_map(function(ref)
+    return {
+      value = ref,
+      display = vim.fn.fnamemodify(ref.filename, ":~:."),
+    }
+  end, references)
+
+  -- Launch Snacks picker with built-in file preview
+  require("snacks.picker").select(items, {
+    prompt = "References:",
+    preview = "file", -- built-in file previewer
+    format_item = function(item)
+      return item.display
+    end,
+  }, function(choice)
+    if not choice then
+      return
+    end
+    vim.cmd("edit " .. choice.value.filename)
+    vim.api.nvim_win_set_cursor(0, { choice.value.lnum, 0 })
+  end)
+end
+
+-- Create commands
+vim.api.nvim_create_user_command("DeleteImage", M.delete_image_under_cursor, {})
+vim.api.nvim_create_user_command("RenameImage", M.rename_image_under_cursor, {})
+vim.api.nvim_create_user_command("ImageReferences", M.show_image_references, {})
+
 return M
