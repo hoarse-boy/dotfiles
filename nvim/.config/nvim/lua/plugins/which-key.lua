@@ -44,8 +44,8 @@ return {
 
       -- stylua: ignore start
       { "<leader>bD", function() util.delete_swap_folder() end, desc = printf("delete swapfile folder"), mode = "n", },
-      -- { "<leader>bv", function() util.check_or_create_launch_json() end, desc = printf("Create or Open launch.json"), mode = "n", },
-      { "<leader>bv", function() util.check_or_create_envrc() end, desc = printf("Create or open .envrc"), mode = "n", },
+      { "<leader>bv", function() util.check_or_create_launch_json() end, desc = printf("Create or Open launch.json"), mode = "n", },
+      { "<leader>bE", function() util.check_or_create_envrc() end, desc = printf("Create or open .envrc"), mode = "n", },
       -- stylua: ignore end
 
     }
