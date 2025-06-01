@@ -1,30 +1,32 @@
 (defcfg
   log-layer-changes no
+  process-unmapped-keys yes
 )
 
 (defvar
-  tap-timeout   100
+  ;; tap-timeout is used to make the tap-hol to have key repeat. ex. tap a and a in repeat succession and then hold a will produces a lot of 'a'.
+  tap-timeout   200
   hold-timeout  250
   tt $tap-timeout
   ht $hold-timeout
 )
 
 (defalias
-  nav (tap-hold 0 $ht spc (layer-while-held navigation))
+  nav (tap-hold $tt $ht spc (layer-while-held navigation))
 
   ;; home row left side. NOTE: alt, meta, shift, ctrl.
-  alt_a (tap-hold 0 $ht a lalt)
-  met_s (tap-hold 0 $ht s lmet)
-  sft_d (tap-hold 0 $ht d lsft)
-  ctl_f (tap-hold 0 $ht f lctl)
+  alt_a (tap-hold $tt $ht a lalt)
+  met_s (tap-hold $tt $ht s lmet)
+  sft_d (tap-hold $tt $ht d lsft)
+  ctl_f (tap-hold $tt $ht f lctl)
 
   ;; NOTE: this makes j, k and l to not have any repetition pressing. 
-  ctl_j (tap-hold 0 $ht j rctl)
-  sft_k (tap-hold 0 $ht k rsft)
-  met_l (tap-hold 0 $ht l rmet) ;; it uses lalt becuase some keyboards has different behavior of lalt and ralt.
-  alt_; (tap-hold 0 $ht ; lalt)
+  ctl_j (tap-hold $tt $ht j rctl)
+  sft_k (tap-hold $tt $ht k rsft)
+  met_l (tap-hold $tt $ht l rmet) ;; it uses lalt becuase some keyboards has different behavior of lalt and ralt.
+  alt_; (tap-hold $tt $ht ; lalt)
   changeLayer (tap-dance $ht (lctl (layer-toggle navigation))) ;; this makes xremap lctrl shift h and l to be a tab 
-  esc_ctl (tap-hold 0 $ht esc lctl)
+  esc_ctl (tap-hold $tt $ht esc lctl)
 
   ;; tab navigation
   tabLeft (multi lctl lsft tab)
