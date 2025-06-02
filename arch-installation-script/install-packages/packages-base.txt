@@ -4,6 +4,7 @@ lazygit
 kanata
 git-delta
 tmux
+slumber
 lsd
 starship
 zoxide
@@ -49,3 +50,4 @@ lsof
 gnome-disk-utility
 direnv
 gum
+cmatrix
