@@ -356,3 +356,12 @@ youtube
 yt-dlp
 zig
 zsh
+term
+remote_working
+command
+redis_insight
+ai_chat
+ai
+http_client
+tui
+slumber
