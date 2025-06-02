@@ -2,12 +2,17 @@
 
 local printf = require("plugins.util.printf").printf
 local autocmd = vim.api.nvim_create_autocmd
-local augroup = vim.api.nvim_create_augroup
+-- local augroup = vim.api.nvim_create_augroup
 
-local markdown_keymaps = augroup("markdown_keymaps", {})
+-- local markdown_keymaps = augroup("markdown_keymaps", {})
+
 local my_notes_dir = "~/jho-notes"
--- local os_util = require("plugins.util.check-os")
--- local os_name = os_util.get_os_name()
+local os_util = require("plugins.util.check-os")
+local os_name = os_util.get_os_name()
+local disableImgClip = true
+if os_name == os_util.LINUX then
+  disableImgClip = false
+end
 
 -- local enabled = true
 -- if vim.g.neovide then
@@ -449,9 +454,11 @@ return {
     },
   },
 
+  -- arch uses custom lua func to copy avif image without converting it. it is super fast. compared to img-clip, it is more than 200x faster.
   {
     "HakonHarnes/img-clip.nvim",
     event = "VeryLazy",
+    enabled = disableImgClip,
     opts = {
       default = {
         use_absolute_path = false, ---@type boolean
