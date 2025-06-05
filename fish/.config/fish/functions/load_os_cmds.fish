@@ -15,6 +15,7 @@ function load_os_cmds --description "Load OS-specific commands"
             # set -Ux fish_user_paths (rbenv root)/shims $fish_user_paths
 
             abbr wk 'cd ~/sync-work'
+            abbr sl slumber -f ~/sync-work/slumber-http/slumber.yml
 
         case Linux
             # Set critical system paths FIRST
@@ -89,5 +90,7 @@ function load_os_cmds --description "Load OS-specific commands"
             abbr cvpn "sudo -E vpn connect oktagon"
             abbr dvpn "sudo -E vpn disconnect"
             abbr svpn "sudo -E vpn status"
+
+            abbr sl slumber -f ~/work/sync-work/slumber-http/slumber.yml
     end
 end

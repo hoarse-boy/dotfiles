@@ -5,10 +5,10 @@ else
     echo "Warning: uname not available yet" >&2
 end
 
-# Ensure PATH is clean
+# ensure PATH is clean
 dedupe_path
 
-# Initialize tools only if available
+# initialize tools only if available
 if command -q starship
     starship init fish | source
 end
@@ -17,17 +17,17 @@ if command -q zoxide
     zoxide init fish | source
 end
 
-# Ensure fish_user_paths is unique
+# ensure fish_user_paths is unique
 ensure_unique_path
 
-# Universal paths (only if commands exist)
+# universal paths (only if commands exist)
 if command -q npm
     set -Ua fish_user_paths (npm config get prefix)/bin
 end
 
 set -Ua fish_user_paths $HOME/.local/bin
 
-# Set fish greeting
+# set fish greeting
 set -g fish_greeting
 
 # makes the cursor change shape when in vim insert mode and normal mode
@@ -36,7 +36,7 @@ set fish_cursor_default block
 set fish_cursor_insert line
 set fish_cursor_replace_one underscore
 
-# Directory listing
+# directory listing
 abbr ls lsd
 abbr l "lsd -l"
 abbr la "lsd -a"
@@ -55,7 +55,8 @@ abbr diff 'delta --pager=never'
 
 # nvim
 abbr v nvim
-abbr lazy "cd ~/.local/share/nvim/lazy/LazyVim/ && $editor"
+alias vim nvim
+# abbr lazy "cd ~/.local/share/nvim/lazy/LazyVim/ && $editor"
 
 # ghostty
 abbr ssh 'TERM=xterm-256color ssh ' # need the env TERM for ghostty to work as the delete button is not working.
@@ -73,19 +74,20 @@ abbr tn 'tmux new-session -s'
 
 # most used commands
 abbr lg lazygit
+abbr lss lazysql
 abbr kb kubectl
 abbr dc docker
 
 # config abbreviation
-abbr hc "cd ~/.config/hypr && $editor userprefs.conf"
-abbr fc "cd ~/.config/fish && $editor config.fish"
-abbr gc "cd ~/.config/ghostty && $editor config"
-abbr kc "cd ~/.config/kitty && $editor kitty.conf"
-abbr wc "cd ~/.config/wezterm/ && $editor wezterm.lua"
-abbr tc "cd ~/.config/tmux/ && $editor tmux.conf"
-abbr nc "cd ~/.config/nvim/ && $editor lua/config/lazy.lua"
+# abbr hc "cd ~/.config/hypr && $editor userprefs.conf"
+# abbr fc "cd ~/.config/fish && $editor config.fish"
+# abbr gc "cd ~/.config/ghostty && $editor config"
+# abbr kc "cd ~/.config/kitty && $editor kitty.conf"
+# abbr wc "cd ~/.config/wezterm/ && $editor wezterm.lua"
+# abbr tc "cd ~/.config/tmux/ && $editor tmux.conf"
+# abbr nc "cd ~/.config/nvim/ && $editor lua/config/lazy.lua"
 
-# Handy change dir shortcuts
+# handy change dir shortcuts
 abbr .. 'cd ..'
 abbr ... 'cd ../..'
 abbr b 'cd ..'
@@ -95,7 +97,7 @@ abbr .3 'cd ../../..'
 abbr .4 'cd ../../../..'
 abbr .5 'cd ../../../../..'
 
-# Always mkdir a path
+# always mkdir a path
 abbr mkdir 'mkdir -p'
 
 # others
