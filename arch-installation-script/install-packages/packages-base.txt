@@ -5,11 +5,13 @@ kanata
 git-delta
 tmux
 slumber
+lazysql
 lsd
 starship
 zoxide
 bat
 jq
+fx
 trash-cli
 grim
 slurp
