@@ -7,3 +7,10 @@ input_bindings:
   scroll_right: [shift right, shift l]
   select_recipe_list: [w] # Rebind from `l`
   history: [z]
+pager:
+  # NOTE: fx and bat is buggy in slumber
+  # json: fx
+  # default: bat
+  default: nvim
+commands:
+  shell: [fish, -c]
