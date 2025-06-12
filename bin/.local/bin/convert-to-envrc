@@ -1,11 +1,16 @@
-#!/usr/bin/env bash
+# #!/usr/bin/env bash
 
 # Get clipboard content
-if command -v wl-paste &> /dev/null; then
-  content=$(wl-paste -p 2>/dev/null || wl-paste)
+if command -v wl-paste &>/dev/null; then
+  content=$(wl-paste 2>/dev/null || wl-paste -p 2>/dev/null)
 else
-  content=$(pbpaste)
+  content=$(xclip -o -selection clipboard 2>/dev/null || xclip -o -selection primary 2>/dev/null || pbpaste 2>/dev/null)
 fi
+
+# Debug: Show raw content with visible control characters
+echo "Debug - Raw clipboard content:"
+echo "$content" | cat -v
+echo "---------------------"
 
 # Function to process JSON
 process_json() {
@@ -15,50 +20,50 @@ process_json() {
 # Function to process .env format
 process_env() {
   while IFS= read -r line; do
-    # Skip comments/empty lines
     [[ "$line" =~ ^[[:space:]]*# || -z "$line" ]] && continue
-    # Parse key=value (even if value contains =)
     if [[ "$line" =~ ^([^=[:space:]]+)[[:space:]]*=[[:space:]]*(.*)$ ]]; then
       key="${BASH_REMATCH[1]}"
       value="${BASH_REMATCH[2]}"
-      # Trim outer quotes if already present
       value="${value%\"}"
       value="${value#\"}"
       value="${value%\'}"
       value="${value#\'}"
-      # Wrap in single quotes and escape existing single quotes
       value="${value//\'/\'\\\'\'}"
       echo "export $key='$value'"
     fi
-  done <<< "$1"
+  done <<<"$1"
 }
 
 # Determine content type and process
-if [[ "$content" =~ ^[[:space:]]*\{ || "$content" =~ ^[[:space:]]*\[ ]]; then
-  # JSON content
-  if ! command -v jq &> /dev/null; then
+if [[ "$content" =~ ^[[:space:]]*\{.*\} || "$content" =~ ^[[:space:]]*\[.*\] ]]; then
+  if ! command -v jq &>/dev/null; then
     echo "Error: Install 'jq' first (brew install jq / apt-get install jq)"
     exit 1
   fi
   converted=$(process_json "$content")
 else
-  # .env format
   converted=$(process_env "$content")
 fi
 
 if [[ -z "$converted" ]]; then
   echo "Error: No valid key-value pairs found in clipboard!"
+  echo "---------------------"
+  echo "Debug - Content that failed to parse:"
+  echo "$content"
+  echo "---------------------"
+  echo "Possible issues:"
+  echo "1. Clipboard doesn't contain valid JSON or .env content"
+  echo "2. jq is not installed for JSON parsing"
+  echo "3. Hidden characters in the clipboard content"
   exit 1
 fi
 
-# Preview
 echo "Conversion result:"
 echo "$converted"
 
-# Confirm (Enter = yes)
 read -p "Append to .envrc? [Y/n] " confirm
 if [[ "${confirm:-Y}" =~ ^[Yy]$ ]]; then
-  echo "$converted" >> .envrc
+  echo "$converted" >>.envrc
   direnv allow
   echo "✅ Added to .envrc"
 else

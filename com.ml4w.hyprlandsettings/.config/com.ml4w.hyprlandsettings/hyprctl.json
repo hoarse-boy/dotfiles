@@ -45,7 +45,7 @@
     },
     {
         "key": "decoration:fullscreen_opacity",
-        "value": 1.0
+        "value": 0.9
     },
     {
         "key": "decoration:active_opacity",
@@ -154,5 +154,21 @@
     {
         "key": "decoration:blur:new_optimizations",
         "value": "true"
+    },
+    {
+        "key": "general:col.inactive_border",
+        "value": "0xff77767b"
+    },
+    {
+        "key": "general:col.active_border",
+        "value": "0xff99c1f1"
+    },
+    {
+        "key": "general:col.nogroup_border",
+        "value": "0xff63452c"
+    },
+    {
+        "key": "general:col.nogroup_border_active",
+        "value": "0xff33d17a"
     }
 ]

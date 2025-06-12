@@ -119,3 +119,5 @@ set -Ux EDITOR nvim # used for crontab -e
 source $HOME/.opam/opam-init/init.fish >/dev/null 2>/dev/null; or true
 
 source (COMPLETE=fish slumber | psub)
+
+direnv hook fish | source

@@ -368,3 +368,13 @@ slumber
 monitoring
 timew
 alphabet
+trading
+investment
+bitcoin
+discussion
+direnv
+luasnip
+blink_cmp
+deployment
+dependency_injection
+tls
