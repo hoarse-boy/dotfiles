@@ -47,9 +47,10 @@ if [[ -f "$CONFIG_FILE" ]]; then
   echo -e "${YELLOW}skipping creation to avoid overwrite.${NC}"
 else
   cat >"$CONFIG_FILE" <<EOF
-font-size = 14
+font-size = 13
 # font-family = JetBrains Mono NL Bold Nerd Font Complete Mono
 background-opacity = 1
+command = fish --login --interactive
 EOF
 
   [[ $? -eq 0 ]] || fail_or_exit "failed to create configuration file"
