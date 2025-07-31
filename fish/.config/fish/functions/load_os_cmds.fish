@@ -92,5 +92,7 @@ function load_os_cmds --description "Load OS-specific commands"
             abbr svpn "sudo -E vpn status"
 
             abbr sl slumber -f ~/work/sync-work/slumber-http/slumber.yml
+
+            source $HOME/.cargo/env.fish 
     end
 end
