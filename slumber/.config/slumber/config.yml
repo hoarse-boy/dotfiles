@@ -8,8 +8,7 @@ input_bindings:
   select_recipe_list: [w] # Rebind from `l`
   history: [z]
 pager:
-  # NOTE: fx and bat is buggy in slumber
-  # json: fx
+  json: fx
   # default: bat
   default: nvim
 commands:
