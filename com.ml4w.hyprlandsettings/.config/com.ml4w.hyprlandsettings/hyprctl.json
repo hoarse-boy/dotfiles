@@ -45,7 +45,7 @@
     },
     {
         "key": "decoration:fullscreen_opacity",
-        "value": 0.9
+        "value": 1.0
     },
     {
         "key": "decoration:active_opacity",
