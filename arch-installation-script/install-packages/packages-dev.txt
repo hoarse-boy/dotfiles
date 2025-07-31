@@ -1,6 +1,7 @@
 fish
 rustup
 go
+golangci-lint
 deno
 nodejs
 npm
