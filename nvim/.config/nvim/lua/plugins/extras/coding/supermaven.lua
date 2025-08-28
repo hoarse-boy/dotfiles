@@ -1,8 +1,15 @@
+local is_bigfile = require("plugins.util.check-for-bigfile").is_bigfile
+
 return {
   {
     "supermaven-inc/supermaven-nvim",
     -- event = "VeryLazy",   -- make supermaven to not be lazy-loaded to make the highligther work
     build = ":SupermavenUseFree", -- this line is optional, remove if you are using pro
+    -- enabled = false,
+    enabled = function()
+      return not is_bigfile()
+    end,
+
     config = function()
       require("supermaven-nvim").setup({
         keymaps = {

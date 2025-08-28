@@ -8,6 +8,8 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+local is_bigfile = require("plugins.util.check-for-bigfile").is_bigfile
+
 -- all snacks.nvim configs goes here
 return {
   {
@@ -95,6 +97,14 @@ return {
           end
           Snacks.util.wo(0, { foldmethod = "manual", statuscolumn = "", conceallevel = 0 })
           vim.b.minianimate_disable = true
+
+
+vim.schedule(function() -- FIX: . Check and test this. remove comments later
+  if vim.api.nvim_buf_is_valid(ctx.buf) then
+    vim.treesitter.stop(ctx.buf) -- stops Treesitter for this buffer
+  end
+end)
+
           vim.schedule(function()
             if vim.api.nvim_buf_is_valid(ctx.buf) then
               vim.bo[ctx.buf].syntax = ctx.ft
@@ -105,7 +115,9 @@ return {
 
       -- indent
       indent = {
-        -- enabled = false, -- NOTE: enable or disable snacks indent
+        -- enabled = false,
+        enabled = not is_bigfile(),
+
         ---@class snacks.indent.Config
         indent = {
           -- enabled = false, -- enable indent guides

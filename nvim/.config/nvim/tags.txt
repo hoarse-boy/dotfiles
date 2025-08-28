@@ -470,3 +470,11 @@ http_router
 http_handler
 core_logic
 store_logic
+typescript_async
+vivaldi
+backup
+race_condition
+final_fantasy
+games
+steam
+ydotool

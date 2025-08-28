@@ -1,8 +1,11 @@
 local printf = require("plugins.util.printf").printf
 
+local is_bigfile = require("plugins.util.check-for-bigfile").is_bigfile
+
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+
     -- commit = "865483f8d1c6e263a1a9efd46f84e78ec5fa31d4",
     dependencies = {
       -- rainbow-delimiters. p00f/nvim-ts-rainbow is buggy and archive along time ago.
@@ -39,47 +42,47 @@ return {
       -- },
 
       -- treesitter playground
-      {
-        "nvim-treesitter/playground",
-        config = function()
-          require("nvim-treesitter.configs").setup({
-            playground = {
-              enable = true,
-              disable = {},
-              updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
-              persist_queries = false, -- Whether the query persists across vim sessions
-              keybindings = {
-                toggle_query_editor = "o",
-                toggle_hl_groups = "i",
-                toggle_injected_languages = "t",
-                toggle_anonymous_nodes = "a",
-                toggle_language_display = "I",
-                focus_language = "f",
-                unfocus_language = "F",
-                update = "R",
-                goto_node = "<cr>",
-                show_help = "?",
-              },
-            },
-          })
-        end,
-        keys = {
-          {
-            "<leader>bt",
-            function()
-              vim.cmd("TSPlaygroundToggle")
-            end,
-            desc = printf("Toggle Treesitter Playground"),
-          },
-          {
-            "<leader>bh",
-            function()
-              vim.cmd("TSHighlightCapturesUnderCursor")
-            end,
-            desc = printf("Toggle Highlight Capture"),
-          },
-        },
-      },
+      -- {
+      --   "nvim-treesitter/playground",
+      --   config = function()
+      --     require("nvim-treesitter.configs").setup({
+      --       playground = {
+      --         enable = true,
+      --         disable = {},
+      --         updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+      --         persist_queries = false, -- Whether the query persists across vim sessions
+      --         keybindings = {
+      --           toggle_query_editor = "o",
+      --           toggle_hl_groups = "i",
+      --           toggle_injected_languages = "t",
+      --           toggle_anonymous_nodes = "a",
+      --           toggle_language_display = "I",
+      --           focus_language = "f",
+      --           unfocus_language = "F",
+      --           update = "R",
+      --           goto_node = "<cr>",
+      --           show_help = "?",
+      --         },
+      --       },
+      --     })
+      --   end,
+      --   keys = {
+      --     {
+      --       "<leader>bt",
+      --       function()
+      --         vim.cmd("TSPlaygroundToggle")
+      --       end,
+      --       desc = printf("Toggle Treesitter Playground"),
+      --     },
+      --     {
+      --       "<leader>bh",
+      --       function()
+      --         vim.cmd("TSHighlightCapturesUnderCursor")
+      --       end,
+      --       desc = printf("Toggle Highlight Capture"),
+      --     },
+      --   },
+      -- },
       {
         "nvim-treesitter/nvim-treesitter",
         opts = function(_, opts)
@@ -94,6 +97,10 @@ return {
       {
         "nvim-treesitter/nvim-treesitter-context",
         -- enabled = false,
+        enabled = function()
+          return not is_bigfile()
+        end,
+
         config = function()
           require("treesitter-context").setup({
             enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)

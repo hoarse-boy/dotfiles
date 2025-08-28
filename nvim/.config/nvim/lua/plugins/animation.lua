@@ -9,12 +9,16 @@ if is_kitty then
   enableCursor = false -- kitty has mouse tralinign animation like neovide
 end
 
+local is_bigfile = require("plugins.util.check-for-bigfile").is_bigfile
+
 return {
   {
     "folke/snacks.nvim",
     opts = {
       scroll = {
-        enabled = enabledAnimation,
+        -- enabled = enabledAnimation,
+        enabled = not is_bigfile(),
+
         animate = {
           duration = { step = 6, total = 100 },
           -- duration = { step = 15, total = 250 }, -- default. higher total value will makes `g` or `G` to be slower even with lower step value.
@@ -31,7 +35,8 @@ return {
   {
     "sphamba/smear-cursor.nvim",
     event = "VeryLazy",
-    enabled = enableCursor,
+    -- enabled = enableCursor,
+    enabled = false, -- disabled, as both kitty and ghostty can do cursor trail animation.
     opts = {
       -- -- fire animation when moving cursor
       -- cursor_color = "#ff8800",

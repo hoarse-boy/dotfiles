@@ -1,7 +1,14 @@
+local is_bigfile = require("plugins.util.check-for-bigfile").is_bigfile
+
 return {
   {
     "akinsho/bufferline.nvim",
     -- enabled = false,
+
+    enabled = function()
+      return not is_bigfile()
+    end,
+
     opts = function(_, opts)
       opts.options = {
         diagnostics = "nvim_lsp",
