@@ -1,0 +1,73 @@
+#!/bin/bash
+
+SESSION="${1:-tmux}"
+
+# Function to check if session should use resurrect
+should_restore() {
+  local session="$1"
+  case "$session" in
+  work | dev | coding) return 0 ;; # These sessions use resurrect
+  *) return 1 ;;                   # Others don't
+  esac
+}
+
+# Function to create conf session with multiple panes
+create_conf_session() {
+  local session="$1"
+
+  # Create first window named 'dotfiles' in ~/my-dotfiles
+  tmux new-session -s "$session" -n dotfiles -d -c ~/my-dotfiles
+
+  # Create second window named 'config' in ~/.config/
+  tmux new-window -t "$session:" -n config -c ~/.config/
+
+  # Switch back to first window (optional)
+  tmux select-window -t "$session:0"
+
+  # Optional: List windows to verify (remove after testing)
+  tmux list-windows -t "$session"
+}
+
+if tmux has-session -t "$SESSION" 2>/dev/null; then
+  exec tmux attach-session -t "$SESSION"
+else
+  case "$SESSION" in
+  conf)
+    create_conf_session "$SESSION"
+    ;;
+  *)
+    tmux new-session -s "$SESSION" -d
+
+    if should_restore "$SESSION"; then
+      tmux run-shell ~/.config/tmux/plugins/tmux-resurrect/scripts/restore.sh
+    fi
+    ;;
+  esac
+
+  exec tmux attach-session -t "$SESSION"
+fi
+
+# # #!/bin/bash
+
+# SESSION="${1:-tmux}"
+
+# # Function to check if session should use resurrect
+# should_restore() {
+#   local session="$1"
+#   case "$session" in
+#     work|dev|coding) return 0 ;; # These sessions use resurrect
+#     *) return 1 ;;               # Others don't
+#   esac
+# }
+
+# if tmux has-session -t "$SESSION" 2>/dev/null; then
+#   exec tmux attach-session -t "$SESSION"
+# else
+#   tmux new-session -s "$SESSION" -d
+#
+#   if should_restore "$SESSION"; then
+#     tmux run-shell ~/.config/tmux/plugins/tmux-resurrect/scripts/restore.sh
+#   fi
+#
+#   exec tmux attach-session -t "$SESSION"
+# fi

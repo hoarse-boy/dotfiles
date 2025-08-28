@@ -3,8 +3,8 @@
 SESSION="work"
 
 if tmux has-session -t "$SESSION" 2>/dev/null; then
-  exec tmux attach-session -t "$SESSION"
+  tmux attach -t "$SESSION"
 else
-  exec tmux new-session -s "$SESSION"
+  tmux new-session -d -s "$SESSION"
+  tmux attach -t "$SESSION"
 fi
-

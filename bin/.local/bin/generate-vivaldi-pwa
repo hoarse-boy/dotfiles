@@ -55,7 +55,7 @@ for entry in "${urls[@]}"; do
   cat >"$desktop_file" <<EOF
 [Desktop Entry]
 Name=$name
-Exec=chromium --app=$url
+Exec=vivaldi --app=$url
 Terminal=false
 Type=Application
 Icon=$appdir/icon.png
