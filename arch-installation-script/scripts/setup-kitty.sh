@@ -49,9 +49,17 @@ if [[ -f "$CONFIG_FILE" ]]; then
 else
   cat >"$CONFIG_FILE" <<EOF
 font_family      JetBrainsMono Nerd Font
-font_size        14.0
+font_size        12.0
 
 background_opacity 1.0
+
+# Ctrl+Tab
+map ctrl+tab send_text all \x1b[2;5I
+
+# Ctrl+Shift+Tab
+map ctrl+shift+tab send_text all \x1b[2;6I
+
+shell /usr/bin/fish
 EOF
 
   [[ $? -eq 0 ]] || fail_or_exit "failed to create configuration file"
