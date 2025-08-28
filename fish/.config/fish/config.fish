@@ -8,10 +8,7 @@ end
 # ensure PATH is clean
 dedupe_path
 
-# initialize tools only if available
-if command -q starship
-    starship init fish | source
-end
+custom_fish_prompt
 
 if command -q zoxide
     zoxide init fish | source
@@ -110,6 +107,8 @@ abbr dot 'cd ~/my-dotfiles'
 abbr con 'cd ~/.config'
 abbr tt taskwarrior-tui
 
+alias pwd="command pwd | string replace -r \"^$HOME\" \"~\""
+
 # modify vim mode binding
 set fish_key_bindings fish_user_key_bindings
 
@@ -121,3 +120,16 @@ source $HOME/.opam/opam-init/init.fish >/dev/null 2>/dev/null; or true
 source (COMPLETE=fish slumber | psub)
 
 direnv hook fish | source
+
+# FIX: . Check and test this. remove comments later
+# function fish_preexec --on-event fish_preexec
+#     echo -en "\e]133;C\e\\"
+# end
+
+# function fish_prompt --on-event fish_prompt
+#     echo -en "\e]133;A\e\\"
+# end
+
+# function fish_postexec --on-event fish_postexec
+#     echo -en "\e]133;B\e\\"
+# end
