@@ -1,8 +1,7 @@
 run this command to update the plugins or install new ones after `tmp` is installed.
 
-```txt
-type ctrl+b and then `I`
-```
+- type ctrl+b and then `I`
+- wait for several minutes. it will get stuck as it is installing plugins
 
 > [!NOTE]
 > command above should fix the issue
