@@ -30,3 +30,22 @@ keybind = control+shift+w=ignore
 # overwrite default ghostty keybindings to use ctrl+tab and ctrl+shift+tab like regular keys
 keybind = ctrl+tab=csi:2;5I
 keybind = ctrl+shift+tab=csi:2;6I
+
+# testing
+custom-shader-animation = true
+# custom-shader-animation = always
+# cursor-style = bar
+# custom-shader = ~/GitHub/KroneCorylus/ghostty-shader-playground/shaders/cursor_smear.glsl
+
+custom-shader = shaders/cursor_smear.glsl
+# custom-shader = shaders/cursor_smear_fade.glsl
+# custom-shader = shaders/cursor_blaze.glsl
+# custom-shader = shaders/cursor_blaze_tapered.glsl
+# custom-shader = shaders/debug_cursor_animated.glsl
+# custom-shader = shaders/manga_slash.glsl
+# custom-shader = shaders/cursor_blaze_no_trail.glsl
+# custom-shader = shaders/cursor_frozen.glsl
+# custom-shader = shaders/debug_cursor_static.glsl
+# custom-shader = shaders/WIP.glsl
+
+auto-update-channel = tip
