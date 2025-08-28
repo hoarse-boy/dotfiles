@@ -1,6 +1,8 @@
 (defcfg
   log-layer-changes no
   process-unmapped-keys yes
+  ;; danger-enable-cmd yes
+  ;; concurrent-tab-hold yes
 )
 
 (defvar
