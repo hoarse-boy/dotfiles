@@ -118,6 +118,9 @@ return {
             RainbowDelimiterViolet = { link = "rainbowcol5" },
             rainbow6 = { link = "rainbowcol5" },
 
+            -- others
+            ["@module"] = { fg = "#7744e5" }, -- lsp import for all language
+
             -- go highlighter
             ["@variable.builtin"] = { fg = "#d61c9f" }, -- golang nil, if ST (semanteic token) is enabled, it will overwrite goNil
 
