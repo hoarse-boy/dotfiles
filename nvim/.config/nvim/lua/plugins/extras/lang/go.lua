@@ -162,6 +162,7 @@ return {
             { "<leader>la", "<cmd>GoCodeAction<cr>", mode = { "n" }, desc = printf("Code Action"), buffer = 0 },
             { "<leader>ls", "<cmd>GoFillStruct<cr>", mode = { "n" }, desc = printf("Fill Struct"), buffer = 0 },
             { "<leader>lr", vim.lsp.buf.rename, mode = { "n" }, desc = printf("Rename"), buffer = 0 },
+            { "<leader>lR", "<cmd>LspRestart gopls<CR>", desc = printf("Restart Lsp"), mode = "n", icon = "󰜉" },
 
             -- Go tags
             { "<leader>ltj", "<cmd>GoModifyTag -add-tags json -transform snakecase -add-options json=<cr>", mode = { "n" }, desc = printf("Add Tags snakecase No 'omitempty'"), buffer = 0 },

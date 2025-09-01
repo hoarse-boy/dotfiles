@@ -272,7 +272,9 @@ return {
               {"<leader>lb", function() telekasten.show_backlinks() end,  mode = "n", desc = printf("Show backlinks"), buffer = 0 },
               {"<leader>ll", function() telekasten.follow_link() end,  mode = "n", desc = printf("Follow link under cursor"), buffer = 0 },
               {"<leader>lL", function() telekasten.insert_link() end, mode = "n", desc = printf("Insert link to note"), buffer = 0 }, -- can open image and link in browser.
-              {"<leader>lR", function() telekasten.rename_note() end,  mode = "n", desc = printf("Telekasten Rename Note (and its Backlink)"), buffer = 0 },
+              {"<leader>lB", function() telekasten.rename_note() end,  mode = "n", desc = printf("Telekasten Rename Note (and its Backlink)"), buffer = 0 },
+              { "<leader>lR", "<cmd>LspRestart markdown_oxide<CR>", desc = printf("Restart Lsp"), mode = "n", icon = "󰜉" },
+
               -- {"<leader>lc", function() telekasten.show_calendar() end, mode = "n", desc = printf("Show calendar"), buffer = 0 },
 
               screenshot_mapping,

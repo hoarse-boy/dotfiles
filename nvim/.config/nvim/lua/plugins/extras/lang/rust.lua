@@ -51,6 +51,7 @@ return {
 
             { "<leader>l", icon = "󱘗", group = printf("lsp (rust-tools)"), mode = "n", buffer = 0 },
             { "<leader>lm", icon = "󱘗", group = printf("move items"), mode = "n", buffer = 0 },
+            { "<leader>lR", "<cmd>LspRestart rust_analyzer<CR>", desc = printf("Restart Lsp"), mode = "n", icon = "󰜉" },
 
             -- stylua: ignore start
             { "K", "<cmd>RustHoverActions<cr>", icon = "󱘗", desc = printf("Hover Actions (Rust)"), mode = "n", buffer = 0 },
