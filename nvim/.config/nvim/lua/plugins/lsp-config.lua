@@ -84,17 +84,18 @@ return {
     end,
   },
 
-  {
-    "folke/which-key.nvim",
-    opts = function(_, _)
-      local wk = require("which-key")
-      local printf = require("plugins.util.printf").printf
-      local mapping = {
-        { "<leader>cL", group = printf("other lsp"), mode = "n" },
-        { "<leader>cLs", "<cmd>LspStart<CR>", desc = printf("Start Lsp"), mode = "n", icon = "" },
-        { "<leader>cLr", "<cmd>LspRestart<CR>", desc = printf("Restart Lsp"), mode = "n", icon = "󰜉" },
-      }
-      wk.add(mapping)
-    end,
-  },
+  -- move to each lsp config binding as LspStart etc needs args now.
+  -- {
+  --   "folke/which-key.nvim",
+  --   opts = function(_, _)
+  --     local wk = require("which-key")
+  --     local printf = require("plugins.util.printf").printf
+  --     local mapping = {
+  --       { "<leader>cL", group = printf("other lsp"), mode = "n" },
+  --       { "<leader>cLs", "<cmd>LspStart<CR>", desc = printf("Start Lsp"), mode = "n", icon = "" },
+  --       { "<leader>cLr", "<cmd>LspRestart<CR>", desc = printf("Restart Lsp"), mode = "n", icon = "󰜉" },
+  --     }
+  --     wk.add(mapping)
+  --   end,
+  -- },
 }
