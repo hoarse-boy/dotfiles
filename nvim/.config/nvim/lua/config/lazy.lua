@@ -46,7 +46,7 @@ require("lazy").setup({
     { import = "plugins.extras.lang.go" },
     { import = "plugins.extras.lang.markdown" },
     { import = "plugins.extras.lang.rust" },
-    { import = "plugins.extras.lang.helm" },
+    -- { import = "plugins.extras.lang.helm" },
     { import = "plugins.extras.lang.deno" }, -- typescript config is required in LazyExtra
     -- { import = "plugins.extras.lang.json" },
     -- { import = "plugins.extras.lang.php" }, -- WARN: causing lspconfig to load at startup, causing performance issue (50ms delay).
@@ -91,6 +91,13 @@ require("lazy").setup({
     },
   },
   checker = { enabled = true, notify = false }, -- automatically check for plugin updates
+  -- checker = { enabled = false, notify = false }, -- default is false; keep it explicit
+
+  -- change_detection = { enabled = false, notify = false }, -- was true by default
+
+  -- If you don’t use LuaRocks, disable to skip its startup hooks
+  -- rocks = { enabled = false },
+
   performance = {
     rtp = {
       -- disable some rtp plugins

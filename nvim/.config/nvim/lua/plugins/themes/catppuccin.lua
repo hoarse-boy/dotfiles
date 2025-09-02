@@ -12,9 +12,10 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
     -- enabled = false,
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    -- lazy = false, -- make sure we load this during startup if it is your main colorscheme -- FIX: . Check and test this. remove comments later
+    event = "VimEnter",
     priority = 1000, -- make sure to load this before all the other start plugins
 
     opts = function(_, opts) -- TODO: remove this if lazyvim is fixed

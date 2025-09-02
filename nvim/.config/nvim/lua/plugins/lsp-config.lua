@@ -4,7 +4,8 @@ return {
   {
     -- LSP keymaps
     "neovim/nvim-lspconfig",
-    -- event = { "BufReadPre", "BufNewFile" }, -- default
+    event = { "BufReadPre", "BufNewFile" }, -- default
+
     init = function()
       local printf = require("plugins.util.printf").printf
 

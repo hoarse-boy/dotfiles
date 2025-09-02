@@ -12,9 +12,11 @@ local is_bigfile = require("plugins.util.check-for-bigfile").is_bigfile
 
 -- all snacks.nvim configs goes here
 return {
+
   {
     "folke/snacks.nvim",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
+    event = "VimEnter", -- load only when UI is ready
     opts = {
       -- scratch buffer
       scratch = {
@@ -98,12 +100,11 @@ return {
           Snacks.util.wo(0, { foldmethod = "manual", statuscolumn = "", conceallevel = 0 })
           vim.b.minianimate_disable = true
 
-
-vim.schedule(function() -- FIX: . Check and test this. remove comments later
-  if vim.api.nvim_buf_is_valid(ctx.buf) then
-    vim.treesitter.stop(ctx.buf) -- stops Treesitter for this buffer
-  end
-end)
+          vim.schedule(function() -- FIX: . Check and test this. remove comments later
+            if vim.api.nvim_buf_is_valid(ctx.buf) then
+              vim.treesitter.stop(ctx.buf) -- stops Treesitter for this buffer
+            end
+          end)
 
           vim.schedule(function()
             if vim.api.nvim_buf_is_valid(ctx.buf) then
