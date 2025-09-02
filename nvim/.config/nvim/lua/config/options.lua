@@ -9,7 +9,7 @@ opt.fillchars = { eob = " " } -- NOTE: removes trailing '~' in nvim
 
 cmd.highlight("CursorLine guibg=#131319") -- CursorLine    xxx guibg=#2a2b3c
 
-require("config.neovide").setup()
+-- require("config.neovide").setup()
 
 -- opt.cursorline = true
 opt.list = false -- NOTE: make the > and other symbol to be hidden when the object is commented.

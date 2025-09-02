@@ -10,8 +10,105 @@ vim.api.nvim_create_autocmd("FileType", {
 
 local is_bigfile = require("plugins.util.check-for-bigfile").is_bigfile
 
+local logo = [[
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣦⣤⣄⣠⣤⣀⣤⣄⡀⠀⣰⣦⣄⣀⡀⠀⠀⣴⣦⣤⣠⣤⣄⣤⣤⣀⡀⠀⣰⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀⠻⣿⣿⣿⣿⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⢿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⠃⠀⠀⠀⠈⢹⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⠁⠀⠀⠀⠀⢹⣿⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⢀⣼⠃⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⡟⠀⠀⠀⠀⢸⣿⡄⠀⠀⠀⠀⢸⣿⠀⠀⢠⣾⡗⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⠀⠀⢸⣿⡇⠀⠀⠀⠀⢸⣿⠀⠀⢸⣿⡇⠀⠀⠀⠀⢸⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⠇⠀⠀⠀⠀⢸⡿⠃⠀⠀⠀⠀⢸⡿⠀⠀⣸⣿⠇⠀⠀⠀⠀⣸⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+]]
+
+-- NOTE: dashboard can alter buffer no. line and signcolumn when openingg buffer from trouble-nvim.
+-- this is the message when running "verbose :set nu? rnu? signcolumn?" in vim command. need to run nvim -V1 in terminal to see the full message.
+-- nonumber
+-- 	Last set from ~/.local/share/nvim/lazy/dashboard-nvim/lua/dashboard/init.lua line 82
+-- norelativenumber
+-- 	Last set from ~/.local/share/nvim/lazy/dashboard-nvim/lua/dashboard/init.lua line 82
+--   signcolumn=no
+-- 	Last set from ~/.local/share/nvim/lazy/dashboard-nvim/lua/dashboard/init.lua line 82
+
+-- local my_notes_dir = "~/jho-notes" -- DEL: . DELETE LINES LATER
+
+-- local os_util = require("plugins.util.check-os")
+-- local os_name = os_util.get_os_name()
+
+-- if os_name == os_util.OSX then
+--   obsidian_path = "~/My Drive/obsidian-vault"
+-- end
+
 -- all snacks.nvim configs goes here
 return {
+  {
+    "folke/snacks.nvim",
+    opts = {
+      scroll = {
+        -- enabled = enabledAnimation,
+        enabled = not is_bigfile(),
+
+        animate = {
+          duration = { step = 6, total = 100 },
+          -- duration = { step = 15, total = 250 }, -- default. higher total value will makes `g` or `G` to be slower even with lower step value.
+          easing = "linear",
+        },
+        -- what buffers to animate
+        -- filter = function(buf) -- NOTE: this makes the bullet.vim to have errors as it tries to delete mapping that doesn't exist
+        --   return vim.g.snacks_scroll ~= false and vim.b[buf].snacks_scroll ~= false and vim.bo[buf].buftype ~= "terminal"
+        -- end,
+      },
+    },
+  },
+
+  {
+    "folke/snacks.nvim",
+    opts = {
+      dashboard = {
+        preset = {
+          --       header = [[
+          --       ██╗      █████╗ ███████╗██╗   ██╗██╗   ██╗██╗███╗   ███╗          Z
+          --       ██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝██║   ██║██║████╗ ████║      Z
+          --       ██║     ███████║  ███╔╝  ╚████╔╝ ██║   ██║██║██╔████╔██║   z
+          --       ██║     ██╔══██║ ███╔╝    ╚██╔╝  ╚██╗ ██╔╝██║██║╚██╔╝██║ z
+          --       ███████╗██║  ██║███████╗   ██║    ╚████╔╝ ██║██║ ╚═╝ ██║
+          --       ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝
+          -- ]],
+          header = logo,
+          -- stylua: ignore
+          ---@type snacks.dashboard.Item[]
+          keys = {
+            { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+            { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+            { icon = " ", key = "p", desc = "Personal Todo", action = function () require("plugins.util.find-files").open_a_file("personal-todo-moc.md", my_notes_dir) end },
+            { icon = " ", key = "n", desc = "My Quick Note", action = function () require("plugins.util.find-files").open_a_file("quick-note.md", my_notes_dir) end },
+            -- { icon = "󱙓 ", key = "n", desc = "My Notes (Change Global Dir)", action = function () require("plugins.util.find-files").change_dir_and_find_files(my_notes_dir) end },
+            -- { icon = " ", key = "c", desc = "Config (Change Global Dir)", action = function () require("plugins.util.find-files").change_dir_and_find_files("~/.local/share/chezmoi/dot_config/nvim") end },
+            { icon = " ", key = "c", desc = "Config (Change Global Dir)", action = function () require("plugins.util.find-files").change_dir_and_find_files("~/.config/nvim/") end },
+            -- { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+            { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
+            { icon = " ", key = "s", desc = "Restore Session", section = "session" },
+            { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+            -- { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+            -- { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+            -- { icon = " ", key = "x", desc = "Lazy Extras", action = ":LazyExtras" },
+          },
+        },
+      },
+    },
+  },
+
+  {
+    "folke/which-key.nvim",
+    opts = function(_, _)
+      local wk = require("which-key")
+      local mapping = {
+        -- TODO: add snack's dashboard to which-key.
+        -- { "<leader>D", "<cmd>Dashboard<cr>", icon = "󰨇 ", group = printf("Dashboard"), mode = "n" },
+        { "<leader>D", "<cmd>lua Snacks.dashboard()<cr>", icon = "󰨇 ", group = printf("Dashboard"), mode = "n" },
+      }
+      wk.add(mapping)
+    end,
+  },
 
   {
     "folke/snacks.nvim",

@@ -1,19 +1,274 @@
+-- don't remove this code. uses snacks.nvim explorer instead. -- TODO: change back to snacks after it is fixed.
+
 -- NOTE: go back to neo-tree to use the git explorer and the plugin has fixed the bug.
 
 local printf = require("plugins.util.printf").printf
-local disable_plugin = true
-
-if disable_plugin then
-  return {}
-end
 
 return {
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    event = "VeryLazy",
+    -- enabled = false,
+    enabled = true,
+    opts = {
+      event_handlers = {
+        -- auto close when clicking file
+        {
+          event = "file_opened",
+          handler = function(_)
+            vim.cmd("Neotree close")
+          end,
+        },
+      },
+
+      filesystem = {
+
+        filtered_items = {
+          visible = false, -- when true, they will just be displayed differently than normal items
+          hide_dotfiles = false,
+          hide_gitignored = false,
+          hide_hidden = false, -- only works on Windows for hidden files/directories
+          hide_by_name = {
+            -- ".DS_Store",
+            -- "thumbs.db",
+            --"node_modules",
+          },
+          hide_by_pattern = {
+            --"*.meta",
+            --"*/src/*/tsconfig.json",
+          },
+          always_show = { -- remains visible even if other settings would normally hide it
+            --".gitignored",
+          },
+          always_show_by_pattern = { -- uses glob style patterns
+            --".env*",
+          },
+          never_show = { -- remains hidden even if visible is toggled to true, this overrides always_show
+            --".DS_Store",
+            --"thumbs.db",
+          },
+          never_show_by_pattern = { -- uses glob style patterns
+            --".null-ls_*",
+          },
+        },
+
+        renderers = {
+          file = {
+            { "icon" },
+            { "name", use_git_status_colors = true },
+            { "diagnostics" },
+            { "git_status", highlight = "NeoTreeDimText" },
+          },
+        },
+
+        window = {
+          popup = {
+            -- make a float right window
+            -- position = { col = "100%", row = "2" },
+            position = { col = "-100%", row = "3" }, -- left side floating window
+            -- size = function(state)
+            --   local root_name = vim.fn.fnamemodify(state.path, ":~")
+            --   local root_len = string.len(root_name) + 4
+            --   return {
+            --     width = math.max(root_len, 50),
+            --     height = vim.o.lines - 6,
+            --   }
+            -- end,
+          },
+        },
+
+        bind_to_cwd = false,
+        -- the explorer will show the current / active buffer. even if we use telescope to move to other file it will find it in realtime
+        -- NOTE: it will stick like glue to the current / active buffer in neo-tree. but it will not work at all in floating mode
+        -- follow_current_file = true,
+      },
+
+      commands = {
+        -- open dir using os specific app. like macOs open
+        -- TODO: find an api to check the current os
+        system_open = function(state)
+          local node = state.tree:get_node()
+          local path = node:get_id()
+          -- macOs: open file in default application in the background.
+          -- Probably you need to adapt the Linux recipe for manage path with spaces. I don't have a mac to try.
+          vim.api.nvim_command("!open -g " .. path)
+          -- Linux: open file in default application
+          -- vim.api.nvim_command(string.format("silent !xdg-open '%s'", path))
+        end,
+      },
+
+      window = {
+        -- position = "float",
+        position = "left", -- NOTE: will use this as default to use follow_current_file behaviour.
+        width = 40,
+        mappings = {
+          ["o"] = "system_open", -- custom command
+          ["<space>"] = "none",
+          ["/"] = "none", -- disable neo-tree native filter. to use vim search instead. can be used by flash if it is enabled
+          ["s"] = "none", -- disabled "s" which is the open vsplit. to let the s of "flash" be usefull in searching files
+          ["S"] = "open_vsplit", -- rewrite the "S" to open vsplit
+
+          -- to make the same behaviour as nvim-tree in lunarvim.
+          -- move move back to the parent node.
+          h = function(state)
+            local node = state.tree:get_node()
+            if (node.type == "directory" or node:has_children()) and node:is_expanded() then
+              state.commands.toggle_node(state)
+            else
+              require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
+            end
+          end,
+          l = function(state)
+            local node = state.tree:get_node()
+            if node.type == "directory" or node:has_children() then
+              -- If it's a directory, toggle node expansion or focus on its first child
+              if not node:is_expanded() then
+                state.commands.toggle_node(state)
+              else
+                require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
+              end
+            else
+              -- If it's a file, open it
+              require("neo-tree.sources.filesystem.commands").open(state)
+            end
+          end,
+        },
+      },
+    },
+  },
+
+  -- FIX: . from lazyvim
+  -- {
+  --   "nvim-neo-tree/neo-tree.nvim",
+  --   cmd = "Neotree",
+  --   keys = {
+  --     {
+  --       "<leader>fe",
+  --       function()
+  --         require("neo-tree.command").execute({ toggle = true, dir = LazyVim.root() })
+  --       end,
+  --       desc = "Explorer NeoTree (Root Dir)",
+  --     },
+  --     {
+  --       "<leader>fE",
+  --       function()
+  --         require("neo-tree.command").execute({ toggle = true, dir = vim.uv.cwd() })
+  --       end,
+  --       desc = "Explorer NeoTree (cwd)",
+  --     },
+  --     { "<leader>e", "<leader>fe", desc = "Explorer NeoTree (Root Dir)", remap = true },
+  --     { "<leader>E", "<leader>fE", desc = "Explorer NeoTree (cwd)", remap = true },
+  --     {
+  --       "<leader>ge",
+  --       function()
+  --         require("neo-tree.command").execute({ source = "git_status", toggle = true })
+  --       end,
+  --       desc = "Git Explorer",
+  --     },
+  --     {
+  --       "<leader>be",
+  --       function()
+  --         require("neo-tree.command").execute({ source = "buffers", toggle = true })
+  --       end,
+  --       desc = "Buffer Explorer",
+  --     },
+  --   },
+  --   deactivate = function()
+  --     vim.cmd([[Neotree close]])
+  --   end,
+  --   init = function()
+  --     -- FIX: use `autocmd` for lazy-loading neo-tree instead of directly requiring it,
+  --     -- because `cwd` is not set up properly.
+  --     vim.api.nvim_create_autocmd("BufEnter", {
+  --       group = vim.api.nvim_create_augroup("Neotree_start_directory", { clear = true }),
+  --       desc = "Start Neo-tree with directory",
+  --       once = true,
+  --       callback = function()
+  --         if package.loaded["neo-tree"] then
+  --           return
+  --         else
+  --           local stats = vim.uv.fs_stat(vim.fn.argv(0))
+  --           if stats and stats.type == "directory" then
+  --             require("neo-tree")
+  --           end
+  --         end
+  --       end,
+  --     })
+  --   end,
+  --   opts = {
+  --     sources = { "filesystem", "buffers", "git_status" },
+  --     open_files_do_not_replace_types = { "terminal", "Trouble", "trouble", "qf", "Outline" },
+  --     filesystem = {
+  --       bind_to_cwd = false,
+  --       follow_current_file = { enabled = true },
+  --       use_libuv_file_watcher = true,
+  --     },
+  --     window = {
+  --       mappings = {
+  --         ["l"] = "open",
+  --         ["h"] = "close_node",
+  --         ["<space>"] = "none",
+  --         ["Y"] = {
+  --           function(state)
+  --             local node = state.tree:get_node()
+  --             local path = node:get_id()
+  --             vim.fn.setreg("+", path, "c")
+  --           end,
+  --           desc = "Copy Path to Clipboard",
+  --         },
+  --         ["O"] = {
+  --           function(state)
+  --             require("lazy.util").open(state.tree:get_node().path, { system = true })
+  --           end,
+  --           desc = "Open with System Application",
+  --         },
+  --         ["P"] = { "toggle_preview", config = { use_float = false } },
+  --       },
+  --     },
+  --     default_component_configs = {
+  --       indent = {
+  --         with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
+  --         expander_collapsed = "",
+  --         expander_expanded = "",
+  --         expander_highlight = "NeoTreeExpander",
+  --       },
+  --       git_status = {
+  --         symbols = {
+  --           unstaged = "󰄱",
+  --           staged = "󰱒",
+  --         },
+  --       },
+  --     },
+  --   },
+  --   config = function(_, opts)
+  --     local function on_move(data)
+  --       Snacks.rename.on_rename_file(data.source, data.destination)
+  --     end
+
+  --     local events = require("neo-tree.events")
+  --     opts.event_handlers = opts.event_handlers or {}
+  --     vim.list_extend(opts.event_handlers, {
+  --       { event = events.FILE_MOVED, handler = on_move },
+  --       { event = events.FILE_RENAMED, handler = on_move },
+  --     })
+  --     require("neo-tree").setup(opts)
+  --     vim.api.nvim_create_autocmd("TermClose", {
+  --       pattern = "*lazygit",
+  --       callback = function()
+  --         if package.loaded["neo-tree.sources.git_status"] then
+  --           require("neo-tree.sources.git_status").refresh()
+  --         end
+  --       end,
+  --     })
+  --   end,
+  -- },
+
   {
     "nvim-tree/nvim-tree.lua",
     -- use this to fix the bug, if entering the dashboard and click s to load session. nvim will be unable to open the nvim-tree. don't use cmd or lazy = true.
     event = "VeryLazy",
     -- lazy = false, -- NOTE: if the bug persist, uncomment this and comment VeryLazy event.
-    -- enabled = false, -- disabled plugin
+    enabled = false, -- disabled plugin
     dependencies = { "nvim-tree/nvim-web-devicons" },
     keys = {
       { "<leader>e", "<cmd>NvimTreeToggle<cr>", mode = "n", desc = printf("Nvim-tree (Explorer)"), silent = true, noremap = true },

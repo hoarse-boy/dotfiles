@@ -19,6 +19,7 @@ local colors = {
 
 local modicator_nvim = {
   "mawkler/modicator.nvim",
+  event = "VeryLazy", -- not working
   init = function()
     -- These are required for Modicator to work
     vim.o.cursorline = true

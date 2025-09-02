@@ -10,8 +10,12 @@ return {
     enabled = false,
   },
   {
-    "folke/tokyonight.nvim",
+    "ibhagwan/fzf-lua",
     enabled = false,
+  },
+  {
+    "echasnovski/mini.animate",
+    enabled = false, -- disabled plugin
   },
 }
 
