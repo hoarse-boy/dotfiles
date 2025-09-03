@@ -8,6 +8,8 @@ urls=(
   "https://mail.google.com/mail/|Gmail"
   "https://app.filen.io/|Filen"
   "https://teams.live.com"
+  "https://gemini.google.com/app"
+  "https://www.kimi.com"
 )
 
 # name + id will be based on domain
