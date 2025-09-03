@@ -9,8 +9,6 @@ opt.fillchars = { eob = " " } -- NOTE: removes trailing '~' in nvim
 
 cmd.highlight("CursorLine guibg=#131319") -- CursorLine    xxx guibg=#2a2b3c
 
--- require("config.neovide").setup()
-
 -- opt.cursorline = true
 opt.list = false -- NOTE: make the > and other symbol to be hidden when the object is commented.
 
@@ -34,15 +32,16 @@ vim.g.autoformat = false -- disable auto format. use <leader>cf to format.
 -- save the file and quit or remove the buffer using <leader>bd.
 -- open the file or buffer again, the swap file probably still exists.
 -- choose 'd' to delete the swap file. the prompt will disappear.
+-- opt.swapfile = false
 opt.swapfile = true
 opt.updatetime = 300 -- Set to 300 milliseconds for more frequent swap file updates
+vim.opt.directory = "/tmp/nvim/swap//" -- NOTE: change dir as the .local/share/nvim/swap is not working on arch linux. macos works fine.
 
-local os_util = require("plugins.util.check-os")
-local os_name = os_util.get_os_name()
-
-if os_name == os_util.LINUX then
-  vim.opt.directory = "/tmp/nvim/swap//" -- NOTE: change dir as the .local/share/nvim/swap is not working on arch linux. macos works fine.
-end
+-- local os_util = require("plugins.util.check-os") -- adding tiny 3 ms to the nvim startup time.
+-- local os_name = os_util.get_os_name()
+-- if os_name == os_util.LINUX then
+-- vim.opt.directory = "/tmp/nvim/swap//" -- NOTE: change dir as the .local/share/nvim/swap is not working on arch linux. macos works fine.
+-- end
 
 -- specific global variable for lazyvim features
 vim.g.lazyvim_picker = "snacks" -- use snacks.nvim as the default picker without adding any extra config.
@@ -53,6 +52,6 @@ vim.g.lazyvim_prettier_needs_config = true -- makes prettier to use prettierrc.y
 
 vim.filetype.add({
   pattern = {
-    [".envrc"] = "bash",  -- Treat .envrc as bash
+    [".envrc"] = "bash", -- Treat .envrc as bash
   },
 })

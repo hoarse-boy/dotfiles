@@ -478,3 +478,5 @@ final_fantasy
 games
 steam
 ydotool
+kafka
+aiven

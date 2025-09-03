@@ -26,13 +26,13 @@
 -- }
 
 return {
-  require("plugins.themes.catppuccin"),
-  -- require("plugins.themes.tokyo-night"),
+  -- require("plugins.themes.catppuccin"),
+  require("plugins.themes.tokyo-night"),
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin", -- default theme
-      -- colorscheme = "tokyonight",
+      -- colorscheme = "catppuccin", -- default theme
+      colorscheme = "tokyonight",
     },
   },
 }

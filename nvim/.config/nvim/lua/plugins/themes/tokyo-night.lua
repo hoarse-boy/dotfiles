@@ -55,7 +55,7 @@ local hl_colors = {
 return {
   {
     "folke/tokyonight.nvim",
-    name = "tokyonight",
+    -- name = "tokyonight",
     -- event = "VimEnter",
     priority = 1000,
 
@@ -72,6 +72,20 @@ return {
           sidebars = "transparent",
           floats = "transparent",
         },
+
+        on_colors = function(colors)
+          -- These are like "color_overrides" in Catppuccin
+          colors.peach = "#da8ede" -- number
+          colors.text = "#c7c7c7" -- variables / text
+          colors.red = "#a10524"
+          colors.green = "#ad7666" -- strings
+          colors.blue = "#0286c7" -- functions, titles
+          colors.pink = "#8d5afa" -- special funcs
+          colors.lavender = "#10b7c7" -- identifiers
+          colors.mauve = "#d42f62" -- return, exception
+          -- You can override any base color Tokyonight defines here
+        end,
+
         on_highlights = function(hl, c)
           -- Base comment and backdrop
           hl.Comment = { fg = "#4d4b49" }
