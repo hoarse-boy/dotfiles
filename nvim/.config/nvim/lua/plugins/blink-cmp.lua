@@ -1,7 +1,3 @@
--- NOTE: new code but buggy
--- works fine now. but check i the issue comback
--- replace and accept works fine but sometimes C-u does not working and need restarting. it does not work because the nvim is updated? test it more
-
 local printf = require("plugins.util.printf").printf
 vim.cmd.highlight("BlinkCmpLabelMatch guifg=#8f6e6e")
 

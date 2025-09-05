@@ -480,3 +480,8 @@ steam
 ydotool
 kafka
 aiven
+intel
+amd
+nvidia
+cpu
+gpu

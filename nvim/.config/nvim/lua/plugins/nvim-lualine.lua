@@ -1,11 +1,11 @@
 local left_separator = ""
 local right_separator = ""
 
--- make empty seperator as neovide makes this "" shrinked to like 70%
-if vim.g.neovide then
-  left_separator = ""
-  right_separator = ""
-end
+-- -- make empty seperator as neovide makes this "" shrinked to like 70%
+-- if vim.g.neovide then
+--   left_separator = ""
+--   right_separator = ""
+-- end
 
 local colors = {
   blue = "#80a0ff",

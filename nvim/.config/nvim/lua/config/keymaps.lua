@@ -70,7 +70,7 @@ set("n", "<leader>ul", function()
   print("enabled (this is to counter dashboard issue)")
 end, { desc = printf("Enable line number and signcolumn"), noremap = true, silent = true })
 
-local os_util = require("plugins.util.check-os")
+local os_util = require("plugins.util.check-os") -- FIX: . Check and test this. remove comments later
 local os_name = os_util.get_os_name()
 
 -- Unset the Alt-based line moving keybindings from lazyvim

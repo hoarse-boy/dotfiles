@@ -75,14 +75,14 @@ return {
 
         on_colors = function(colors)
           -- These are like "color_overrides" in Catppuccin
-          colors.peach = "#da8ede" -- number
-          colors.text = "#c7c7c7" -- variables / text
+          -- colors.peach = "#da8ede" -- number
+          -- colors.text = "#c7c7c7" -- variables / text
           colors.red = "#a10524"
           colors.green = "#ad7666" -- strings
           colors.blue = "#0286c7" -- functions, titles
-          colors.pink = "#8d5afa" -- special funcs
-          colors.lavender = "#10b7c7" -- identifiers
-          colors.mauve = "#d42f62" -- return, exception
+          -- colors.pink = "#8d5afa" -- special funcs
+          -- colors.lavender = "#10b7c7" -- identifiers
+          -- colors.mauve = "#d42f62" -- return, exception
           -- You can override any base color Tokyonight defines here
         end,
 
@@ -150,6 +150,10 @@ return {
           hl["@lsp.typemod.function.defaultLibrary"] = { fg = "#0286c7" }
           hl["@lsp.typemod.macro.defaultLibrary"] = { fg = "#94e2d5" }
           hl["@constant.builtin"] = { link = "Type" }
+
+          -- others
+          hl["TreesitterContext"] = { bg = "NONE" }
+          -- hl["BufferLineGroupLabel"] = { bg = "NONE" } -- DEL: . DELETE LINES LATER
         end,
       })
 

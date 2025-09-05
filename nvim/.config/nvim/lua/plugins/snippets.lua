@@ -1,7 +1,7 @@
-local my_vscode_path = "~/.config/nvim/lua/vscode-snippets"
-local my_snipmate_path = "~/.config/nvim/lua/snippets"
-local my_lua_snippets = "~/.config/nvim/lua/luasnippets"
-local honza_snippets_path = "~/.local/share/nvim/lazy/vim-snippets/snippets" -- community driven of all programing language snippets
+-- local my_vscode_path = "~/.config/nvim/lua/vscode-snippets"
+-- local my_snipmate_path = "~/.config/nvim/lua/snippets"
+-- local my_lua_snippets = "~/.config/nvim/lua/luasnippets"
+-- local honza_snippets_path = "~/.local/share/nvim/lazy/vim-snippets/snippets" -- community driven of all programing language snippets
 
 -- must install default lazyvim's luasnip form LazyExtra
 return {
@@ -9,30 +9,77 @@ return {
   { "garymjr/nvim-snippets", enabled = false },
 
   -- add luasnip
+  -- {
+  --   "L3MON4D3/LuaSnip",
+  --   -- tag = "v2.3.0", -- NOTE: this is to make snippet trigger in blink.cmp to work. some snippet like ```yaml``` will not remove the trigger `;`. v2.4.0 and up will not work. -- FIX: . Check and test this. remove comments later
+  --   lazy = true,
+  --   build = (not LazyVim.is_win()) and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp" or nil,
+  --   dependencies = {
+  --     {
+  --       "rafamadriz/friendly-snippets",
+  --       config = function()
+  --         require("luasnip.loaders.from_vscode").lazy_load()
+  --       end,
+  --     },
+  --   },
+  --   opts = function(_, opts)
+  --     opts.history = true
+  --     opts.delete_check_events = "TextChanged"
+
+  --     require("luasnip.loaders.from_snipmate").lazy_load({ paths = { my_snipmate_path, honza_snippets_path } })
+  --     require("luasnip.loaders.from_lua").lazy_load({ paths = { my_lua_snippets } })
+  --     require("luasnip.loaders.from_vscode").lazy_load({ paths = my_vscode_path })
+  --   end,
+  --   keys = {},
+  -- }, -- FIX: . Check and test this. remove comments later
+
   {
     "L3MON4D3/LuaSnip",
     lazy = true,
+    tag = "v2.4.0",
     build = (not LazyVim.is_win()) and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp" or nil,
     dependencies = {
-      {
-        "rafamadriz/friendly-snippets",
-        config = function()
-          require("luasnip.loaders.from_vscode").lazy_load()
-        end,
-      },
+      "rafamadriz/friendly-snippets",
     },
-    opts = function(_, opts)
+    config = function(_, opts)
+      vim.keymap.set("n", "<leader>xs", function() -- FIX: . Check and test this. remove comments later
+        local snippets = require("luasnip").snippets
+        for ft, ft_snippets in pairs(snippets) do
+          print("Filetype:", ft)
+          for name, snippet in pairs(ft_snippets) do
+            print("  - " .. name)
+          end
+        end
+      end, { desc = "Debug: Show loaded snippets" })
+
+      -- Apply the opts first
+      opts = opts or {}
       opts.history = true
       opts.delete_check_events = "TextChanged"
+      require("luasnip").setup(opts)
 
+      -- Load all snippets in the correct order
+      local my_vscode_path = vim.fn.expand("~/.config/nvim/lua/vscode-snippets")
+      local my_snipmate_path = vim.fn.expand("~/.config/nvim/lua/snippets")
+      local my_lua_snippets = vim.fn.expand("~/.config/nvim/lua/luasnippets")
+      local honza_snippets_path = vim.fn.expand("~/.local/share/nvim/lazy/vim-snippets/snippets")
+
+      -- Load friendly-snippets first
+      require("luasnip.loaders.from_vscode").lazy_load()
+
+      -- Then load your custom snippets (your snippets should take precedence)
       require("luasnip.loaders.from_snipmate").lazy_load({ paths = { my_snipmate_path, honza_snippets_path } })
       require("luasnip.loaders.from_lua").lazy_load({ paths = { my_lua_snippets } })
-      require("luasnip.loaders.from_vscode").lazy_load({ paths = my_vscode_path })
+      require("luasnip.loaders.from_vscode").lazy_load({
+        paths = { my_vscode_path },
+        -- This ensures your snippets override friendly-snippets if there are conflicts
+        override_priority = 1000,
+      })
     end,
     keys = {},
   },
 
-  -- update vscode style snippets
+  -- create, update, and delete vscode style snippets faster
   {
     "chrisgrieser/nvim-scissors",
     event = "VeryLazy",

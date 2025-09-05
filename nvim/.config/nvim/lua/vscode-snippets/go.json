@@ -1,1 +1,1 @@
-{"fmt_del":{"body":["// DEL: DELETE fmt print below later","fmt.Println(\"-------------------------------------------------- ${1:}\", ${1:}, \" --------------------------------------------------\") // DEL: DELETE LATER"],"prefix":"fmt_del"}}
+{"fmt_del":{"body":["// DEL: DELETE fmt print below later","fmt.Println(\"-------------------------------------------------- ${1:}\", ${1:}, \" --------------------------------------------------\") // DEL: DELETE LATER"],"prefix":"fmt_del"},"new-kekkek":{"body":"lalalalalekekkeke","prefix":"new-kekkek"}}

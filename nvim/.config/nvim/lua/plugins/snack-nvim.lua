@@ -8,7 +8,7 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-local is_bigfile = require("plugins.util.check-for-bigfile").is_bigfile
+-- local is_bigfile = require("plugins.util.check-for-bigfile").is_bigfile
 
 local logo = [[
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣦⣤⣄⣠⣤⣀⣤⣄⡀⠀⣰⣦⣄⣀⡀⠀⠀⣴⣦⣤⣠⣤⣄⣤⣤⣀⡀⠀⣰⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -45,7 +45,7 @@ return {
     opts = {
       scroll = {
         -- enabled = enabledAnimation,
-        enabled = not is_bigfile(),
+        -- enabled = not is_bigfile(),
 
         animate = {
           duration = { step = 6, total = 100 },
@@ -214,7 +214,7 @@ return {
       -- indent
       indent = {
         -- enabled = false,
-        enabled = not is_bigfile(),
+        -- enabled = not is_bigfile(),
 
         ---@class snacks.indent.Config
         indent = {
