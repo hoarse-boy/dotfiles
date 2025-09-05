@@ -3,16 +3,22 @@
 -- replace and accept works fine but sometimes C-u does not working and need restarting. it does not work because the nvim is updated? test it more
 
 local printf = require("plugins.util.printf").printf
-local enableSnippet = false
-vim.cmd.highlight("BlinkCmpLabelMatch guifg=#8f6e6e") -- to make the fuzzy match more visible as some cmp suggestion has identical white highlight too
+vim.cmd.highlight("BlinkCmpLabelMatch guifg=#8f6e6e")
+
+-- Define global state and function in the same file
+_G.enableSnippet = _G.enableSnippet or false
+
+function _G.getSnippetState()
+  return _G.enableSnippet
+end
 
 vim.keymap.set({ "i" }, "<C-u>", function()
-  enableSnippet = not enableSnippet
-  -- require("blink.cmp").reload("snippets") -- working fine without reload
-  print(enableSnippet and "🟢 Snippets enabled" or "🔴 Snippets disabled")
+  _G.enableSnippet = not _G.enableSnippet
+  -- Force reload to ensure the new state is picked up immediately
+  pcall(require("blink.cmp").reload, "snippets")
+  print(_G.enableSnippet and "🟢 Snippets enabled" or "🔴 Snippets disabled")
 end, { silent = false })
 
--- NOTE: this is a hack to fix the issue of double snippets or some word that still left behind when scrolling suggestions
 local function replace_current_word(_, items)
   local col = vim.api.nvim_win_get_cursor(0)[2]
   local line = vim.api.nvim_get_current_line()
@@ -37,39 +43,21 @@ end
 return {
   {
     "saghen/blink.cmp",
-    -- version = not vim.g.lazyvim_blink_main and "*",
-    -- tag = "v0.11.0",
     build = vim.g.lazyvim_blink_main and "cargo build --release",
     dependencies = { "rafamadriz/friendly-snippets" },
     event = "InsertEnter",
     opts = {
       appearance = {
-        -- Sets the fallback highlight groups to nvim-cmp's highlight groups
-        -- Useful for when your theme doesn't support blink.cmp
-        -- Will be removed in a future release
         use_nvim_cmp_as_default = true,
       },
 
       sources = {
-        -- commenting this out since it is not working in version 0.12
-        -- default = { "lsp", "path", "buffer" },
-
         providers = {
-          -- lazydev = {
-          --   name = "LazyDev",
-          --   module = "lazydev.integrations.blink",
-          --   fallbacks = { "lsp" },
-          -- },
-
           path = {
             name = "Path",
             module = "blink.cmp.sources.path",
             score_offset = 25,
-            -- When typing a path, I would get snippets and text in the
-            -- suggestions, I want those to show only if there are no path
-            -- suggestions
             fallbacks = { "buffer" },
-            -- fallbacks = { "snippets", "buffer" },
             opts = {
               trailing_slash = false,
               label_trailing_slash = true,
@@ -78,8 +66,7 @@ return {
               end,
               show_hidden_files_by_default = true,
             },
-
-            transform_items = replace_current_word, -- without thi path still works fine.
+            transform_items = replace_current_word,
           },
 
           lsp = {
@@ -87,7 +74,6 @@ return {
             module = "blink.cmp.sources.lsp",
             score_offset = 10,
             fallbacks = { "buffer" },
-            -- transform_items = replace_current_word, -- NOTE: . buggy when accepting suggestion in the middle of words
           },
 
           buffer = {
@@ -101,7 +87,7 @@ return {
           snippets = {
             name = "snippets",
             enabled = function()
-              return enableSnippet
+              return _G.getSnippetState()
             end,
             min_keyword_length = 2,
             module = "blink.cmp.sources.snippets",
@@ -111,7 +97,8 @@ return {
         },
       },
 
-      -- new completion window configuration
+      snippets = { preset = "luasnip" }, -- need this to make sure luasnip is loaded.
+
       completion = {
         menu = { border = "single", winblend = 0, winhighlight = "Normal:NormalFloat" },
         documentation = {
@@ -122,7 +109,6 @@ return {
           },
         },
       },
-      -- New signature window configuration
       signature = { window = { border = "single" } },
       keymap = {
         ["<Tab>"] = { "select_next", "fallback" },
@@ -130,20 +116,17 @@ return {
         ["<Up>"] = { "select_prev", "fallback" },
         ["<Down>"] = { "select_next", "fallback" },
 
-        -- ["<C-y>"] = { "select_and_accept" },
         ["<C-y>"] = {
           function()
             local cmp = require("blink.cmp")
             cmp.select_and_accept()
-            enableSnippet = false
-            -- vim.schedule(function()
-            -- cmp.reload("snippets")
-            -- print("🚫 Snippets disabled after accept")
-            -- end)
+            _G.enableSnippet = false
+            -- Also reload snippets after accepting to disable them immediately
+            pcall(require("blink.cmp").reload, "snippets")
           end,
         },
 
-        ["<CR>"] = { "fallback" }, -- NOTE: Prevents auto-selecting a suggestion. this is done to avoid choosing suggestion instead of bullets.vim enter binding
+        ["<CR>"] = { "fallback" },
       },
     },
   },
@@ -153,8 +136,6 @@ return {
     lazy = true,
     keys = {
       {
-        -- TODO: luansippet movement not working. fix it
-        -- it works in markdown file though but not in go. check others 
         "<C-G>",
         function()
           local ok, luasnip = pcall(require, "luasnip")
@@ -183,16 +164,6 @@ return {
     },
   },
 
-  -- make supermaven to not be lazy-loaded to make the highligther work
-  -- {
-  --   "supermaven-inc/supermaven-nvim",
-  --   event = "VeryLazy",
-  --   dependencies = { "saghen/blink.cmp" },
-  --   opts = {
-  --     -- Add SuperMaven options here
-  --   },
-  -- },
-
   {
     "catppuccin",
     optional = true,
@@ -200,6 +171,7 @@ return {
   },
 }
 
+-- FIX: .
 -- old code
 
 -- -- blink.cmp config's
@@ -269,7 +241,6 @@ return {
 
 --   -- stylua: ignore
 -- },
-
 
 -- old code
 --
@@ -487,4 +458,3 @@ return {
 --     opts = { integrations = { blink_cmp = true } },
 --   },
 -- }
-
