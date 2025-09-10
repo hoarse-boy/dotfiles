@@ -485,3 +485,15 @@ amd
 nvidia
 cpu
 gpu
+lsp
+guide
+learn
+mason
+treesitter
+highlight
+thread
+thread_pool
+cpu_thread
+distributed_system
+Saas
+async
