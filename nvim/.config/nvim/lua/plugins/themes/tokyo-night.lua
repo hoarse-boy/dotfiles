@@ -50,6 +50,7 @@ local hl_colors = {
   todo_WARN = "#b0ab8b",
   todo_HACK = "#7833f5",
   todo_FIX = "#d4284a",
+  stringEscape = "#5e7843",
 }
 
 return {
@@ -136,8 +137,16 @@ return {
           hl.RainbowDelimiterViolet = { link = "rainbowcol5" }
           hl.rainbow6 = { link = "rainbowcol5" }
 
+          -- all languages
+          hl["@lsp.type.escapeSequence"] = { fg = hl_colors.stringEscape, bold = true }
+          hl["@lsp.typemod.function.generic"] = { fg = "#2b5db5" } -- FIX: . Check and test this. remove comments later
+          hl["@lsp.type.method"] = { link = "@lsp.typemod.function.generic" } -- FIX: . Check and test this. remove comments later
+
           -- Golang specific
           hl["@variable.builtin"] = { fg = "#d61c9f" }
+          hl["@lsp.typemod.string.format"] = { fg = "#10b7c7" }
+          hl["@lsp.type.string.go"] = {} -- to fix the \n or escape string to be highlighted, as this has high priority agains the goStringEscape
+          hl.goStringEscape = { fg = hl_colors.stringEscape, bold = true } -- this is available using charlespascoe/vim-go-syntax plugin
           hl["@type.builtin"] = { fg = "#5e7843" }
           hl.goStructTypeField = { fg = "#10b7c7" }
           hl.goVarAssign = { fg = "#D7658B" }
@@ -153,7 +162,8 @@ return {
 
           -- others
           hl["TreesitterContext"] = { bg = "NONE" }
-          -- hl["BufferLineGroupLabel"] = { bg = "NONE" } -- DEL: . DELETE LINES LATER
+          hl["StatusLine"] = { bg = "NONE" } -- to remove lualine statusline highlights
+          hl["TabLineFill"] = { bg = "NONE" } -- to remove tabline highlights (bufferline)
         end,
       })
 
