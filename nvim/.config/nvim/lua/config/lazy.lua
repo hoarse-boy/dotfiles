@@ -12,7 +12,23 @@ require("lazy").setup({
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
-    -- lazyvim's extra will be done using LazyExtra
+    -- lazyvim's extra will be done using LazyExtra. commented here as sometime the lazy extra is disabled by itself?
+    -- Enabled Plugins: (8)
+    --   ● coding.blink  blink.cmp  friendly-snippets  blink.compat  catppuccin
+    --   ● coding.supermaven  User  noice.nvim  supermaven-nvim
+    --   ● dap.dap  User  lua-json5  mason-nvim-dap.nvim  mason.nvim  nvim-dap  nvim-dap-ui  nvim-dap-virtual-text  nvim-nio
+    --   ● editor.neo-tree  neo-tree.nvim
+    --   ● editor.snacks_picker    nvim-lspconfig  snacks.nvim  alpha-nvim  dashboard-nvim  flash.nvim  mini.starter  todo-comments.nvim
+    --   ● test.core    neotest  nvim-nio  nvim-dap
+    --   ● util.dot    mason.nvim  nvim-lspconfig  nvim-treesitter
+    --   ● util.mini-hipatterns    mini.hipatterns
+
+    -- Enabled Languages: (4)
+    --   ● lang.deno  User  mason.nvim
+    --   ● lang.zig  neotest-zig  nvim-lspconfig  nvim-treesitter  neotest
+    --   ● lang.go  User  go.nvim  goplay.nvim  guihua.lua  mason.nvim  mini.icons  neotest-go  neotest-golang  nvim-dap-go  nvim-lspconfig  nvim-treesitter  vim-go-syntax  which-key.nvim  neotest  none-ls.nvim  nvim-dap
+    --   ● lang.markdown  User  bullets.vim  markdown-preview.nvim  mason.nvim  mini.icons  nvim-lspconfig  nvim-toc  nvim-treesitter  render-markdown.nvim  snacks.nvim  telekasten.nvim  telescope.nvim  which-key.nvim  conform.nvim
+    --   ● lang.rust  User  neotest-rust  nvim-lspconfig  nvim-treesitter  rust-tools.nvim  which-key.nvim  mason.nvim  neotest
 
     -- import all of my languages config.
     { import = "plugins.extras.lang.go" },

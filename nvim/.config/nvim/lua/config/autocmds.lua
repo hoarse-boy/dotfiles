@@ -32,7 +32,8 @@ autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "markdown", "text" },
   callback = function()
-    vim.opt_local.wrap = false
+    vim.opt_local.wrap = true
+    -- vim.opt_local.linebreak = true -- Optional: Wraps at word boundaries, not in the middle of a word
   end,
 })
 
@@ -104,3 +105,4 @@ vim.api.nvim_create_autocmd("FileType", {
 --     vim.fn.writefile({log_message}, log_file, "a")
 --   end
 -- })
+
