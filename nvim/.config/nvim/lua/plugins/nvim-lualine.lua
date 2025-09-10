@@ -139,7 +139,17 @@ return {
         globalstatus = true,
       }
 
-      opts.sections.lualine_a = { { "mode", separator = { left = left_separator }, right_padding = 2 } } -- init value from lazyvim is just { "mode" }. so we need to overwrite it.
+      opts.sections.lualine_a = {
+        {
+          function()
+            return "" -- TODO: make it dynamic. arch or macos
+          end,
+          separator = { left = left_separator },
+          padding = { left = 0, right = 1 },
+        },
+        { "mode", separator = { left = left_separator }, right_padding = 2 },
+      } -- init value from lazyvim is just { "mode" }. so we need to overwrite it.
+
       opts.sections.lualine_y = { { "location", padding = { left = 1, right = 1 } } }
 
       -- table.insert(opts.sections.lualine_x, 1, lsp) -- takes too much space. need to be refined to return only one client.
