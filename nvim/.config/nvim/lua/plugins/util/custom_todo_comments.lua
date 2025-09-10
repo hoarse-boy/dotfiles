@@ -19,6 +19,7 @@ local filetype_formats = {
   ruby = "# %s",
   conf = "# %s",
   hyprlang = "# %s",
+  fish = "# %s",
   python = "# %s",
   mojo = "# %s",
   html = "<!-- %s -->",
