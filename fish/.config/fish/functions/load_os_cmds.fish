@@ -93,6 +93,9 @@ function load_os_cmds --description "Load OS-specific commands"
 
             abbr sl slumber -f ~/work/sync-work/slumber-http/slumber.yml
 
-            source $HOME/.cargo/env.fish 
+            source $HOME/.cargo/env.fish
+
+            # set -gx PATH $HOME/.local/zig/0.16.0-dev $PATH
+            set -gx PATH $HOME/.local/zig/current $PATH
     end
 end

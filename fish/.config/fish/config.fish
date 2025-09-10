@@ -6,7 +6,7 @@ else
 end
 
 # ensure PATH is clean
-dedupe_path
+# dedupe_path #  FIX: . Check and test this. remove comments later
 
 custom_fish_prompt
 
@@ -15,7 +15,7 @@ if command -q zoxide
 end
 
 # ensure fish_user_paths is unique
-ensure_unique_path
+# ensure_unique_path # FIX: . Check and test this. remove comments later
 
 # universal paths (only if commands exist)
 if command -q npm
