@@ -71,7 +71,7 @@ return {
 
   {
     "akinsho/bufferline.nvim",
-    enabled = true, -- FIX: . disable for now as the transparency is broken in nvim 0.11
+    enabled = true,
     -- enabled = function()
     --   return not is_bigfile()
     -- end,
@@ -82,293 +82,13 @@ return {
         indicator = {
           icon = "", -- this should be omitted if indicator style is not 'icon'
           -- style = "none",
-          style = "underline", -- "icon" | "underline" | "none", -- NOTE: underline is broken in tmux. somehow it is working in tmux. tested on mac for now.
+          style = "underline", -- "icon" | "underline" | "none", -- working in tmux + arch / macos + ghostty / kitty.
         },
 
-
-        -- highlights = { -- FIX: . not working. broken in nvim 0.11?
-        --   fill = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   background = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   tab = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   tab_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   tab_separator = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   tab_separator_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     sp = "NONE",
-        --     underline = "NONE",
-        --   },
-        --   tab_close = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   close_button = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   close_button_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   close_button_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   buffer_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   buffer_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   numbers = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   numbers_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   numbers_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   diagnostic = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   diagnostic_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   diagnostic_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   hint = {
-        --     -- fg = "NONE",
-        --     sp = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   hint_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   hint_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     sp = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   hint_diagnostic = {
-        --     -- fg = "NONE",
-        --     sp = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   hint_diagnostic_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   hint_diagnostic_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     sp = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   info = {
-        --     -- fg = "NONE",
-        --     sp = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   info_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   info_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     sp = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   info_diagnostic = {
-        --     -- fg = "NONE",
-        --     sp = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   info_diagnostic_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   info_diagnostic_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     sp = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   warning = {
-        --     -- fg = "NONE",
-        --     sp = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   warning_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   warning_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     sp = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   warning_diagnostic = {
-        --     -- fg = "NONE",
-        --     sp = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   warning_diagnostic_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   warning_diagnostic_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     sp = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   error = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     sp = "NONE",
-        --   },
-        --   error_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   error_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     sp = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   error_diagnostic = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     sp = "NONE",
-        --   },
-        --   error_diagnostic_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   error_diagnostic_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     sp = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   modified = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   modified_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   modified_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   duplicate_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     italic = true,
-        --   },
-        --   duplicate_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     italic = true,
-        --   },
-        --   duplicate = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     italic = true,
-        --   },
-        --   separator_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   separator_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   separator = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   indicator_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   indicator_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   pick_selected = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   pick_visible = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   pick = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --     bold = true,
-        --     italic = true,
-        --   },
-        --   offset_separator = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        --   trunc_marker = {
-        --     -- fg = "NONE",
-        --     bg = "NONE",
-        --   },
-        -- },
+        style_preset = {
+          require("bufferline").style_preset.no_italic,
+          -- bufferline.style_preset.no_bold,
+        },
 
         offsets = {
           {
@@ -379,7 +99,7 @@ return {
           },
         },
 
-        always_show_bufferline = false, -- NOTE: to fix snacks dashboard showing empty buffer when first opening nvim.
+        always_show_bufferline = false, -- NOTE: it will push the dashboard 1 line down.
         show_buffer_close_icons = false,
         show_close_icon = true,
         -- hover = {
@@ -388,6 +108,7 @@ return {
         --   reveal = { "close" },
         -- },
         separator_style = { "", "" }, -- use this to remove the buggy lazyvim separator. ex. "slant" | "slope" | "thick" | "thin" | { "any", "any" }
+        -- separator_style = { "│", "│" }, -- clean pipe
       }
 
       require("bufferline").setup(opts)
@@ -991,6 +712,54 @@ return {
           Norm = { cmd = "norm" },
         },
       })
+    end,
+  },
+
+  -- {
+  --   "jiaoshijie/undotree", -- TODO: latest undotree lua version is returning err about highlights
+  --   dependencies = { "nvim-lua/plenary.nvim" },
+  --   ---@module 'undotree.collector'
+  --   ---@type UndoTreeCollector.Opts
+  --   opts = {
+  --     float_diff = false, -- using float window previews diff, set this `true` will disable layout option
+  --     layout = "left_bottom", -- "left_bottom", "left_left_bottom"
+  --     position = "left", -- "right", "bottom"
+  --     ignore_filetype = {
+  --       "undotree",
+  --       "undotreeDiff",
+  --       "qf",
+  --       "TelescopePrompt",
+  --       "spectre_panel",
+  --       "tsplayground",
+  --     },
+  --     window = {
+  --       winblend = 30,
+  --     },
+  --     keymaps = {
+  --       j = "move_next",
+  --       k = "move_prev",
+  --       gj = "move2parent",
+  --       J = "move_change_next",
+  --       K = "move_change_prev",
+  --       ["<cr>"] = "action_enter",
+  --       p = "enter_diffbuf",
+  --       q = "quit",
+  --     },
+  --   },
+  --   keys = { -- load the plugin only when using it's keybinding:
+  --     { "<leader>ou", "<cmd>lua require('undotree').toggle()<cr>", desc = printf("Toggle Undotree") },
+  --   },
+  -- },
+
+  -- minus is, the ui cannot be reset. the main window will shrink when opening other window like neo-tree.
+  {
+    "mbbill/undotree",
+    -- enabled = false,
+    keys = { -- load the plugin only when using it's keybinding:
+      { "<leader>ou", "<cmd>UndotreeToggle<cr>", desc = printf("Toggle Undotree") },
+    },
+    config = function()
+      -- vim.g.undotree_WindowLayout = 2
     end,
   },
 }
