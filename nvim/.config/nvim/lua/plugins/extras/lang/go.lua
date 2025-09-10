@@ -32,6 +32,7 @@ return {
         -- NOTE: uses highlighter from this plugin instead of treesitter
         -- which doesnt convey alot of go common syntax highlighter like printf %v, & and * pointer in type and other.
         "charlespascoe/vim-go-syntax",
+        -- enabled = false,
         config = function()
           vim.g.go_highlight_comma = 1 -- it uses the highlight color of func?
           -- NOTE: with catpuccin it is better in vanilla setting. but need to be changed. the highlight is called 'Identifier'
@@ -275,12 +276,11 @@ return {
         vim.list_extend(opts.ensure_installed, { "go", "gomod", "gosum", "gowork" })
       end
 
-      -- TODO: remove this, after nvim-treesitter can have %v and other fmt related string highlighter enabled.
+      -- go-vim-go-syntax is still better than pure treesitter or lsp semantic highlighting
       if type(opts.highlight.disable) == "table" then
-        -- NOTE: disable go TS to use vim-go-syntx highlight instead but still uses the ts plugins like ts-rainbow and context
+        -- disable go TS to use vim-go-syntax highlight alongside gopls lsp semantic token highlight.
         vim.list_extend(opts.highlight.disable, { "go" })
       else
-        -- NOTE: in case the table is yet to be created in lazyvim plugin config so this else will create a new table
         opts.highlight.disable = { "go" }
       end
     end,
