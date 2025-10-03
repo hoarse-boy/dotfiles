@@ -101,10 +101,10 @@ return {
       {
         "<leader>mc",
         function()
-          require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(nil, "Check and test this. remove comments later", false)
+          require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(nil, "check and test this. remove comments later", false)
         end,
         mode = "n",
-        desc = printf("Append 'FIX Check and Test'"),
+        desc = printf("Append 'FIX Check and Test':"),
         noremap = true,
         silent = true,
       },
@@ -124,7 +124,7 @@ return {
           require("plugins.util.custom_todo_comments").toggle_uncomment_comment()
         end,
         mode = "n",
-        desc = printf("Uncomment and remove 'UNCOMMENT' comment in current line"),
+        desc = printf("toggle comment and uncomment current line"),
         noremap = true,
         silent = true,
       },
@@ -161,7 +161,7 @@ return {
       {
         "<leader>mr",
         function()
-          capture_visual_selection() -- FIX: . Check and test this. remove comments later
+          capture_visual_selection()
           -- require("plugins.util.custom_todo_comments").remove_todo_comments_from_visual_selection()
         end,
         mode = "v",
