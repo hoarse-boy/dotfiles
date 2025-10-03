@@ -18,7 +18,7 @@ local format_sync_grp = augroup("GoReminderPersonal", {})
 autocmd("BufWritePre", {
   pattern = "*.go",
   callback = function()
-    vim.notify("# Have you:\n- run GoTest?\n- run GoLint?\n- checked todo 'FIX:'?", "info", { title = "go.nvim" })
+    Snacks.notify.info("# Have you:\n- run GoTest?\n- run GoLint?\n- checked todo 'FIX:'?", { once = false, id = 1 })
   end,
   group = format_sync_grp,
 })
