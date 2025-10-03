@@ -115,7 +115,7 @@ return {
   -- fancy UI for the debugger
   {
     "rcarriga/nvim-dap-ui",
-    enabled = false,
+    -- enabled = false,
     dependencies = { "nvim-neotest/nvim-nio" },
     -- stylua: ignore
     keys = {
@@ -142,7 +142,7 @@ return {
       local dapui = require("dapui")
       dapui.setup(opts)
       dap.listeners.after.event_initialized["dapui_config"] = function()
-        Snacks.notify.info(most_used_shortcut, { once = false, timeout = 10000 })
+        Snacks.notify.info(most_used_shortcut, { once = true, timeout = 10000 })
         dapui.open({})
       end
       dap.listeners.before.event_terminated["dapui_config"] = function()
@@ -157,7 +157,7 @@ return {
   -- simple UI for the debugger. https://igorlfs.github.io/nvim-dap-view/configuration
   {
     "igorlfs/nvim-dap-view",
-    -- enabled = false,
+    enabled = false, -- disabled for now as it is stuck when debugging ts
     ---@module 'dap-view'
     ---@type dapview.Config
     opts = {
@@ -186,7 +186,7 @@ return {
                 return "?"
               end,
               action = function()
-                Snacks.notify.info(f_shortcuts, { once = false, timeout = 10000 })
+                Snacks.notify.info(f_shortcuts, { once = false, timeout = 10000 }) -- need once=false to make it repeatable.
               end,
             },
           },
@@ -239,7 +239,7 @@ return {
       -- open dap view ui when the debugger starts
       dap.listeners.after["event_initialized"]["dapview"] = function(session, body)
         vim.schedule(function()
-          Snacks.notify.info(most_used_shortcut, { once = false, timeout = 10000 })
+          Snacks.notify.info(most_used_shortcut, { once = true, timeout = 10000 })
           vim.cmd("DapViewOpen")
         end)
       end
@@ -248,13 +248,13 @@ return {
       dap.listeners.before["event_terminated"]["dapview"] = function(session, body)
         vim.schedule(function()
           -- vim.cmd("DapViewClose")
-          Snacks.notify.info("DAP terminated. Manually close the UI", { once = false, timeout = 10000 })
+          Snacks.notify.info("DAP terminated. Manually close the UI", { once = true, timeout = 10000 })
         end)
       end
       dap.listeners.before["event_exited"]["dapview"] = function(session, body)
         vim.schedule(function()
           -- vim.cmd("DapViewClose")
-          Snacks.notify.info("DAP exited. Manually close the UI", { once = false, timeout = 10000 })
+          Snacks.notify.info("DAP exited. Manually close the UI", { once = true, timeout = 10000 })
         end)
       end
     end,
@@ -269,7 +269,7 @@ return {
       {
         "<leader>dt",
         function()
-          Snacks.notify.info("DAP terminated", { once = false })
+          Snacks.notify.info("DAP terminated", { once = true })
           require("dap-view").close()
         end,
         desc = "Terminate",
