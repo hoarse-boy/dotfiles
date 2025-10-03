@@ -2,6 +2,7 @@
 -- no hassle with duplicate gopls server in memory
 -- https://github.com/ray-x/go.nvim?ref=morioh.com&utm_source=morioh.com
 
+local printf = require("plugins.util.printf").printf
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
@@ -18,7 +19,7 @@ local format_sync_grp = augroup("GoReminderPersonal", {})
 autocmd("BufWritePre", {
   pattern = "*.go",
   callback = function()
-    Snacks.notify.info("# Have you:\n- run GoTest?\n- run GoLint?\n- checked todo 'FIX:'?", { once = false, id = 1 })
+    Snacks.notify.info("# Have you:\n- run GoTest?\n- run GoLint?\n- checked todo 'FIX:'?", { once = false, id = 1, timeout = 5000 })
   end,
   group = format_sync_grp,
 })
@@ -143,7 +144,6 @@ return {
     "folke/which-key.nvim",
     opts = function(_, _)
       local wk = require("which-key")
-      local printf = require("plugins.util.printf").printf
       local go_keymaps = augroup("go_keymaps", {})
 
       autocmd("BufEnter", {
@@ -232,7 +232,24 @@ return {
       {
         "leoluz/nvim-dap-go",
         config = function()
+          local dap = require("dap")
+
           require("dap-go").setup()
+
+          -- this is for complicated debugging, like running all files in certain directory. and run the args.
+          table.insert(dap.configurations.go, {
+            type = "go",
+            name = printf("Debug (prompted dir and args)"),
+            request = "launch",
+            program = function()
+              return vim.fn.input("Go program dir (default ./cmd): ", "./cmd", "file") -- ask which package or binary to debug
+            end,
+            args = function()
+              local args_str = vim.fn.input("Args: ", "") -- ask for args (space separated)
+              return vim.split(args_str, " +") -- splits on spaces
+            end,
+            outputMode = "remote",
+          })
         end,
       },
     },
