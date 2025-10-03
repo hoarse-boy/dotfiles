@@ -158,7 +158,8 @@ return {
       opts.sections.lualine_z = {
         {
           function()
-            return "  " .. os.date("%X")
+            -- return "  " .. os.date("%X")
+            return "  " .. os.date("%H:%M:%S") -- 24-hour format (e.g., 14:30:25)
           end,
           separator = { right = right_separator },
         },
