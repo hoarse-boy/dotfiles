@@ -12,23 +12,31 @@ require("lazy").setup({
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
-    -- lazyvim's extra will be done using LazyExtra. commented here as sometime the lazy extra is disabled by itself?
-    -- Enabled Plugins: (8)
+    -- NOTE: lazyvim's extra will be done using LazyExtra. commented here as sometime the lazy extra is disabled by itself?
+    -- language specific extras are needed for nvim-dap
+
+    -- Enabled Plugins: (9)
     --   ● coding.blink  blink.cmp  friendly-snippets  blink.compat  catppuccin
     --   ● coding.supermaven  User  noice.nvim  supermaven-nvim
-    --   ● dap.dap  User  lua-json5  mason-nvim-dap.nvim  mason.nvim  nvim-dap  nvim-dap-ui  nvim-dap-virtual-text  nvim-nio
+    --   ● dap.dap  User  lua-json5  mason-nvim-dap.nvim  mason.nvim  nvim-dap  nvim-dap-view  nvim-dap-virtual-text
     --   ● editor.neo-tree  neo-tree.nvim
     --   ● editor.snacks_picker    nvim-lspconfig  snacks.nvim  alpha-nvim  dashboard-nvim  flash.nvim  mini.starter  todo-comments.nvim
+    --     Fast and modern file picker
+    --   ● formatting.prettier  mason.nvim  conform.nvim  none-ls.nvim
     --   ● test.core    neotest  nvim-nio  nvim-dap
+    --     Neotest support. Requires language specific adapters to be configured. (see lang extras)
     --   ● util.dot    mason.nvim  nvim-lspconfig  nvim-treesitter
+    --     Language support for dotfiles
     --   ● util.mini-hipatterns    mini.hipatterns
+    --     Highlight colors in your code. Also includes Tailwind CSS support.
 
-    -- Enabled Languages: (4)
+    -- Enabled Languages: (6)
     --   ● lang.deno  User  mason.nvim
-    --   ● lang.zig  neotest-zig  nvim-lspconfig  nvim-treesitter  neotest
     --   ● lang.go  User  go.nvim  goplay.nvim  guihua.lua  mason.nvim  mini.icons  neotest-go  neotest-golang  nvim-dap-go  nvim-lspconfig  nvim-treesitter  vim-go-syntax  which-key.nvim  neotest  none-ls.nvim  nvim-dap
     --   ● lang.markdown  User  bullets.vim  markdown-preview.nvim  mason.nvim  mini.icons  nvim-lspconfig  nvim-toc  nvim-treesitter  render-markdown.nvim  snacks.nvim  telekasten.nvim  telescope.nvim  which-key.nvim  conform.nvim
     --   ● lang.rust  User  neotest-rust  nvim-lspconfig  nvim-treesitter  rust-tools.nvim  which-key.nvim  mason.nvim  neotest
+    --   ● lang.typescript    mason.nvim  mini.icons  nvim-lspconfig  nvim-dap
+    --   ● lang.zig  neotest-zig  nvim-lspconfig  nvim-treesitter  neotest
 
     -- import all of my languages config.
     { import = "plugins.extras.lang.go" },
