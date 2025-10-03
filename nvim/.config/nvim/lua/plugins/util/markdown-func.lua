@@ -806,4 +806,34 @@ vim.api.nvim_create_user_command("DeleteImage", M.delete_image_under_cursor, {})
 vim.api.nvim_create_user_command("RenameImage", M.rename_image_under_cursor, {})
 vim.api.nvim_create_user_command("ImageReferences", M.show_image_references, {})
 
+function M.insert_md_todo()
+  local title = vim.fn.input("Title: ")
+  if title == "" then
+    vim.notify("No title provided", vim.log.levels.ERROR)
+    return
+  end
+
+  local lines = {
+    "## " .. title,
+    "",
+    "### todo",
+    "",
+    "- [ ]  ",
+    "- [ ] create jira ticket",
+    "",
+    "### logs",
+    "",
+    "### other",
+    "",
+    "---",
+    "",
+  }
+
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+  vim.api.nvim_buf_set_lines(0, row, row, false, lines)
+  -- place cursor at first todo checkbox
+  vim.api.nvim_win_set_cursor(0, { row + 5, 6 })
+  vim.cmd("startinsert")
+end
+
 return M
