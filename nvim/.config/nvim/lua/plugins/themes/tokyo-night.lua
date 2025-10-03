@@ -91,14 +91,17 @@ return {
           -- Base comment and backdrop
           hl.Comment = { fg = "#4d4b49" }
           hl.FlashBackdrop = { fg = "#4d4b49" }
+          hl.Statement = { fg = "#8d60e0" } -- global if, else, switch, case, default, return, defer, for, while, do, until and etc.
 
           -- Operator and basic syntax
-          hl.Operator = { fg = "#99875c" }
+          -- hl.Operator = { fg = "#99875c" }
           hl.Boolean = { fg = "#7833f5" }
-          hl.Number = { fg = "#87b7c7" }
+          hl.Number = { fg = "#BDB76B" } -- FIX: . Check and test this. remove comments later
+          -- hl.Number = { fg = "#87b7c7" }
           hl.Type = { fg = hl_colors.types }
           hl.Identifier = { fg = "#5885b0" }
-          hl["@parameter"] = { fg = "#9c4528" }
+          -- hl["@lsp.type.parameter"] = { fg = "#9c4528" } -- parameter by lsp
+          hl["@variable.parameter"] = { fg = "#9c4528" } -- parameter by treesitter
 
           -- String/url
           hl["@string.special.url"] = { fg = "#a89996" }
@@ -137,10 +140,165 @@ return {
           hl.RainbowDelimiterViolet = { link = "rainbowcol5" }
           hl.rainbow6 = { link = "rainbowcol5" }
 
+          -- example colors
+          -- palevioletred      #DB7093
+          -- pink               #FFC0CB
+          -- lightpink          #FFB6C1
+          -- snow               #FFFAFA
+          -- rosybrown          #BC8F8F
+          -- lightcoral         #F08080
+          -- crimson            #DC143C
+          -- indianred          #CD5C5C
+          -- mistyrose          #FFE4E1
+          -- brown              #A52A2A
+          -- salmon             #FA8072
+          -- firebrick          #B22222
+          -- maroon             #800000
+          -- tomato             #FF6347
+          -- darkred            #8B0000
+          -- red                #FF0000
+          -- darksalmon         #E9967A
+          -- orangered          #FF4500
+          -- coral              #FF7F50
+          -- lightsalmon        #FFA07A
+          -- sienna             #A0522D
+          -- chocolate          #D2691E
+          -- saddlebrown        #8B4513
+          -- sandybrown         #F4A460
+          -- darkorange         #FF8C00
+          -- seashell           #FFF5EE
+          -- peru               #CD853F
+          -- peachpuff          #FFDAB9
+          -- orange             #FFA500
+          -- linen              #FAF0E6
+          -- burlywood          #DEB887
+          -- bisque             #FFE4C4
+          -- tan                #D2B48C
+          -- antiquewhite       #FAEBD7
+          -- navajowhite        #FFDEAD
+          -- darkgoldenrod      #B8860B
+          -- blanchedalmond     #FFEBCD
+          -- goldenrod          #DAA520
+          -- moccasin           #FFE4B5
+          -- papayawhip         #FFEFD5
+          -- wheat              #F5DEB3
+          -- oldlace            #FDF5E6
+          -- floralwhite        #FFFAF0
+          -- gold               #FFD700
+          -- cornsilk           #FFF8DC
+          -- khaki              #F0E68C
+          -- darkkhaki          #BDB76B
+          -- olive              #808000
+          -- yellow             #FFFF00
+          -- palegoldenrod      #EEE8AA
+          -- lemonchiffon       #FFFACD
+          -- lightgoldenrodyellow #FAFAD2
+          -- lightyellow        #FFFFE0
+          -- beige              #F5F5DC
+          -- ivory              #FFFFF0
+          -- olivedrab          #6B8E23
+          -- yellowgreen        #9ACD32
+          -- darkolivegreen     #556B2F
+          -- greenyellow        #ADFF2F
+          -- chartreuse         #7FFF00
+          -- lawngreen          #7CFC00
+          -- darkgreen          #006400
+          -- green              #008000
+          -- lime               #00FF00
+          -- limegreen          #32CD32
+          -- forestgreen        #228B22
+          -- palegreen          #98FB98
+          -- lightgreen         #90EE90
+          -- darkseagreen       #8FBC8F
+          -- honeydew           #F0FFF0
+          -- springgreen        #00FF7F
+          -- seagreen           #2E8B57
+          -- mediumseagreen     #3CB371
+          -- mediumspringgreen  #00FA9A
+          -- mintcream          #F5FFFA
+          -- mediumaquamarine   #66CDAA
+          -- aquamarine         #7FFFD4
+          -- turquoise          #40E0D0
+          -- lightseagreen      #20B2AA
+          -- mediumturquoise    #48D1CC
+          -- aqua               #00FFFF
+          -- darkcyan           #008B8B
+          -- teal               #008080
+          -- darkslategray      #2F4F4F
+          -- paleturquoise      #AFEEEE
+          -- darkturquoise      #00CED1
+          -- lightcyan          #E0FFFF
+          -- azure              #F0FFFF
+          -- cadetblue          #5F9EA0
+          -- powderblue         #B0E0E6
+          -- lightblue          #ADD8E6
+          -- skyblue            #87CEEB
+          -- deepskyblue        #00BFFF
+          -- lightskyblue       #87CEFA
+          -- aliceblue          #F0F8FF
+          -- slategray          #708090
+          -- lightslategray     #778899
+          -- steelblue          #4682B4
+          -- lightsteelblue     #B0C4DE
+          -- dodgerblue         #1E90FF
+          -- cornflowerblue     #6495ED
+          -- ghostwhite         #F8F8FF
+          -- lavender           #E6E6FA
+          -- royalblue          #4169E1
+          -- darkgray           #A9A9A9
+          -- dimgray            #696969
+          -- gainsboro          #DCDCDC
+          -- gray               #808080
+          -- lightgray          #D3D3D3
+          -- silver             #C0C0C0
+          -- white              #FFFFFF
+          -- whitesmoke         #F5F5F5
+          -- darkslateblue      #483D8B
+          -- slateblue          #6A5ACD
+          -- mediumslateblue    #7B68EE
+          -- midnightblue       #191970
+          -- blue               #0000FF
+          -- darkblue           #00008B
+          -- mediumblue         #0000CD
+          -- navy               #000080
+          -- mediumpurple       #9370DB
+          -- rebeccapurple      #663399
+          -- blueviolet         #8A2BE2
+          -- indigo             #4B0082
+          -- darkorchid         #9932CC
+          -- darkviolet         #9400D3
+          -- mediumorchid       #BA55D3
+          -- thistle            #D8BFD8
+          -- plum               #DDA0DD
+          -- violet             #EE82EE
+          -- orchid             #DA70D6
+          -- darkmagenta        #8B008B
+          -- fuchsia            #FF00FF
+          -- purple             #800080
+          -- mediumvioletred    #C71585
+          -- hotpink            #FF69B4
+          -- lavenderblush      #FFF0F5
+          -- deeppink           #FF1493
           -- all languages
           hl["@lsp.type.escapeSequence"] = { fg = hl_colors.stringEscape, bold = true }
-          hl["@lsp.typemod.function.generic"] = { fg = "#2b5db5" } -- FIX: . Check and test this. remove comments later
-          hl["@lsp.type.method"] = { link = "@lsp.typemod.function.generic" } -- FIX: . Check and test this. remove comments later
+          hl["@lsp.typemod.function.generic"] = { fg = "#2b5db5" }
+          hl["@lsp.typemod.method.defaultLibrary"] = { link = "@lsp.typemod.function.generic" }
+          hl["@lsp.type.method"] = { link = "@lsp.typemod.function.generic" }
+          hl["@keyword.import"] = { fg = "#10b7c7" }
+          hl["@keyword"] = { fg = "#d42f62" }
+          hl["@lsp.type.keyword"] = {} -- lsp keyword like fn, if, defer etc. but treesitter has different naming for if vs fn
+          hl["@lsp.type.namespace"] = { fg = "#5F9EA0", italic = true } -- go package name and rust use package::
+
+          -- hl["@lsp.type.namespace"] = { fg = "#7DCFFF", italic = true } -- go package name and rust use package::
+          hl["@lsp.typemod.macro.library"] = { fg = "#9C9797" }
+          hl["@lsp.typemod.macro.defaultLibrary"] = { fg = "#9C9797" }
+          hl["@lsp.type.operator"] = { fg = "#dedfe0" } -- &, *, =, := and etc. need to have different color as points and reference will be next to a var or types.
+          hl["@lsp.type.property"] = { fg = "#82bacc" }
+          hl["@keyword.exception"] = { fg = "#99875c" } -- throw, try, catch, finally
+          hl["@keyword.conditional"] = { fg = "#8d60e0" } -- if, else, switch, case, default
+          hl["@keyword.repeat"] = { fg = "#8d60e0" } -- for, while, do, until
+          hl.Constant = { fg = "#915d41" }
+          -- #9D7CD8 can be used
 
           -- Golang specific
           hl["@variable.builtin"] = { fg = "#d61c9f" }
@@ -152,13 +310,29 @@ return {
           hl.goVarAssign = { fg = "#D7658B" }
           hl.PreProc = { fg = "#9c9797" }
           hl.goStringFormat = { fg = "#10b7c7" }
+          hl["goFuncDecl"] = { fg = "#d42f62" }
+          hl["goImport"] = { fg = "#d42f62" }
+          hl["goReturn"] = { fg = "#d42f62" }
+          -- hl["goKeywords"] = { fg = "#d42f62" } -- FIX: . Check and test this. remove comments later
+          hl["goPackage"] = { fg = "#0286c7" }
+          hl["goFuncBlock"] = { link = "Identifier" } -- var
+          hl["goStructLiteralBlock"] = { link = "Identifier" } -- var that contains a struct
+          hl["goFuncCallArgs"] = { link = "Identifier" } -- var that is inside a function call as parameter -- FIX: . Check and test this. remove comments later
+          hl["goStructLiteralField"] = { fg = "#dedfe0" } -- a field inside a struct -- FIX: . Check and test this. remove comments later
+          hl["goField"] = { fg = "#dedfe0" } -- a field inside a func parameter-- FIX: . Check and test this. remove comments later
+          hl["@lsp.typemod.type.defaultLibrary"] = { fg = "#915d41" } -- FIX: . Check and test this. remove comments later
 
           -- Rust specific
           hl["@punctuation.special"] = { fg = "#10b7c7" }
           hl["@string.special"] = { fg = "#10b7c7" }
           hl["@lsp.typemod.function.defaultLibrary"] = { fg = "#0286c7" }
-          hl["@lsp.typemod.macro.defaultLibrary"] = { fg = "#94e2d5" }
+          -- hl["@lsp.typemod.macro.defaultLibrary"] = { fg = "#94e2d5" }
           hl["@constant.builtin"] = { link = "Type" }
+
+          -- TS specific
+          hl["@lsp.type.enumMember.typescript"] = { fg = "#915d41" }
+          hl["@lsp.typemod.interface.declaration.typescript"] = { fg = "#008B8B" }
+          hl["@lsp.type.interface.typescript"] = { fg = "#008B8B" }
 
           -- others
           hl["TreesitterContext"] = { bg = "NONE" }
