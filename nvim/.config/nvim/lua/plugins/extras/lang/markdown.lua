@@ -245,8 +245,8 @@ return {
             return
           end
 
-          local os_util = require("plugins.util.check-os")
-          local os_name = os_util.get_os_name()
+          -- local os_util = require("plugins.util.check-os")
+          -- local os_name = os_util.get_os_name()
 
           local screenshot_mapping = {
               -- stylua: ignore
@@ -301,6 +301,9 @@ return {
               { "<leader>ltR", function() tag_manager.remove_tags() end, desc = printf("Remove a Tag from Collection"), buffer = 0 },
               { "<leader>lta", function() tag_manager.append_tags_to_front_matter() end, desc = printf("Append Tags to Front Matter"), buffer = 0 },
               { "<leader>ltu", function() tag_manager.rename_tag() end, desc = printf("Rename a Tag"), buffer = 0 },
+
+              -- generate markdown todo for work
+              { "<leader>ot", function()  markdown_func.insert_md_todo() end, desc = printf("Insert Markdown Todo"), buffer = 0 },
 
               -- formatter
               { "<leader>lj", ":!prettier --parser json<CR>",mode = "v", desc = printf("Format JSON code"), buffer = 0 }, -- TODO: find a better one
