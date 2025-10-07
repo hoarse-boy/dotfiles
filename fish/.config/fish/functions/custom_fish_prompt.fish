@@ -59,14 +59,22 @@ function custom_fish_prompt --description "custom fish prompt"
         printf ''
     end
 
+    # WARN: do not remove this prompt style as it is needed by tmux auto copy last command output
+    # if changed, test it with tmux auto copy last command output
     # main prompt: OSC 133;A, then verbose path on first line, prompt on second
     function fish_prompt
         # OSC 133;A = prompt start (terminated with BEL)
         printf '\033]133;A\007'
 
-        # NOTE: do not update this prompt style as it is needed by tmux auto copy last command output
+        # detect os
+        set os_symbol ' '
+        switch (uname)
+            case Darwin
+                set os_symbol ' '
+        end
+
         # print verbose path, with ~ for $HOME
-        printf ' %s\n' (string replace -r "^$HOME" '~' $PWD)
+        printf '%s %s\n' $os_symbol (string replace -r "^$HOME" '~' $PWD)
 
         # second line: prompt symbol
         printf '❱ '
