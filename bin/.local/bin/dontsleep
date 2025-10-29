@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# usage: dontsleep <hours> <minutes>
+# example: dontsleep 0 5  -> prevent sleep for 5 minutes
+
+HOURS=${1:-0}
+MINS=${2:-0}
+TOTAL_MINUTES=$((HOURS * 60 + MINS))
+LOG_INTERVAL=10  # minutes between logs
+
+if (( TOTAL_MINUTES <= 0 )); then
+    echo "usage: dontsleep <hours> <minutes>"
+    exit 1
+fi
+
+echo "preventing sleep for $HOURS hour(s) and $MINS minute(s)..."
+
+systemd-inhibit --why="manual dontsleep timer" bash -c '
+    total_minutes='"$TOTAL_MINUTES"'
+    interval='"$LOG_INTERVAL"'
+
+    while (( total_minutes > 0 )); do
+        echo "$(date +"%H:%M:%S") - $total_minutes minutes left"
+        sleep $((interval * 60))
+        (( total_minutes -= interval ))
+        (( total_minutes < 0 )) && total_minutes=0
+    done
+
+    echo "$(date +"%H:%M:%S") - done, releasing inhibitor"
+'
+
