@@ -4,34 +4,14 @@ local printf = require("plugins.util.printf").printf
 local append_del_str = "DEL: . "
 -- local uncomment_str = "UNCOMMENT: . "
 
--- DEL: . DELETE LINES LATER
-local function capture_visual_selection()
-  -- Get start and end positions of visual selection
-  local start_pos = vim.fn.getpos("'<")
-  local end_pos = vim.fn.getpos("'>")
-
-  -- Get selected lines
-  local lines = vim.api.nvim_buf_get_lines(
-    0,
-    start_pos[2] - 1, -- Convert from 1-indexed to 0-indexed
-    end_pos[2], -- Inclusive end
-    false
-  )
-
-  -- Join and store as before
-  local content = table.concat(lines, "\n")
-  vim.fn.setreg("a", content)
-  vim.g.captured_content = content
-
-  vim.notify("Captured selection to register 'a'", vim.log.levels.INFO)
-  return content
-end
-
--- other keymaps for marking buffer are here.
 return {
   {
     "folke/todo-comments.nvim",
     opts = function(_, opts)
+      vim.api.nvim_create_user_command("CleanFixComments", function(opts)
+        require("plugins.util.custom_todo_comments").clean_fix_comments_in_range(opts.line1, opts.line2)
+      end, { range = true, desc = "remove FIX: . comments for current filetype" })
+
       opts.merge_keywords = true -- when true, custom keywords will be merged with the defaults
 
       -- add my custom todo.
@@ -101,17 +81,17 @@ return {
       {
         "<leader>mc",
         function()
-          require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(nil, "check and test this. remove comments later", false)
+          require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(nil, "check and test this. remove comments later:", false)
         end,
         mode = "n",
-        desc = printf("Append 'FIX Check and Test':"),
+        desc = printf("Append 'FIX Check and Test'"),
         noremap = true,
         silent = true,
       },
       {
         "<leader>mw",
         function()
-          require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(nil, "follow up / is pending", false)
+          require("plugins.util.custom_todo_comments").append_todo_comments_to_current_line(nil, "follow up / is pending:", false)
         end,
         mode = "n",
         desc = printf("Append 'FIX follow up / is pending'"),
@@ -161,14 +141,26 @@ return {
       {
         "<leader>mr",
         function()
-          capture_visual_selection()
-          -- require("plugins.util.custom_todo_comments").remove_todo_comments_from_visual_selection()
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":'<,'>CleanFixComments<CR>", true, false, true), "x", false)
         end,
         mode = "v",
-        desc = printf("Remove 'FIX' Comment"),
+        desc = printf("remove 'FIX' comments in visual selection"),
         noremap = true,
         silent = true,
       },
+      {
+        "<leader>ms",
+        function()
+          local ok = pcall(vim.cmd, "/\\VFIX: .")
+          if not ok then
+            Snacks.notify.info("no FIX: . found", { once = false, id = 2 })
+          end
+        end,
+        desc = printf("search FIX: . comments by filetype"),
+        noremap = true,
+        silent = true,
+      },
+
       {
         "<leader>mM",
         -- stylua: ignore
