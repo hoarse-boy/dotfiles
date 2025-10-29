@@ -504,3 +504,9 @@ rng
 cloudflare
 graphql
 mouseless
+viper_go
+tips
+monster_hunter
+mhwilds
+mhworld
+mhrise
