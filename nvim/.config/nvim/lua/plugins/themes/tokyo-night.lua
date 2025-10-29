@@ -96,7 +96,7 @@ return {
           -- Operator and basic syntax
           -- hl.Operator = { fg = "#99875c" }
           hl.Boolean = { fg = "#7833f5" }
-          hl.Number = { fg = "#BDB76B" } -- FIX: . Check and test this. remove comments later
+          hl.Number = { fg = "#BDB76B" }
           -- hl.Number = { fg = "#87b7c7" }
           hl.Type = { fg = hl_colors.types }
           hl.Identifier = { fg = "#5885b0" }
@@ -313,14 +313,13 @@ return {
           hl["goFuncDecl"] = { fg = "#d42f62" }
           hl["goImport"] = { fg = "#d42f62" }
           hl["goReturn"] = { fg = "#d42f62" }
-          -- hl["goKeywords"] = { fg = "#d42f62" } -- FIX: . Check and test this. remove comments later
           hl["goPackage"] = { fg = "#0286c7" }
           hl["goFuncBlock"] = { link = "Identifier" } -- var
           hl["goStructLiteralBlock"] = { link = "Identifier" } -- var that contains a struct
-          hl["goFuncCallArgs"] = { link = "Identifier" } -- var that is inside a function call as parameter -- FIX: . Check and test this. remove comments later
-          hl["goStructLiteralField"] = { fg = "#dedfe0" } -- a field inside a struct -- FIX: . Check and test this. remove comments later
-          hl["goField"] = { fg = "#dedfe0" } -- a field inside a func parameter-- FIX: . Check and test this. remove comments later
-          hl["@lsp.typemod.type.defaultLibrary"] = { fg = "#915d41" } -- FIX: . Check and test this. remove comments later
+          hl["goFuncCallArgs"] = { link = "Identifier" } -- var that is inside a function call as parameter
+          hl["goStructLiteralField"] = { fg = "#dedfe0" } -- a field inside a struct
+          hl["goField"] = { fg = "#dedfe0" } -- a field inside a func parameter
+          hl["@lsp.typemod.type.defaultLibrary"] = { fg = "#915d41" }
 
           -- Rust specific
           hl["@punctuation.special"] = { fg = "#10b7c7" }
