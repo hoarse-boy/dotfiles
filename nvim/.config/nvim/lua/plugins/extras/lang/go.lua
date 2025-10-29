@@ -237,16 +237,38 @@ return {
           require("dap-go").setup()
 
           -- this is for complicated debugging, like running all files in certain directory. and run the args.
+          -- it has to be a table to store the last dap config
+          -- running the dap will auto add the last dap config to the dap.configurations.go
+          local last_dap_config = {}
           table.insert(dap.configurations.go, {
             type = "go",
-            name = printf("Debug (prompted dir and args)"),
+            name = printf("Debug (prompted env_file, dir and args)"),
             request = "launch",
             program = function()
-              return vim.fn.input("Go program dir (default ./cmd): ", "./cmd", "file") -- ask which package or binary to debug
+              local default_dir = last_dap_config.program or "./cmd"
+              local p = vim.fn.input("Go program dir: ", default_dir, "file")
+              last_dap_config.program = p
+              return p
             end,
             args = function()
-              local args_str = vim.fn.input("Args: ", "") -- ask for args (space separated)
-              return vim.split(args_str, " +") -- splits on spaces
+              local default_args_str = table.concat(last_dap_config.args or {}, " ")
+              local args_str = vim.fn.input("Args: ", default_args_str)
+              local args = vim.split(args_str, " +")
+              last_dap_config.args = args
+              return args
+            end,
+            env = function()
+              local default_env_file = ""
+              if last_dap_config.env and last_dap_config.env.ENV_FILE then
+                default_env_file = last_dap_config.env.ENV_FILE
+              end
+              local env_file = vim.fn.input("ENV_FILE path (leave empty to skip): ", default_env_file, "file")
+              if env_file ~= "" then
+                last_dap_config.env = { ENV_FILE = env_file }
+              else
+                last_dap_config.env = nil
+              end
+              return last_dap_config.env
             end,
             outputMode = "remote",
           })
