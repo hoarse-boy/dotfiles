@@ -1,3 +1,5 @@
+;; for config.kbd (arch) copy all of this and change these:
+;; - lmet j of mouseless => lalt j. oppisite position vs macos
 (defcfg
   log-layer-changes no
   process-unmapped-keys yes
@@ -7,15 +9,18 @@
 
 (defchordsv2
   ;; (participating-keys1) action1 timeout1 release-behaviour1 (disabled-layers1)
-  (caps j) (multi (macro A-0) (layer-switch mouseless)) 50 all-released (mouseless) ;; FIX: . check this
+  ;; (caps j) (multi (macro A-0) (layer-switch mouseless)) 50 all-released (mouseless)
+  ;; (lmet j) (multi (macro A-0) (layer-switch mouseless)) 50 all-released (mouseless)
+
+  (lmet caps) (layer-switch base) 50 all-released (base)
 
   ;; caps+j: do different things depending on current layer for mouseless toggle free mode
-  ;; (caps j)
-  ;; (switch
-  ;;   ((layer base))      (multi (macro A-0) (layer-switch mouseless)) break
-  ;;   ((layer mouseless)) (multi (macro A-0) (layer-switch base))      break
-  ;; )
-  ;; 50 all-released ()
+  (lmet j)
+  (switch
+    ((layer base))      (multi (macro A-0) (layer-switch mouseless)) break
+    ((layer mouseless)) (multi (macro A-0) (layer-switch base))      break
+  )
+  50 all-released ()
 )
 
 (defvar
@@ -27,7 +32,10 @@
 )
 
 (defalias
-  cBase (multi esc (layer-switch base))
+  ;; NOTE: this is still needed to change to base layer in case mouseless defchordsv2 is not working.
+  ;; just click this 'esc' twice in case the layer is not correct.
+  cBase (multi esc (layer-switch base)) 
+  escKey esc
 
   nav (tap-hold $tt $ht spc (layer-while-held navigation))
 
@@ -45,8 +53,6 @@
   changeLayer (tap-dance $ht (lctl (layer-toggle navigation))) ;; this makes xremap lctrl shift h and l to be a tab 
 
   esc_ctl (tap-hold $tt $ht esc lctl)
-
-  escKey esc
 
   ;; tab navigation
   tabLeft (multi lctl lsft tab)
@@ -90,13 +96,14 @@
   lctl lmet lalt           spc            ralt rmet rctl    left down right
 )
 
+
 ;; defalias for mouseless layer
 ;; add any key combination that are commonly used when in mouseless free mode
 ;; NOTE: this (macro M-w) will work if mouseless uses 'w' key in free mode. 
 ;; strangely, when using 'w' as back key of mouse, cmd+w will behave like 'w' key instead.
 (defalias
-  copy (macro C-c) ;; FIX: . check and test this. remove comments later
-  closeTab (macro C-w) ;; FIX: . check and test this. remove comments later
+  copy (macro M-c)
+  closeTab (macro M-w) 
 )
 
 ;; this layer is used for mouseless free mode.
@@ -106,12 +113,11 @@
 ;; modifying `c` is fine.
 (deflayer mouseless
   esc
-  grv  1  @closeTab   3    4    5    6    7    8    9    0    -    =    bspc
+  grv  1  @closeTab   3    4    5    6    7    8  @tabLeft    @tabRight   -    =    bspc
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  @cBase a    s    d    f    g    h    j    k    l    ;    '    ret
+  @escKey a    s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    @copy    v    b    n    m    ,    .    /    rsft     up
   lctl lmet lalt  spc   ralt rmet rctl    left down right
 )
-
 
 ;; vim:ft=lisp
