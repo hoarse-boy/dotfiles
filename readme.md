@@ -58,6 +58,12 @@ run the following commands to create symlinks:
 stow-all
 ```
 
+or stow one folder:
+
+```sh
+stow aerospace/
+```
+
 #### 3.1 symlink specific files (optional)
 
 this is for stowing hyprland config files.
