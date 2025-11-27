@@ -53,3 +53,6 @@ gnome-disk-utility
 direnv
 gum
 cmatrix
+openrgb
+wine
+winetricks
