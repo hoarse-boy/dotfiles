@@ -9,13 +9,13 @@
   ;; (participating-keys1) action1 timeout1 release-behaviour1 (disabled-layers1)
   (caps j) (multi (macro A-0) (layer-switch mouseless)) 50 all-released (mouseless) ;; FIX: . check this
 
-  ;; caps+j: do different things depending on current layer for mouseless toggle free mode
-  ;; (caps j)
-  ;; (switch
-  ;;   ((layer base))      (multi (macro A-0) (layer-switch mouseless)) break
-  ;;   ((layer mouseless)) (multi (macro A-0) (layer-switch base))      break
-  ;; )
-  ;; 50 all-released ()
+  ;; 
+  (home end pgup pgdn)
+  (switch
+    ((layer base))      (layer-switch gaming) break
+    ((layer gaming)) (layer-switch base)      break
+  )
+  50 all-released ()
 )
 
 (defvar
@@ -112,6 +112,18 @@
   lsft z    x    @copy    v    b    n    m    ,    .    /    rsft     up
   lctl lmet lalt  spc   ralt rmet rctl    left down right
 )
+
+(deflayer gaming
+  esc
+  grv  1  2   3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft     up
+  lctl lmet lalt  spc   ralt rmet rctl    left down right
+)
+
+
+;; vim:ft=lisp
 
 
 ;; vim:ft=lisp

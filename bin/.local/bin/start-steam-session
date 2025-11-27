@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # no color
+
+log_separator() {
+  echo -e "\n${BLUE}═══════════════════════════════════════════════${NC}\n"
+}
+
+log_separator
+echo -e "${GREEN}🎮 preparing system for gaming mode...${NC}"
+log_separator
+
+# --- fetch active GUI apps ---
+echo -e "${YELLOW}🔍 listing active gui apps...${NC}"
+ACTIVE_APPS=$(hyprctl clients | grep "class:" | awk '{print $2}' | sort | uniq)
+echo "$ACTIVE_APPS"
+
+# --- whitelist ---
+WHITELIST=("steam")
+
+# --- close all non-whitelisted apps ---
+log_separator
+echo -e "${YELLOW}🧹 closing non-game applications...${NC}"
+for app in $ACTIVE_APPS; do
+  if [[ ! " ${WHITELIST[*]} " =~ " ${app} " ]]; then
+    echo -e "${RED}✖ closing $app${NC}"
+    hyprctl dispatch closewindow "class:$app" 2>/dev/null || true
+  fi
+done
+
+# --- wait and kill any leftovers ---
+sleep 3
+echo -e "${YELLOW}💀 force killing remaining processes (vivaldi, slack, ghostty, kitty, etc)...${NC}"
+pkill -9 -f "vivaldi|Slack|ghostty|kitty|lollypop|nautilus" 2>/dev/null || true
+
+# --- wait for cleanup ---
+sleep 2
+
+# --- launch steam ---
+log_separator
+echo -e "${GREEN}🚀 launching steam for gaming session...${NC}"
+steam & disown
+
+log_separator
+echo -e "${GREEN}✅ system cleaned and steam launched${NC}"
+log_separator
