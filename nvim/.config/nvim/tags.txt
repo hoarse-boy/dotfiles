@@ -510,3 +510,8 @@ monster_hunter
 mhwilds
 mhworld
 mhrise
+awk
+aria2
+switch
+nintendo_switch
+terabox
