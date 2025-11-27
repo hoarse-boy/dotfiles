@@ -1,0 +1,11 @@
+[Unit]
+Description=openrgb static light blue
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/openrgb --mode static --color 00AFFF --startminimized
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target
