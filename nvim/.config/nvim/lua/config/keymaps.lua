@@ -13,6 +13,7 @@ local printf = require("plugins.util.printf").printf
 
 del("n", "<leader>l") -- disable keymap l for lazyvim as it will be used for other lsp keymaps.
 del("n", "<leader>n") -- disable lazyvim's default keymap n that open notification history.
+del("n", "<leader>gf") -- FIX: . check and test this. remove comments later:
 
 -- -- TODO: visual x doesnt put to last yank?
 
@@ -100,4 +101,7 @@ set("n", "<leader>ol", function () require("plugins.util.find-files").change_dir
 set("n", "<leader>oe", function () Snacks.terminal("fish -c env-manage") end, { desc = printf("Manage .envrc") })
 
 -- set("n", "<leader>oc", function () require("plugins.util.find-files").change_dir_and_find_files("~/.config/nvim/") end, { desc = printf("Open My Nvim Config") }) -- old, uses chezmoi dotfiles dir now
+
+set("n", "gk", function() require("plugins.util.util").GotoEnclosingSymbolName() end, { desc = printf("Go to Function / LSP symbol name") })
+
 -- stylua: ignore end

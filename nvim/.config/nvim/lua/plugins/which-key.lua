@@ -45,13 +45,19 @@ return {
       -- stylua: ignore start
       { "<leader>bD", function() util.delete_swap_folder() end, desc = printf("delete swapfile folder"), mode = "n", },
       { "<leader>bv", function() util.check_or_create_launch_json() end, desc = printf("Create or Open launch.json"), mode = "n", },
-      { "<leader>bE", function() util.check_or_create_envrc() end, desc = printf("Create or open .envrc"), mode = "n", },
+      -- { "<leader>be", function() util.check_or_create_envrc() end, desc = printf("Create or open .envrc"), mode = "n", }, -- not using direnv anymore
+      { "<leader>be", function() util.check_or_create_env() end, desc = printf("Create or open .env"), mode = "n", },
+      {
+        "<leader>bE",
+        function()
+          require("neo-tree.command").execute({ source = "buffers", toggle = true })
+        end,
+        desc = "Buffer Explorer",
+      }
+,
       -- stylua: ignore end
-
     }
 
     wk.add(mapping)
   end,
 }
-
-

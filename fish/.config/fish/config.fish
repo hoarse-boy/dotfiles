@@ -52,6 +52,10 @@ abbr diff 'delta --pager=never'
 
 # nvim
 abbr v nvim
+
+# to use mise env var for dap # FIX: . check and test this. remove comments later:
+# abbr v 'mise exec -- nvim'
+
 alias vim nvim
 # abbr lazy "cd ~/.local/share/nvim/lazy/LazyVim/ && $editor"
 
@@ -117,19 +121,6 @@ set -Ux EDITOR nvim # used for crontab -e
 # opam configuration
 source $HOME/.opam/opam-init/init.fish >/dev/null 2>/dev/null; or true
 
-source (COMPLETE=fish slumber | psub)
+# source (COMPLETE=fish slumber | psub) # causes this err: Error: No collection file found in current or ancestor directories. why?
 
-direnv hook fish | source
-
-# FIX: . Check and test this. remove comments later
-# function fish_preexec --on-event fish_preexec
-#     echo -en "\e]133;C\e\\"
-# end
-
-# function fish_prompt --on-event fish_prompt
-#     echo -en "\e]133;A\e\\"
-# end
-
-# function fish_postexec --on-event fish_postexec
-#     echo -en "\e]133;B\e\\"
-# end
+# direnv hook fish | source

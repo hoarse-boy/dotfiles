@@ -14,13 +14,13 @@
 
   (lmet caps) (layer-switch base) 50 all-released (base)
 
-  ;; caps+j: do different things depending on current layer for mouseless toggle free mode
-  (lmet j)
-  (switch
-    ((layer base))      (multi (macro A-0) (layer-switch mouseless)) break
-    ((layer mouseless)) (multi (macro A-0) (layer-switch base))      break
-  )
-  50 all-released ()
+  ;; ;; caps+j: do different things depending on current layer for mouseless toggle free mode
+  ;; (lmet j)
+  ;; (switch
+  ;;   ((layer base))      (multi (macro A-0) (layer-switch mouseless)) break
+  ;;   ((layer mouseless)) (multi (macro A-0) (layer-switch base))      break
+  ;; )
+  ;; 50 all-released ()
 )
 
 (defvar
@@ -57,6 +57,10 @@
   ;; tab navigation
   tabLeft (multi lctl lsft tab)
   tabRight (multi lctl tab)
+
+  ;; mouseless
+  mCMD (multi (macro A-0) (layer-switch mouseless))
+  mCMD2 (multi (macro A-0) (layer-switch base))
 )
 
 (defsrc
@@ -78,8 +82,9 @@
   tab          q      w    e      r    t    y    u      i    o      p      [    ]    \    
   @escKey @alt_a @met_s @sft_d @ctl_f g    h  @ctl_j @sft_k @met_l @alt_; '  ret
   lsft         z      x    c      v    b    n    m      ,    .      /    rsft  up
-  lctl      lmet   lalt           @nav            ralt rmet rctl    left down right
+  lctl      lmet   lalt           @nav            ralt @mCMD rctl    left down right
 )
+
 ;; old base layer
 ;; lctl       lmet   lalt           @nav            ralt rmet rctl    left down right
 ;; @esc_ctl @alt_a @met_s @sft_d @ctl_f g    h  @ctl_j @sft_k @met_l @alt_; '  ret
@@ -95,7 +100,6 @@
   lsft z    x    c    v    b    @tabLeft @tabRight ,    rpt-any    /    rsft     up
   lctl lmet lalt           spc            ralt rmet rctl    left down right
 )
-
 
 ;; defalias for mouseless layer
 ;; add any key combination that are commonly used when in mouseless free mode
@@ -117,7 +121,7 @@
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
   @escKey a    s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    @copy    v    b    n    m    ,    .    /    rsft     up
-  lctl lmet lalt  spc   ralt rmet rctl    left down right
+  lctl lmet lalt  spc   ralt @mCMD2 rctl    left down right
 )
 
 ;; vim:ft=lisp

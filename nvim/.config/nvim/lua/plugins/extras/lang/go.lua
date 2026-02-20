@@ -24,6 +24,8 @@ autocmd("BufWritePre", {
   group = format_sync_grp,
 })
 
+local last_dap_config = {}
+
 return {
   {
     "ray-x/go.nvim",
@@ -239,17 +241,48 @@ return {
           -- this is for complicated debugging, like running all files in certain directory. and run the args.
           -- it has to be a table to store the last dap config
           -- running the dap will auto add the last dap config to the dap.configurations.go
-          local last_dap_config = {}
+
           table.insert(dap.configurations.go, {
             type = "go",
-            name = printf("Debug (prompted env_file, dir and args)"),
+            name = printf("Go: select program and args (need mise for env)"),
             request = "launch",
             program = function()
-              local default_dir = last_dap_config.program or "./cmd"
-              local p = vim.fn.input("Go program dir: ", default_dir, "file")
+              -- fast path: already resolved, run immediately
+              if last_dap_config.program then
+                return last_dap_config.program
+              end
+
+              local default_dir = "./"
+
+              local yn = vim.fn.input("Auto detect Go entry? (y/n): ", "y")
+
+              local p
+
+              if yn == "y" or yn == "Y" then
+                last_dap_config.auto = true
+
+                if vim.fn.filereadable("./main.go") == 1 then
+                  p = "."
+                else
+                  local targets = find_cmd_targets()
+                  if #targets == 1 then
+                    p = targets[1]
+                  elseif #targets > 1 then
+                    -- ambiguous, fallback to manual once
+                    p = vim.fn.input("Multiple cmd targets found, enter dir: ", default_dir, "file")
+                  else
+                    p = vim.fn.input("No entry found, enter dir: ", default_dir, "file")
+                  end
+                end
+              else
+                last_dap_config.auto = false
+                p = vim.fn.input("Go program dir: ", default_dir, "file")
+              end
+
               last_dap_config.program = p
               return p
             end,
+
             args = function()
               local default_args_str = table.concat(last_dap_config.args or {}, " ")
               local args_str = vim.fn.input("Args: ", default_args_str)
@@ -257,22 +290,21 @@ return {
               last_dap_config.args = args
               return args
             end,
-            env = function()
-              local default_env_file = ""
-              if last_dap_config.env and last_dap_config.env.ENV_FILE then
-                default_env_file = last_dap_config.env.ENV_FILE
-              end
-              local env_file = vim.fn.input("ENV_FILE path (leave empty to skip): ", default_env_file, "file")
-              if env_file ~= "" then
-                last_dap_config.env = { ENV_FILE = env_file }
-              else
-                last_dap_config.env = nil
-              end
-              return last_dap_config.env
-            end,
+
             outputMode = "remote",
           })
         end,
+
+        keys = {
+          {
+            "<leader>dG",
+            function()
+              last_dap_config.program = nil
+              last_dap_config.auto = nil
+            end,
+            desc = printf("Reset last Go debug config"),
+          },
+        },
       },
     },
   },
@@ -386,3 +418,59 @@ return {
     },
   },
 }
+
+-- NOTE: old dap config
+
+-- table.insert(dap.configurations.go, {
+--             type = "go",
+--             name = printf("Debug (prompted dir and args)"),
+--             request = "launch",
+--             program = function()
+--               local default_dir = last_dap_config.program or "./cmd"
+--               local p = vim.fn.input("Go program dir: ", default_dir, "file")
+--               last_dap_config.program = p
+--               return p
+--             end,
+--             args = function()
+--               local default_args_str = table.concat(last_dap_config.args or {}, " ")
+--               local args_str = vim.fn.input("Args: ", default_args_str)
+--               local args = vim.split(args_str, " +")
+--               last_dap_config.args = args
+--               return args
+--             end,
+--             outputMode = "remote",
+--           })
+
+-- table.insert(dap.configurations.go, {
+--             type = "go",
+--             name = printf("Debug (prompted env_file, dir and args)"),
+--             request = "launch",
+--             program = function()
+--               local default_dir = last_dap_config.program or "./cmd"
+--               local p = vim.fn.input("Go program dir: ", default_dir, "file")
+--               last_dap_config.program = p
+--               return p
+--             end,
+--             args = function()
+--               local default_args_str = table.concat(last_dap_config.args or {}, " ")
+--               local args_str = vim.fn.input("Args: ", default_args_str)
+--               local args = vim.split(args_str, " +")
+--               last_dap_config.args = args
+--               return args
+--             end,
+--             env = function()
+--               local default_env_file = ""
+--               if last_dap_config.env and last_dap_config.env.ENV_FILE then
+--                 default_env_file = last_dap_config.env.ENV_FILE
+--               end
+--               local env_file = vim.fn.input("ENV_FILE path (leave empty to skip): ", default_env_file, "file")
+--               if env_file ~= "" then
+--                 last_dap_config.env = { ENV_FILE = env_file }
+--               else
+--                 last_dap_config.env = nil
+--               end
+--               return last_dap_config.env
+--             end,
+
+--             outputMode = "remote",
+--           })

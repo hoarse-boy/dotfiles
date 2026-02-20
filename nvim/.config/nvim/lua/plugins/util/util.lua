@@ -17,6 +17,26 @@ util.UNKNOWN = "unknown"
 --   end
 -- end
 
+-- shared project root cache
+util._project_root = util._project_root or nil
+
+local function resolve_project_root()
+  if util._project_root then
+    return util._project_root
+  end
+
+  local cwd = vim.fn.getcwd()
+  local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+
+  if git_root and git_root ~= "" and vim.v.shell_error == 0 then
+    util._project_root = git_root
+  else
+    util._project_root = cwd
+  end
+
+  return util._project_root
+end
+
 function util.get_terminal()
   if vim.fn.getenv("KITTY_WINDOW_ID") ~= vim.NIL then
     return "kitty"
@@ -148,42 +168,95 @@ function util.remove_dashboard_item(dashboard_keys_table, key_to_remove)
   end
 end
 
-function util.check_or_create_launch_json()
-  -- Get the current working directory
-  local cwd = vim.fn.getcwd()
-  local launch_path = cwd .. "/.vscode/launch.json"
+-- function util.check_or_create_launch_json()
+--   -- Get the current working directory
+--   local cwd = vim.fn.getcwd()
+--   local launch_path = cwd .. "/.vscode/launch.json"
 
-  -- Check if .vscode/launch.json exists
-  if vim.fn.filereadable(launch_path) == 1 then
-    -- File exists, open it
-    vim.cmd("edit " .. launch_path)
-    return
-  end
+--   -- Check if .vscode/launch.json exists
+--   if vim.fn.filereadable(launch_path) == 1 then
+--     -- File exists, open it
+--     vim.cmd("edit " .. launch_path)
+--     return
+--   end
 
-  -- Ask user if they want to create the file
-  local confirm = vim.fn.input(string.format("Create launch.json in %s? (y/n): ", cwd))
+--   -- Ask user if they want to create the file
+--   local confirm = vim.fn.input(string.format("Create launch.json in %s? (y/n): ", cwd))
 
-  if confirm:lower() ~= "y" then
-    print("\nOperation cancelled")
-    return
-  end
+--   if confirm:lower() ~= "y" then
+--     print("\nOperation cancelled")
+--     return
+--   end
 
-  -- Create .vscode directory if it doesn't exist
-  local vscode_dir = cwd .. "/.vscode"
-  if vim.fn.isdirectory(vscode_dir) == 0 then
-    vim.fn.mkdir(vscode_dir, "p")
-  end
+--   -- Create .vscode directory if it doesn't exist
+--   local vscode_dir = cwd .. "/.vscode"
+--   if vim.fn.isdirectory(vscode_dir) == 0 then
+--     vim.fn.mkdir(vscode_dir, "p")
+--   end
 
-  -- Create empty file and open it
-  local file = io.open(launch_path, "w")
-  if file then
-    file:close()
-    vim.cmd("edit " .. launch_path)
-    print("\nCreated launch.json")
-  else
-    print("\nError: Could not create launch.json")
-  end
-end
+--   -- Create empty file and open it
+--   local file = io.open(launch_path, "w")
+--   if file then
+--     file:close()
+--     vim.cmd("edit " .. launch_path)
+--     print("\nCreated launch.json")
+--   else
+--     print("\nError: Could not create launch.json")
+--   end
+-- end -- DEL: . DELETE LINES LATER
+
+-- cache resolved base dir per session
+util._launch_base_dir = util._launch_base_dir or nil
+
+-- function util.check_or_create_launch_json()
+--   -- Get the current working directory
+--   local cwd = vim.fn.getcwd()
+
+--   -- Resolve git root once per session, fallback to cwd
+--   if not util._launch_base_dir then
+--     local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+
+--     if git_root and git_root ~= "" and vim.v.shell_error == 0 then
+--       util._launch_base_dir = git_root
+--     else
+--       util._launch_base_dir = cwd
+--     end
+--   end
+
+--   local base_dir = util._launch_base_dir
+--   local launch_path = base_dir .. "/.vscode/launch.json"
+
+--   -- Check if .vscode/launch.json exists
+--   if vim.fn.filereadable(launch_path) == 1 then
+--     -- File exists, open it
+--     vim.cmd("edit " .. launch_path)
+--     return
+--   end
+
+--   -- Ask user if they want to create the file
+--   local confirm = vim.fn.input(string.format("Create launch.json in %s? (y/n): ", base_dir))
+
+--   if confirm:lower() ~= "y" then
+--     print("\nOperation cancelled")
+--     return
+--   end
+
+--   -- Create .vscode directory if it doesn't exist
+--   local vscode_dir = base_dir .. "/.vscode"
+--   if vim.fn.isdirectory(vscode_dir) == 0 then
+--     vim.fn.mkdir(vscode_dir, "p")
+--   end
+
+--   -- Create empty file and open it
+--   local file = io.open(launch_path, "w")
+--   if file then
+--     file:close()
+--     vim.cmd("edit " .. launch_path)
+--     print("\nCreated launch.json")
+--   else
+--     print("\nError: Could not create launch.json")
+--   end
+-- end -- DEL: . DELETE LINES LATER
 
 function util.check_or_create_envrc()
   -- Find project root by looking for .git or .envrc in parent directories
@@ -239,6 +312,149 @@ function util.check_or_create_envrc()
   elseif response:lower() == "n" then
     -- User cancelled
     vim.notify("Creation of .envrc cancelled", vim.log.levels.INFO)
+  end
+end
+
+-- still cannot command to type 'gr' etc to simulate go to reference without manual typing.
+function util.GotoEnclosingSymbolName()
+  local params = vim.lsp.util.make_position_params()
+  vim.lsp.buf_request(0, "textDocument/documentSymbol", params, function(err, result)
+    if err or not result then
+      return
+    end
+
+    local row = params.position.line
+    local col = params.position.character
+
+    local function in_range(r)
+      if row < r.start.line or row > r["end"].line then
+        return false
+      end
+      if row == r.start.line and col < r.start.character then
+        return false
+      end
+      if row == r["end"].line and col > r["end"].character then
+        return false
+      end
+      return true
+    end
+
+    local function walk(symbols)
+      for _, sym in ipairs(symbols) do
+        if sym.range and in_range(sym.range) then
+          if sym.selectionRange then
+            local r = sym.selectionRange.start
+            vim.api.nvim_win_set_cursor(0, { r.line + 1, r.character })
+            return true
+          end
+        end
+        if sym.children and walk(sym.children) then
+          return true
+        end
+      end
+    end
+
+    walk(result)
+  end)
+end
+
+-- cache resolved base dir per session
+util._env_base_dir = util._env_base_dir or nil
+
+-- function util.check_or_create_env()
+--   -- resolve base dir only once
+--   if not util._env_base_dir then
+--     local cwd = vim.fn.getcwd()
+--     local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+
+--     if git_root and git_root ~= "" and vim.v.shell_error == 0 then
+--       util._env_base_dir = git_root
+--     else
+--       util._env_base_dir = cwd
+--     end
+--   end
+
+--   local base_dir = util._env_base_dir
+--   local env_path = base_dir .. "/.env"
+
+--   -- check if .env exists
+--   if vim.fn.filereadable(env_path) == 1 then
+--     -- file exists, open it
+--     vim.cmd("edit " .. env_path)
+--     return
+--   end
+
+--   -- ask user if they want to create the file
+--   local confirm = vim.fn.input(string.format("create .env in %s? (y/n): ", base_dir))
+
+--   if confirm:lower() ~= "y" then
+--     print("\noperation cancelled")
+--     return
+--   end
+
+--   -- create empty file and open it
+--   local file = io.open(env_path, "w")
+--   if file then
+--     file:close()
+--     vim.cmd("edit " .. env_path)
+--     print("\ncreated .env")
+--   else
+--     print("\nerror: could not create .env")
+--   end
+-- end -- DEL: . DELETE LINES LATER
+
+function util.check_or_create_launch_json()
+  local base_dir = resolve_project_root()
+  local launch_path = base_dir .. "/.vscode/launch.json"
+
+  if vim.fn.filereadable(launch_path) == 1 then
+    vim.cmd("edit " .. launch_path)
+    return
+  end
+
+  local confirm = vim.fn.input(string.format("Create launch.json in %s? (y/n): ", base_dir))
+  if confirm:lower() ~= "y" then
+    print("\nOperation cancelled")
+    return
+  end
+
+  local vscode_dir = base_dir .. "/.vscode"
+  if vim.fn.isdirectory(vscode_dir) == 0 then
+    vim.fn.mkdir(vscode_dir, "p")
+  end
+
+  local file = io.open(launch_path, "w")
+  if file then
+    file:close()
+    vim.cmd("edit " .. launch_path)
+    print("\nCreated launch.json")
+  else
+    print("\nError: Could not create launch.json")
+  end
+end
+
+function util.check_or_create_env()
+  local base_dir = resolve_project_root()
+  local env_path = base_dir .. "/.env"
+
+  if vim.fn.filereadable(env_path) == 1 then
+    vim.cmd("edit " .. env_path)
+    return
+  end
+
+  local confirm = vim.fn.input(string.format("create .env in %s? (y/n): ", base_dir))
+  if confirm:lower() ~= "y" then
+    print("\noperation cancelled")
+    return
+  end
+
+  local file = io.open(env_path, "w")
+  if file then
+    file:close()
+    vim.cmd("edit " .. env_path)
+    print("\ncreated .env")
+  else
+    print("\nerror: could not create .env")
   end
 end
 

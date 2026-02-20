@@ -641,7 +641,7 @@ return {
       },
     },
     keys = {
-      { "gk", "<cmd>lua Snacks.image.hover()<cr>", desc = printf("Show image in a floating window"), mode = "n" },
+      { "gk", "<cmd>lua Snacks.image.hover()<cr>", desc = printf("Show image in a floating window"), mode = "n", ft = "markdown" },
     },
   },
 }

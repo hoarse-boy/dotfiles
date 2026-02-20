@@ -515,3 +515,11 @@ aria2
 switch
 nintendo_switch
 terabox
+http_timeout
+mise
+lazyvim
+lazy_nvim
+llm
+agentic_ai
+uv
+udemy

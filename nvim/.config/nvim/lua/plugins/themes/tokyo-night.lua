@@ -62,6 +62,24 @@ return {
 
     config = function()
       require("tokyonight").setup({
+        light_style = "day", -- The theme is used when the background is set to light -- FIX: . check and test this. remove comments later:
+        day_brightness = 0.3, -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
+        dim_inactive = true, -- dims inactive windows
+        lualine_bold = true, -- When `true`, section headers in the lualine theme will be bold
+        cache = true, -- When set to true, the theme will be cached for better performance
+        plugins = {
+          -- enable all plugins when not using lazy.nvim
+          -- set to false to manually enable/disable plugins
+          all = package.loaded.lazy == nil,
+          -- uses your plugin manager to automatically enable needed plugins
+          -- currently only lazy.nvim is supported
+          auto = true,
+          -- add any plugins here that you want to enable
+          -- for all possible plugins, see:
+          --   * https://github.com/folke/tokyonight.nvim/tree/main/lua/tokyonight/groups
+          -- telescope = true,
+        },
+
         style = "night", -- storm, night, moon, day
         transparent = true,
         terminal_colors = true,
@@ -305,9 +323,9 @@ return {
           hl["@lsp.typemod.string.format"] = { fg = "#10b7c7" }
           hl["@lsp.type.string.go"] = {} -- to fix the \n or escape string to be highlighted, as this has high priority agains the goStringEscape
           hl.goStringEscape = { fg = hl_colors.stringEscape, bold = true } -- this is available using charlespascoe/vim-go-syntax plugin
-          hl["@type.builtin"] = { fg = "#5e7843" }
           hl.goStructTypeField = { fg = "#10b7c7" }
           hl.goVarAssign = { fg = "#D7658B" }
+          hl.goVarStructAssign = { fg = "#fca7b4" }
           hl.PreProc = { fg = "#9c9797" }
           hl.goStringFormat = { fg = "#10b7c7" }
           hl["goFuncDecl"] = { fg = "#d42f62" }
@@ -319,7 +337,9 @@ return {
           hl["goFuncCallArgs"] = { link = "Identifier" } -- var that is inside a function call as parameter
           hl["goStructLiteralField"] = { fg = "#dedfe0" } -- a field inside a struct
           hl["goField"] = { fg = "#dedfe0" } -- a field inside a func parameter
-          hl["@lsp.typemod.type.defaultLibrary"] = { fg = "#915d41" }
+          hl["@lsp.typemod.type.defaultLibrary"] = { fg = "#5e7843" } -- primitive type: string, int, float etc in golang.
+          hl["@type.builtin"] = { fg = "#4f8066" }
+          -- "#ab9d3c", "#009688", "#4f8066"
 
           -- Rust specific
           hl["@punctuation.special"] = { fg = "#10b7c7" }

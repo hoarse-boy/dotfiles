@@ -42,6 +42,7 @@
   "nui.nvim": { "branch": "main", "commit": "7cd18e73cfbd70e1546931b7268b3eebaeff9391" },
   "nvim-autopairs": { "branch": "master", "commit": "4d74e75913832866aa7de35e4202463ddf6efd1b" },
   "nvim-dap": { "branch": "master", "commit": "b0f983507e3702f073bfe1516846e58b56d4e42f" },
+  "nvim-dap-envfile": { "branch": "main", "commit": "093990f8c769c0c1b34646fe2950296b3e4e003e" },
   "nvim-dap-go": { "branch": "main", "commit": "8763ced35b19c8dc526e04a70ab07c34e11ad064" },
   "nvim-dap-ui": { "branch": "master", "commit": "73a26abf4941aa27da59820fd6b028ebcdbcf932" },
   "nvim-dap-view": { "branch": "main", "commit": "a5d836ad5631eb9d0d2574f3c9312c3673f9d020" },

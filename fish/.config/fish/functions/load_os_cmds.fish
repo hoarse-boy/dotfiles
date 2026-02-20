@@ -99,5 +99,7 @@ function load_os_cmds --description "Load OS-specific commands"
             set -gx PATH $HOME/.local/zig/current $PATH
 
             set -U fish_user_paths $fish_user_paths $HOME/go/bin
+
+            mise activate fish | source
     end
 end

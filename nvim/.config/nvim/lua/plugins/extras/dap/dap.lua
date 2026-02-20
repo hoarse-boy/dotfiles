@@ -33,6 +33,13 @@ return {
         opts = {},
       },
 
+      -- {
+      --   "ravsii/nvim-dap-envfile", -- is not good for go and .env. it will print empty or commented line to nvim
+      --   version = "*", -- use latest stable release
+      --   dependencies = { "mfussenegger/nvim-dap" },
+      --   opts = {},
+      -- },
+
       {
         "Joakker/lua-json5",
         event = "VeryLazy",

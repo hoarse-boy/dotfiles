@@ -7,7 +7,10 @@
 
 (defchordsv2
   ;; (participating-keys1) action1 timeout1 release-behaviour1 (disabled-layers1)
-  (caps j) (multi (macro A-0) (layer-switch mouseless)) 50 all-released (mouseless) ;; FIX: . check this
+
+  ;; (caps j) (multi (macro A-0) (layer-switch mouseless)) 50 all-released (mouseless)
+
+  (lalt caps) (layer-switch base) 50 all-released (base) ;; to change to base to reset when mouseless mode is reverse
 
   ;; 
   (home end pgup pgdn)
@@ -51,6 +54,10 @@
   ;; tab navigation
   tabLeft (multi lctl lsft tab)
   tabRight (multi lctl tab)
+
+  ;; mouseless
+  mCMD (multi (macro A-0) (layer-switch mouseless))
+  mCMD2 (multi (macro A-0) (layer-switch base))
 )
 
 (defsrc
@@ -72,8 +79,9 @@
   tab          q      w    e      r    t    y    u      i    o      p      [    ]    \    
   @escKey @alt_a @met_s @sft_d @ctl_f g    h  @ctl_j @sft_k @met_l @alt_; '  ret
   lsft         z      x    c      v    b    n    m      ,    .      /    rsft  up
-  lctl      lmet   lalt           @nav            ralt rmet rctl    left down right
+  lctl      lmet   lalt           @nav            @mCMD2 rmet rctl    left down right
 )
+
 ;; old base layer
 ;; lctl       lmet   lalt           @nav            ralt rmet rctl    left down right
 ;; @esc_ctl @alt_a @met_s @sft_d @ctl_f g    h  @ctl_j @sft_k @met_l @alt_; '  ret
@@ -110,7 +118,7 @@
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
   @cBase a    s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    @copy    v    b    n    m    ,    .    /    rsft     up
-  lctl lmet lalt  spc   ralt rmet rctl    left down right
+  lctl lmet lalt  spc   @mCMD2 rmet rctl    left down right
 )
 
 (deflayer gaming

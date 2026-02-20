@@ -5,7 +5,7 @@ local is_bigfile = require("plugins.util.check-for-bigfile").is_bigfile
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-event = { "BufReadPre", "BufNewFile" }, -- load only when editing a file -- FIX: . Check and test this. remove comments later
+    event = { "BufReadPre", "BufNewFile" }, -- load only when editing a file -- FIX: . Check and test this. remove comments later
     -- commit = "865483f8d1c6e263a1a9efd46f84e78ec5fa31d4",
     dependencies = {
       -- rainbow-delimiters. p00f/nvim-ts-rainbow is buggy and archive along time ago.
