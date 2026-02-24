@@ -1,3 +1,9 @@
+neovim
+lazygit
+git-delta
+tmux
+slumber
+lazysql
 fish
 rustup
 go
@@ -17,3 +23,4 @@ podman-compose
 crun
 fuse-overlayfs
 slirp4netns
+mise

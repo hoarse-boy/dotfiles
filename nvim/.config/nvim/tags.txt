@@ -523,3 +523,8 @@ llm
 agentic_ai
 uv
 udemy
+limine
+boot-loader
+systemd-boot
+grub
+refind

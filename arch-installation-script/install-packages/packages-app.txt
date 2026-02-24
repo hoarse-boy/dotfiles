@@ -1,9 +1,8 @@
-syncthing
 ghostty
 dbeaver
 postman-bin
 neovide
 gimp
 telegram-desktop-bin
-chromium
+vivaldi
 slack-desktop-wayland
