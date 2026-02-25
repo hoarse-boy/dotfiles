@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Toggle workspace script for Hyprland
+# Logic flow:
+# 1. Get currently active special workspace on focused monitor
+# 2. Based on argument:
+#    - Special workspace name: toggle between special workspaces
+#    - Number: close special workspace (if any) and switch to number
+#    - left/right: close special workspace (if any) and stop (no workspace switch)
+#    - down: close special workspace (if any) and run empty workspace script
+
 # Close special workspace on the focused monitor if one is present
 active=$(hyprctl -j monitors | jq --raw-output '.[] | select(.focused==true).specialWorkspace.name | split(":") | if length > 1 then .[1] else "" end')
 
@@ -8,7 +17,7 @@ if [[ ${#active} -gt 0 ]]; then
 
   # eww close special-ws
 
-  # If moving left or right, stop after hiding Quick-note
+  # If moving to the left, right or down, inside a special workspace, close the special workspace and stop
   case "$1" in
   "left" | "right" | "down")
     exit 0

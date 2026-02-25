@@ -528,3 +528,9 @@ boot-loader
 systemd-boot
 grub
 refind
+ctia
+omtp
+iem
+mic
+speaker
+headphone
