@@ -48,8 +48,6 @@ gnome-disk-utility
 gum
 cmatrix
 openrgb
-wine
-winetricks
 webkit2gtk-4.1
 gdk-pixbuf2
 glycin
