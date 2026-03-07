@@ -52,6 +52,14 @@ vim.api.nvim_create_autocmd("FileType", {
     -- vim.bo.softtabstop = 4
   end,
 })
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "hyprlang" },
+  callback = function()
+    vim.bo.tabstop = 4
+    vim.bo.shiftwidth = 4
+    -- vim.bo.softtabstop = 4
+  end,
+})
 
 -- NOTE: disable this in favor of the yanky plugin
 -- -- make yank animation to be blazingly fast
