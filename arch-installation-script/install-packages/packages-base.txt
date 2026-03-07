@@ -62,3 +62,7 @@ cmake
 ninja
 meson
 linux-headers
+thunar-archive-plugin
+thunar-media-tags-plugin
+gvfs
+swayosd

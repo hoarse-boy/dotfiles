@@ -8,3 +8,4 @@ slack-desktop-wayland
 onlyoffice-bin
 terabox-bin
 imv
+thunar

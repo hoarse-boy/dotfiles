@@ -553,3 +553,5 @@ status_bar
 zip
 rar
 encrypt
+imv
+thunar

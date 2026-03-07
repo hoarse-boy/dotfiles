@@ -94,3 +94,6 @@ fish/.config/fish/arch.fish
 
 /hypr/.config/hypr/current_wallpaper
 /hypr/.config/hypr/colors/colors.conf
+/mpd/.config/mpd/mpdstate
+/rofi/.config/rofi/colors.rasi
+/quickshell/.config/quickshell/matugen.json

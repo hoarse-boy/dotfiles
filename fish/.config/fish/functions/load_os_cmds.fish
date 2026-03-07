@@ -27,12 +27,15 @@ function load_os_cmds --description "Load OS-specific commands"
 
             test -f ~/.config/fish/arch.fish; and source ~/.config/fish/arch.fish # for file that cannot be push to git
 
-            set -gx editor "neovide --fork --wayland_app_id neovide"
+            # set -gx editor "neovide --fork --wayland_app_id neovide"
 
-            abbr nv 'neovide --fork --wayland_app_id neovide'
+            # abbr nv 'neovide --fork --wayland_app_id neovide'
             abbr pwd 'pwd && pwd | wl-copy'
+
+            # open file manager in current directory
             abbr dol 'nohup dolphin . > /dev/null 2>&1 &'
-            abbr open 'setsid nautilus .'
+            abbr open 'setsid thunar .'
+
             abbr wk 'cd ~/work/sync-work'
 
             # yay package manager
