@@ -1,0 +1,19 @@
+sw_volume: 100
+audio_device_state:1:pulse audio
+audio_device_state:1:my_fifo
+state: play
+current: 0
+time: 120.24000000000001
+random: 0
+repeat: 1
+single: 0
+consume: 0
+crossfade: 0
+mixrampdb: 0
+mixrampdelay: -1
+lastloadedplaylist: 
+playlist_begin
+0:monster-hunter/Grand Hub Diva Performance  Land of Life - Monster Hunter Wilds.mp3
+1:monster-hunter/New Diva SongSoul of the World Festival of Accord  Lumenhymn Monster Hunter Wilds  4K.mp3
+2:monster-hunter/The Diva New Performance at The Blossomdance Festival [HQ  4K] - Monster Hunter Wilds.mp3
+playlist_end
