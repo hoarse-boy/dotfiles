@@ -92,4 +92,4 @@ ghostty/.config/ghostty/other
 kitty/.config/kitty/arch.conf
 fish/.config/fish/arch.fish
 
-.config/hypr/current_wallpaper
+/hypr/.config/hypr/current_wallpaper
