@@ -93,3 +93,4 @@ kitty/.config/kitty/arch.conf
 fish/.config/fish/arch.fish
 
 /hypr/.config/hypr/current_wallpaper
+/hypr/.config/hypr/colors/colors.conf
