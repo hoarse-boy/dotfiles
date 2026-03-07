@@ -25,7 +25,7 @@ function load_os_cmds --description "Load OS-specific commands"
                 /usr/lib/jvm/default/bin $HOME/.local/share/flatpak/exports/bin \
                 /usr/lib/rustup/bin
 
-            source ~/.config/fish/arch.fish
+            test -f ~/.config/fish/arch.fish; and source ~/.config/fish/arch.fish # for file that cannot be push to git
 
             set -gx editor "neovide --fork --wayland_app_id neovide"
 
@@ -38,6 +38,7 @@ function load_os_cmds --description "Load OS-specific commands"
             # yay package manager
             abbr y yay
             abbr ys 'yay -S --noconfirm'
+            abbr yS 'yay -S'
             abbr yr 'yay -Rns'
             abbr yu 'yay -Syu'
 
@@ -73,18 +74,20 @@ function load_os_cmds --description "Load OS-specific commands"
             set -gx PATH $HOME/.npm-global/bin $PATH
             alias cz czg
 
-            # Set your download directories
+            # set your download directories
             set -Ux YT_VIDEO_DIR ~/syncthing-temp-folder/temp-videos
             set -Ux YT_MUSIC_DIR ~/Music/sync-music
 
-            # YouTube video downloads (variable paths)
+            # youtube video downloads (variable paths)
             abbr yt "yt-dlp -P $YT_VIDEO_DIR"
             abbr ytsd "yt-dlp -P $YT_VIDEO_DIR -f 'bestvideo[height<=480][fps<=30]+bestaudio/best[height<=480][fps<=30]'"
             abbr ythd "yt-dlp -P $YT_VIDEO_DIR -f 'bestvideo[height<=720]+bestaudio/best[height<=720]'"
             abbr ytfhd "yt-dlp -P $YT_VIDEO_DIR -f 'bestvideo[height<=1080][fps<=60]+bestaudio/best[height<=1080][fps<=60]'"
 
-            # YouTube audio (MP3) downloads
-            abbr ytmp3 "yt-dlp -x --audio-format mp3 -P $YT_MUSIC_DIR"
+            # youtube audio (mp3) downloads. this will embed metadata for mpd cli or any other mp3 player.
+            # use auto-fix-mp3-tags to fix the tags of all mp3 files in the directory.
+            abbr ytmp3 "yt-dlp -x --audio-format mp3  --embed-metadata  --embed-thumbnail  -o '%(title)s.%(ext)s' -P $YT_MUSIC_DIR"
+            abbr ytopus "yt-dlp -f bestaudio -x --audio-format opus --embed-metadata --embed-thumbnail -o '%(title)s.%(ext)s' -P $YT_MUSIC_DIR"
 
             # outline-cli https://github.com/Kira-NT/outline-cli. need outline vpn added to work see the docs.
             abbr cvpn "sudo -E vpn connect oktagon"

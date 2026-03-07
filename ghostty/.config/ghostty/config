@@ -3,7 +3,14 @@
 font-size = 15
 # font-family = JetBrains Mono NL Bold Nerd Font Complete Mono
 
+# top, bottom
+window-padding-y = 5,0
+window-padding-x = 5,5
+
+window-inherit-working-directory = true
+
 background = 000000
+# this is for non arch + hyprland. opacity will be handled by WM instead
 background-opacity = 0.9
 foreground = ffffff
 

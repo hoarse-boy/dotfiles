@@ -1,8 +1,10 @@
 ghostty
 dbeaver
 postman-bin
-neovide
 gimp
 telegram-desktop-bin
 vivaldi
 slack-desktop-wayland
+onlyoffice-bin
+terabox-bin
+imv

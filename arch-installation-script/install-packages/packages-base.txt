@@ -56,3 +56,11 @@ glycin
 glycin-loaders
 tree
 limine
+hyprpaper
+id3v2
+python-mutagen
+mailcap
+cmake
+ninja
+meson
+linux-headers

@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ensure script runs as root
+if [[ "$EUID" -ne 0 ]]; then
+  echo "please run with sudo or as root"
+  exit 1
+fi
+
+CONFIG_DIR="/etc/greetd"
+CONFIG_FILE="/etc/greetd/config.toml"
+BACKUP_FILE="/etc/greetd/config.toml.bak"
+
+echo "==> installing greetd and tuigreet"
+pacman -S --needed --noconfirm greetd greetd-tuigreet
+
+echo "==> disabling sddm (if present)"
+if systemctl list-unit-files | grep -q "^sddm.service"; then
+  systemctl disable sddm.service 2>/dev/null || true
+fi
+
+if pacman -Q sddm &>/dev/null; then
+  pacman -Rns --noconfirm sddm
+fi
+
+echo "==> ensuring greetd config directory exists"
+mkdir -p "$CONFIG_DIR"
+
+if [[ -f "$CONFIG_FILE" ]]; then
+  echo "existing greetd config found → creating backup"
+  cp -n "$CONFIG_FILE" "$BACKUP_FILE"
+fi
+
+echo "==> writing greetd config"
+
+cat >"$CONFIG_FILE" <<'EOF'
+[terminal]
+vt = 2
+
+[default_session]
+command = "tuigreet --time --asterisks --greeting 'AUTHORIZED PERSONNEL ONLY' --remember --remember-user-session --power-shutdown 'systemctl poweroff' --power-reboot 'systemctl reboot' --cmd start-hyprland"
+user = "greeter"
+EOF
+
+echo "==> enabling greetd service"
+systemctl enable greetd.service
+
+echo "==> verifying greetd installation"
+
+systemctl is-enabled --quiet greetd.service || {
+  echo "greetd failed to enable"
+  exit 1
+}
+
+echo "greetd enabled successfully (will start on next boot)"
+
+systemctl is-active --quiet greetd.service || {
+  echo "greetd is not running"
+  systemctl status greetd.service --no-pager
+  exit 1
+}
+
+echo "greetd enabled and running"
+echo
+echo "setup complete."
+echo
+echo "after reboot:"
+echo "  tty1 → greetd + tuigreet login"
+echo "  tty2 → Hyprland session"
+echo
+echo "reboot now to activate greetd"
