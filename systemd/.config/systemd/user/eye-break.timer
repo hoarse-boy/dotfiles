@@ -1,0 +1,10 @@
+[Unit]
+Description=Eye Break Timer
+
+[Timer]
+OnBootSec=5m
+OnUnitActiveSec=2h
+Unit=eye-break.service
+
+[Install]
+WantedBy=timers.target

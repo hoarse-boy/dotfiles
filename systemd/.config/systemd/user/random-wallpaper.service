@@ -1,0 +1,6 @@
+[Unit]
+Description=Change wallpaper randomly
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/hypr/scripts/random-wallpaper.sh

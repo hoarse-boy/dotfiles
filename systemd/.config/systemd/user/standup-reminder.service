@@ -1,0 +1,6 @@
+[Unit]
+Description=Stand Up Reminder
+
+[Service]
+Type=oneshot
+ExecStart=/home/jho/.local/bin/standup-reminder.sh

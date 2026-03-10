@@ -1,0 +1,10 @@
+[Unit]
+Description=Stand Up Reminder Timer
+
+[Timer]
+OnBootSec=10m
+OnUnitActiveSec=30m
+Unit=standup-reminder.service
+
+[Install]
+WantedBy=timers.target

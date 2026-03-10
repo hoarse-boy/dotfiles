@@ -1,0 +1,6 @@
+[Unit]
+Description=Eye Break Reminder
+
+[Service]
+Type=oneshot
+ExecStart=/home/jho/.local/bin/eye-break.sh

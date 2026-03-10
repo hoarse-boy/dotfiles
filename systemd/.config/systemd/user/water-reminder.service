@@ -1,7 +1,6 @@
 [Unit]
-Description=Water reminder notification
-After=graphical-session.target
+Description=Water Reminder
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/notify-send "💧 Stay Hydrated!" "Remember to drink some water!" -t 30000
+ExecStart=/home/jho/.local/bin/water-reminder.sh

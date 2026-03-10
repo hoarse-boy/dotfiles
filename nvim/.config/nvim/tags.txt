@@ -555,3 +555,4 @@ rar
 encrypt
 imv
 thunar
+wl-kbptr

@@ -1,11 +1,10 @@
 [Unit]
-Description=Timer for water reminder every 1 hour
+Description=Water Reminder Timer
 
 [Timer]
-OnBootSec=5min
-; OnUnitActiveSec=1h 30min
-OnUnitActiveSec=1h
-Persistent=true
+OnBootSec=15m
+OnUnitActiveSec=45m
+Unit=water-reminder.service
 
 [Install]
 WantedBy=timers.target

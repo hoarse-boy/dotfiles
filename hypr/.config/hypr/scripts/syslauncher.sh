@@ -30,22 +30,22 @@ case "$SELECTED" in
         "$HOME/.config/rofi/scripts/rofi-theme-switcher.sh"
         ;;
     "󰏘   Theme Switcher")
-        "$HOME/.config/hypr/themepicker.sh"
+        "$HOME/.config/hypr/scripts//themepicker.sh"
         ;;
     "󰸉   Wallpaper Switcher")
-        "$HOME/.config/hypr/wppicker.sh"
+        "$HOME/.config/hypr/scripts/wppicker.sh"
         ;;
     "󰔎   Toggle Dark/Light")
 		"$HOME/.config/matugen/toggle-theme.sh"
 		;;
     "   Clipboard")
-        "$HOME/.config/hypr/clip.sh"
+        "$HOME/.config/hypr/scripts//clip.sh"
         ;;
     "   Capture")
-		"$HOME/.config/hypr/screenshotrofi.sh"
+		"$HOME/.config/hypr/scripts/screenshotrofi.sh"
 		;;
 	"󰞅   Emoji")
-		"$HOME/.config/hypr/emoji.sh"
+		"$HOME/.config/hypr/scripts/emoji.sh"
 		;;
     "󰌌   Cheatsheet")
 		"$HOME/.config/rofi/scripts/key.sh"

@@ -30,29 +30,24 @@
 )
 
 (defalias
-  cBaseML (multi esc (layer-switch base))
+  cBase (multi esc (layer-switch base))
 
-  ;; tap-hold-tap-keys usefull for home row
-  ;; (tap-hold-tap-keys $tap-repress-timeout $hold-timeout $tap-action $hold-action $tap-keys)
-  ;; met_s (tap-hold-tap-keys $tt $ht s lmet (a b c))
-  ;; or empty () / $tap-keys to avoid early tap-hold behavior
-
-  nav (tap-hold-tap-keys $tt $ht spc (layer-while-held navigation) ())
+  nav (tap-hold $tt $ht spc (layer-while-held navigation))
 
   ;; home row left side. NOTE: alt, meta, shift, ctrl.
-  alt_a (tap-hold-tap-keys $tt $ht a lalt ())
-  met_s (tap-hold-tap-keys $tt $ht s lmet ())
-  sft_d (tap-hold-tap-keys $tt $ht d lsft ())
-  ctl_f (tap-hold-tap-keys $tt $ht f lctl ())
+  alt_a (tap-hold $tt $ht a lalt)
+  met_s (tap-hold $tt $ht s lmet)
+  sft_d (tap-hold $tt $ht d lsft)
+  ctl_f (tap-hold $tt $ht f lctl)
 
   ;; NOTE: this makes j, k and l to not have any repetition pressing. 
-  ctl_j (tap-hold-tap-keys $tt $ht j rctl ())
-  sft_k (tap-hold-tap-keys $tt $ht k rsft ())
-  met_l (tap-hold-tap-keys $tt $ht l rmet ()) ;; it uses lalt becuase some keyboards has different behavior of lalt and ralt.
-  alt_; (tap-hold-tap-keys $tt $ht ; lalt ())
+  ctl_j (tap-hold $tt $ht j rctl)
+  sft_k (tap-hold $tt $ht k rsft)
+  met_l (tap-hold $tt $ht l rmet) ;; it uses lalt becuase some keyboards has different behavior of lalt and ralt.
+  alt_; (tap-hold $tt $ht ; lalt)
   changeLayer (tap-dance $ht (lctl (layer-toggle navigation))) ;; this makes xremap lctrl shift h and l to be a tab 
 
-  esc_ctl (tap-hold-tap-keys $tt $ht esc lctl ())
+  esc_ctl (tap-hold $tt $ht esc lctl)
 
   escKey esc
 
@@ -84,7 +79,7 @@
   tab          q      w    e      r    t    y    u      i    o      p      [    ]    \    
   @escKey @alt_a @met_s @sft_d @ctl_f g    h  @ctl_j @sft_k @met_l @alt_; '  ret
   lsft         z      x    c      v    b    n    m      ,    .      /    rsft  up
-  lctl      lmet   lalt           @nav            @cMouse rmet rctl    left down right
+  lctl      lmet   lalt           @nav            @mCMD2 rmet rctl    left down right
 )
 
 ;; old base layer
@@ -108,6 +103,7 @@
 ;; NOTE: this (macro M-w) will work if mouseless uses 'w' key in free mode. 
 ;; strangely, when using 'w' as back key of mouse, cmd+w will behave like 'w' key instead.
 (defalias
+  copy (macro C-c) ;; FIX: . check and test this. remove comments later
   closeTab (macro C-w) ;; FIX: . check and test this. remove comments later
 )
 
@@ -120,7 +116,7 @@
   esc
   grv  1  @closeTab   3    4    5    6    7    8    9    0    -    =    bspc
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  @cBaseML a    s    d    f    g    h    j    k    l    ;    '    ret
+  @cBase a    s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    @copy    v    b    n    m    ,    .    /    rsft     up
   lctl lmet lalt  spc   @mCMD2 rmet rctl    left down right
 )
@@ -133,60 +129,5 @@
   lsft z    x    c    v    b    n    m    ,    .    /    rsft     up
   lctl lmet lalt  spc   ralt rmet rctl    left down right
 )
-
-(defvar
-  mw-initial-v 10
-  mw-maximum-v 120
-  mw-accel 1.15
-  mw-decel 0.93
-)
-
-(defalias
-  ;; mwu (mwheel-accel-up   $mw-initial-v $mw-maximum-v $mw-accel $mw-decel)
-  ;; mwd (mwheel-accel-down $mw-initial-v $mw-maximum-v $mw-accel $mw-decel)
-)
-
-(defalias
-  mwu (mwheel-up 30 120)
-  mwd (mwheel-down 30 120)
-  mwl (mwheel-left 50 120)
-  mwr (mwheel-right 50 120)
-
-  ma↑ (movemouse-up 5 3)
-  ma← (movemouse-left 5 3)
-  ma↓ (movemouse-down 5 3)
-  ma→ (movemouse-right 5 3)
-
-  ;; ma↑ (movemouse-accel-up 1 1000 1 5)
-  ;; ma← (movemouse-accel-left 1 1000 1 5)
-  ;; ma↓ (movemouse-accel-down 1 1000 1 5)
-  ;; ma→ (movemouse-accel-right 1 1000 1 5)
-
-  ;; sm (setmouse 32228 32228)
-
-  sFst (movemouse-speed 500)
-  fst (movemouse-speed 200)
-  slw (movemouse-speed 20)
-
-  copy (macro C-c) 
-  paste (macro C-v) 
-  cut (macro C-x) 
-
-  cBase (tap-hold-tap-keys $tt $ht (layer-switch base) ralt ())
-  cMouse (tap-hold-tap-keys $tt $ht (layer-switch mouse) ralt ())
-)
-
-;; Home   _     _     _      _      _      _      _      _      _    _    _    _    _
-;; End   @slw  mltp mmtp   mrtp    mmid  @ma←    @ma↓   @ma↑   @ma→  _    _    _
-
-(deflayer mouse
-  _
-  _      _      _      _      _      _      _      _      _     @tabLeft @tabRight  _     _    _
-  Home   _      _     mmid   mrgt    _      _      _     @ma↑       _        _     mbck  mfwd  _
-  End   @slw    @fst  @fst    _      _      _     @ma←   @ma↓      @ma→      _       _    _
-  @fst  @sFst   @cut  @copy  @paste  _     @mwd   @mwu   @mwl      @mwr      _       _    _
-  _      _       _                  mlft                 @cBase     _        _       _    _    _
-)
-;; FIX: . todo. change cBase and cMouse to be multi and run a quick shell command to make a layer to show that we are in mouse mode.
 
 ;; vim:ft=lisp

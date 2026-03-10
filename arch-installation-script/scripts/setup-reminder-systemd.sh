@@ -21,102 +21,56 @@ log_separator() {
 SYSTEMD_DIR="$HOME/.config/systemd/user"
 BIN_DIR="$HOME/.local/bin"
 
-mkdir -p "$SYSTEMD_DIR"
-
 #################################
 # verify scripts exist
 #################################
 
 for script in water-reminder.sh standup-reminder.sh eye-break.sh; do
-    if [[ ! -x "$BIN_DIR/$script" ]]; then
-        fail_or_exit "$BIN_DIR/$script not found or not executable"
-    fi
+  [[ -x "$BIN_DIR/$script" ]] || \
+    fail_or_exit "$BIN_DIR/$script not found or not executable"
 done
 
 #################################
-# services
+# verify systemd units exist (stowed)
 #################################
 
-cat > "$SYSTEMD_DIR/water-reminder.service" <<EOF
-[Unit]
-Description=Water Reminder
-
-[Service]
-Type=oneshot
-ExecStart=$BIN_DIR/water-reminder.sh
-EOF
-
-cat > "$SYSTEMD_DIR/standup-reminder.service" <<EOF
-[Unit]
-Description=Stand Up Reminder
-
-[Service]
-Type=oneshot
-ExecStart=$BIN_DIR/standup-reminder.sh
-EOF
-
-cat > "$SYSTEMD_DIR/eye-break.service" <<EOF
-[Unit]
-Description=Eye Break Reminder
-
-[Service]
-Type=oneshot
-ExecStart=$BIN_DIR/eye-break.sh
-EOF
+for unit in \
+  water-reminder.service \
+  water-reminder.timer \
+  standup-reminder.service \
+  standup-reminder.timer \
+  eye-break.service \
+  eye-break.timer
+do
+  [[ -f "$SYSTEMD_DIR/$unit" ]] || \
+    fail_or_exit "$SYSTEMD_DIR/$unit not found (did you stow systemd?)"
+done
 
 #################################
-# timers
+# reload systemd
 #################################
 
-cat > "$SYSTEMD_DIR/water-reminder.timer" <<EOF
-[Unit]
-Description=Water Reminder Timer
-
-[Timer]
-OnBootSec=15m
-OnUnitActiveSec=45m
-Unit=water-reminder.service
-
-[Install]
-WantedBy=timers.target
-EOF
-
-cat > "$SYSTEMD_DIR/standup-reminder.timer" <<EOF
-[Unit]
-Description=Stand Up Reminder Timer
-
-[Timer]
-OnBootSec=10m
-OnUnitActiveSec=30m
-Unit=standup-reminder.service
-
-[Install]
-WantedBy=timers.target
-EOF
-
-cat > "$SYSTEMD_DIR/eye-break.timer" <<EOF
-[Unit]
-Description=Eye Break Timer
-
-[Timer]
-OnBootSec=5m
-OnUnitActiveSec=2h
-Unit=eye-break.service
-
-[Install]
-WantedBy=timers.target
-EOF
+systemctl --user daemon-reload || \
+  fail_or_exit "systemd reload failed"
 
 #################################
 # enable timers
 #################################
 
-systemctl --user daemon-reload || fail_or_exit "systemd reload failed"
+for timer in \
+  water-reminder.timer \
+  standup-reminder.timer \
+  eye-break.timer
+do
+  if ! systemctl --user is-enabled --quiet "$timer"; then
+    systemctl --user enable "$timer"
+  fi
 
-systemctl --user enable --now water-reminder.timer
-systemctl --user enable --now standup-reminder.timer
-systemctl --user enable --now eye-break.timer
+  if ! systemctl --user is-active --quiet "$timer"; then
+    systemctl --user start "$timer"
+  fi
+done
 
 log_separator
-echo -e "${GREEN}✓ ergonomic reminder timers installed${NC}"
+echo -e "${GREEN}✓ ergonomic reminder timers enabled${NC}"
 log_separator

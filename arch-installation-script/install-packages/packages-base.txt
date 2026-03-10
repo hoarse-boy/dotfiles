@@ -66,3 +66,4 @@ thunar-archive-plugin
 thunar-media-tags-plugin
 gvfs
 swayosd
+cliphist
