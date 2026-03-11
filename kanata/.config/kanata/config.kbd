@@ -1,25 +1,14 @@
 (defcfg
   log-layer-changes no
   process-unmapped-keys yes
-  ;; danger-enable-cmd yes
+  danger-enable-cmd yes
   concurrent-tap-hold yes
 )
 
-(defchordsv2
-  ;; (participating-keys1) action1 timeout1 release-behaviour1 (disabled-layers1)
-
-  ;; (caps j) (multi (macro A-0) (layer-switch mouseless)) 50 all-released (mouseless)
-
-  (lalt caps) (layer-switch base) 50 all-released (base) ;; to change to base to reset when mouseless mode is reverse
-
-  ;; 
-  (home end pgup pgdn)
-  (switch
-    ((layer base))      (layer-switch gaming) break
-    ((layer gaming)) (layer-switch base)      break
-  )
-  50 all-released ()
-)
+;; scln = semicolon
+;; lbrc and  rbrc = brackets
+;; bksl = backslash
+;; dont print the actual symbol, they will make break treesitter
 
 (defvar
   ;; tap-timeout is used to make the tap-hol to have key repeat. ex. tap a and a in repeat succession and then hold a will produces a lot of 'a'.
@@ -29,9 +18,17 @@
   ht $hold-timeout
 )
 
-(defalias
-  cBaseML (multi esc (layer-switch base))
+(defsrc
+  esc
+  grv  1    2    3    4    5    6    7    8    9     0     -      =    bspc
+  tab  q    w    e    r    t    y    u    i    o     p    lbrc   rbrc  bksl
+  caps a    s    d    f    g    h    j    k    l    scln   '     ret
+  lsft z    x    c    v    b    n    m    ,    .     /    rsft    up
+  lctl lmet lalt           spc           ralt rmet  rctl  left   down  right
+)
 
+;; homerow
+(defalias
   ;; tap-hold-tap-keys usefull for home row
   ;; (tap-hold-tap-keys $tap-repress-timeout $hold-timeout $tap-action $hold-action $tap-keys)
   ;; met_s (tap-hold-tap-keys $tt $ht s lmet (a b c))
@@ -39,101 +36,46 @@
 
   nav (tap-hold-tap-keys $tt $ht spc (layer-while-held navigation) ())
 
-  ;; home row left side. NOTE: alt, meta, shift, ctrl.
+  ;; home row left side: alt, meta, shift, ctrl.
   alt_a (tap-hold-tap-keys $tt $ht a lalt ())
   met_s (tap-hold-tap-keys $tt $ht s lmet ())
   sft_d (tap-hold-tap-keys $tt $ht d lsft ())
   ctl_f (tap-hold-tap-keys $tt $ht f lctl ())
 
-  ;; NOTE: this makes j, k and l to not have any repetition pressing. 
+  ;; this makes j, k and l to not have any repetition pressing. 
   ctl_j (tap-hold-tap-keys $tt $ht j rctl ())
   sft_k (tap-hold-tap-keys $tt $ht k rsft ())
-  met_l (tap-hold-tap-keys $tt $ht l rmet ()) ;; it uses lalt becuase some keyboards has different behavior of lalt and ralt.
-  alt_; (tap-hold-tap-keys $tt $ht ; lalt ())
-  changeLayer (tap-dance $ht (lctl (layer-toggle navigation))) ;; this makes xremap lctrl shift h and l to be a tab 
-
-  esc_ctl (tap-hold-tap-keys $tt $ht esc lctl ())
-
-  escKey esc
-
-  ;; tab navigation
-  tabLeft (multi lctl lsft tab)
-  tabRight (multi lctl tab)
-
-  ;; mouseless
-  mCMD (multi (macro A-0) (layer-switch mouseless))
-  mCMD2 (multi (macro A-0) (layer-switch base))
+  met_l (tap-hold-tap-keys $tt $ht l rmet ())
+  alt_scln (tap-hold-tap-keys $tt $ht scln lalt ()) ;; it uses lalt because some keyboards have different behavior of lalt and ralt.
 )
 
-(defsrc
-  esc
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  caps a    s    d    f    g    h    j    k    l    ;    '    ret
-  lsft z    x    c    v    b    n    m    ,    .    /    rsft     up
-  lctl lmet lalt           spc            ralt rmet rctl    left down right
-)
-
-;; NOTE: this is very important. defsrc must include all keys. to avoid delay.
-;; ex. 'e' is not registered and 'spc' has an alias of tap-hold. when pressing 'spc' and then 'e'.
-;; it will be printed like this 'e '.
-;; which is very annoying as it shows massive delay. the outcome should be ' e'.
 (deflayer base
   esc
-  grv          1      2    3      4    5    6    7      8    9      0      -    =    bspc
-  tab          q      w    e      r    t    y    u      i    o      p      [    ]    \    
-  @escKey @alt_a @met_s @sft_d @ctl_f g    h  @ctl_j @sft_k @met_l @alt_; '  ret
-  lsft         z      x    c      v    b    n    m      ,    .      /    rsft  up
-  lctl      lmet   lalt           @nav            @cMouse rmet rctl    left down right
+  grv        1      2       3       4       5    6    7       8       9        0         -      =     bspc
+  tab        q      w       e       r       t    y    u       i       o        p        lbrc   rbrc   bksl
+  esc     @alt_a  @met_s  @sft_d  @ctl_f    g    h  @ctl_j  @sft_k  @met_l  @alt_scln    '     ret
+  lsft       z      x       c       v       b    n    m       ,       .        /        rsft   up
+  lctl     lmet   @mLyr2           @nav                     @cMouse  rmet     rctl      left   down   right
 )
 
-;; old base layer
-;; lctl       lmet   lalt           @nav            ralt rmet rctl    left down right
-;; @esc_ctl @alt_a @met_s @sft_d @ctl_f g    h  @ctl_j @sft_k @met_l @alt_; '  ret
+(defalias
+  endCaps (tap-hold-tap-keys $tt $ht End caps ())
 
-;; TODO: 
-;; add end and home keys
-;; add delete and backspace keys
+  ;; tab navigation
+  tabL (multi lctl lsft tab)
+  tabR (multi lctl tab)
+)
+
 (deflayer navigation
   esc
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab  esc  w    e    r    t    y    u    i    o    p    [    ]    \
-  caps a    s    d    f    g    left down up right  ;    '    ret
-  lsft z    x    c    v    b    @tabLeft @tabRight ,    rpt-any    /    rsft     up
-  lctl lmet lalt           spc            ralt rmet rctl    left down right
+  grv        1    2    3    4    5      6       7       8    9         0      -     =     bspc
+  Home      esc   w    e    r    t      y       u       i    o         p    lbrc   rbrc   bksl 
+  @endCaps   a    s    d    f    g     left   down     up   right    scln     '    ret
+  lsft       z    x    c    v    b    @tabL   @tabR     ,   rpt-any    /    rsft    up
+  lctl      lmet lalt           spc                   ralt  rmet     rctl   left   down right
 )
 
-;; defalias for mouseless layer
-;; add any key combination that are commonly used when in mouseless free mode
-;; NOTE: this (macro M-w) will work if mouseless uses 'w' key in free mode. 
-;; strangely, when using 'w' as back key of mouse, cmd+w will behave like 'w' key instead.
-(defalias
-  closeTab (macro C-w) ;; FIX: . check and test this. remove comments later
-)
-
-;; this layer is used for mouseless free mode.
-;; to not conflict with base's home row delays
-;; WARN: cannot modify `x` here as mouseless will behave strangely.
-;; in jump mode, pressing `x` will not make it behave like `x` but it will will run the alias instead.
-;; modifying `c` is fine.
-(deflayer mouseless
-  esc
-  grv  1  @closeTab   3    4    5    6    7    8    9    0    -    =    bspc
-  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  @cBaseML a    s    d    f    g    h    j    k    l    ;    '    ret
-  lsft z    x    @copy    v    b    n    m    ,    .    /    rsft     up
-  lctl lmet lalt  spc   @mCMD2 rmet rctl    left down right
-)
-
-(deflayer gaming
-  esc
-  grv  1  2   3    4    5    6    7    8    9    0    -    =    bspc
-  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  caps a    s    d    f    g    h    j    k    l    ;    '    ret
-  lsft z    x    c    v    b    n    m    ,    .    /    rsft     up
-  lctl lmet lalt  spc   ralt rmet rctl    left down right
-)
-
+;; mouse layer. kanata built-in mouse keys and wl-kbptr
 (defvar
   mw-initial-v 10
   mw-maximum-v 120
@@ -142,51 +84,89 @@
 )
 
 (defalias
-  ;; mwu (mwheel-accel-up   $mw-initial-v $mw-maximum-v $mw-accel $mw-decel)
-  ;; mwd (mwheel-accel-down $mw-initial-v $mw-maximum-v $mw-accel $mw-decel)
-)
-
-(defalias
   mwu (mwheel-up 30 120)
   mwd (mwheel-down 30 120)
+  ;; mwu (mwheel-accel-up   $mw-initial-v $mw-maximum-v $mw-accel $mw-decel)
+  ;; mwd (mwheel-accel-down $mw-initial-v $mw-maximum-v $mw-accel $mw-decel)
+
+
   mwl (mwheel-left 50 120)
   mwr (mwheel-right 50 120)
 
-  ma↑ (movemouse-up 5 3)
-  ma← (movemouse-left 5 3)
-  ma↓ (movemouse-down 5 3)
-  ma→ (movemouse-right 5 3)
+  ma↑ (movemouse-up 7 2)
+  ma← (movemouse-left 7 2)
+  ma↓ (movemouse-down 7 2)
+  ma→ (movemouse-right 7 2)
 
   ;; ma↑ (movemouse-accel-up 1 1000 1 5)
   ;; ma← (movemouse-accel-left 1 1000 1 5)
   ;; ma↓ (movemouse-accel-down 1 1000 1 5)
   ;; ma→ (movemouse-accel-right 1 1000 1 5)
 
-  ;; sm (setmouse 32228 32228)
-
   sFst (movemouse-speed 500)
   fst (movemouse-speed 200)
-  slw (movemouse-speed 20)
+  slw (movemouse-speed 15)
 
   copy (macro C-c) 
   paste (macro C-v) 
   cut (macro C-x) 
 
-  cBase (tap-hold-tap-keys $tt $ht (layer-switch base) ralt ())
-  cMouse (tap-hold-tap-keys $tt $ht (layer-switch mouse) ralt ())
+  cBase (tap-hold-tap-keys $tt $ht (multi
+        (layer-switch base)
+        ;; (push-msg "layer:base")
+        )
+        alt ())
+
+  ;; this is to change to base layer to avoid wl-kbptr / mouseless to unable to press keys
+  cBaseL (tap-hold-tap-keys $tt $ht
+         (multi
+         (layer-switch base)
+         ;; (push-msg "layer:base")
+         lalt
+         )
+         lalt ())
+
+  cMouse (tap-hold-tap-keys $tt $ht (multi
+         (layer-switch mouse)
+         ;; (push-msg "layer:mouse")
+         )
+         ralt ())
 )
 
-;; Home   _     _     _      _      _      _      _      _      _    _    _    _    _
-;; End   @slw  mltp mmtp   mrtp    mmid  @ma←    @ma↓   @ma↑   @ma→  _    _    _
+;; mLyr is for wl-kbptr. which is better than mouseless as this has both hover and click.
+;; works with wayland + free.
+(defalias
+  ;; this remove the lalt hold keys. if need change to use tap-tap-hold-tap-keys and inside is is tap-dance?
+  ;; timeout makes it slower than hyprland's. but making it 150 or lower will make it missfires as i need to double tap super fast.
+  ;; mLyr (tap-dance 200 (
+  ;;      (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh))
+  ;;      (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover))
+  ;;      ))
+
+  ;; mLyr2 (tap-dance 200 (
+  ;;      (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh)
+  ;;      (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover)
+  ;;      ))
+
+  mLyr (tap-hold-tap-keys $tt $ht
+        (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh))
+        (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover))
+        ())
+
+  mLyr2 (tap-hold-tap-keys $tt $ht
+        (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh)
+        (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover) ;; TODO: make it run cmd hover and then change to mouse layer. but it needs to wait though
+        ())
+)
 
 (deflayer mouse
   _
-  _      _      _      _      _      _      _      _      _     @tabLeft @tabRight  _     _    _
-  Home   _      _     mmid   mrgt    _      _      _     @ma↑       _        _     mbck  mfwd  _
-  End   @slw    @fst  @fst    _      _      _     @ma←   @ma↓      @ma→      _       _    _
-  @fst  @sFst   @cut  @copy  @paste  _     @mwd   @mwu   @mwl      @mwr      _       _    _
-  _      _       _                  mlft                 @cBase     _        _       _    _    _
+  _      _       _        _      _      _      _      _      _       @tabL    @tabR     _     _    _
+  Home   _       _      mmid   mrgt     _      _      _     @ma↑       _        _      mbck  mfwd  _
+  End   @slw    @fst    @fst   @fst     _      _     @ma←   @ma↓      @ma→      _       _     _
+  @fst  @sFst   @cut    @copy  @paste   _     @mwd   @mwu   @mwl      @mwr      _       _     _
+  _      _      @mLyr                  mlft                 @cBase     _        _       _     _    _
 )
-;; FIX: . todo. change cBase and cMouse to be multi and run a quick shell command to make a layer to show that we are in mouse mode.
 
+;; dont copy below to any file that nvim reads ex. md file.
 ;; vim:ft=lisp

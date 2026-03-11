@@ -7,6 +7,22 @@ log_info() { echo -e "${YELLOW}➕ $1${NC}"; }
 log_err() { echo -e "${RED}❌ $1${NC}"; exit 1; }
 log_sep() { echo -e "\n${BLUE}══════════════════════════════════════════════════${NC}\n"; }
 
+# check cargo
+if ! command -v cargo >/dev/null; then
+    log_err "cargo not found. install rust first (sudo pacman -S rustup)"
+fi
+
+# install kanata with cmd feature
+if ! command -v kanata >/dev/null; then
+    log_info "Installing kanata with cmd feature via cargo..."
+    cargo install kanata --features cmd
+    log_ok "Kanata installed with cmd support"
+else
+    log_info "Reinstalling kanata with cmd feature..."
+    cargo install kanata --features cmd --force
+    log_ok "Kanata rebuilt with cmd support"
+fi
+
 REAL_USER=${SUDO_USER:-$USER}
 [[ "$EUID" -eq 0 && -z "${SUDO_USER:-}" ]] && log_err "Run as regular user, or use sudo -E"
 
@@ -124,6 +140,22 @@ log_sep
 # log_separator() {
 #   echo -e "\n${BLUE}══════════════════════════════════════════════════${NC}\n"
 # }
+
+# # check cargo
+# if ! command -v cargo >/dev/null; then
+#     log_err "cargo not found. install rust first (sudo pacman -S rustup)"
+# fi
+
+# # install kanata with cmd feature
+# if ! command -v kanata >/dev/null; then
+#     log_info "Installing kanata with cmd feature via cargo..."
+#     cargo install kanata --features cmd
+#     log_ok "Kanata installed with cmd support"
+# else
+#     log_info "Reinstalling kanata with cmd feature..."
+#     cargo install kanata --features cmd --force
+#     log_ok "Kanata rebuilt with cmd support"
+# fi
 
 # fail_or_exit() {
 #   echo -e "${RED}❌ $1${NC}"
