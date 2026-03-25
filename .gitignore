@@ -101,3 +101,11 @@ fish/.config/fish/arch.fish
 /waybar/.config/waybar/config.jsonc
 /waybar/.config/waybar/style.css
 /waybar/.config/waybar/colors/colors.css
+
+
+# kitty session files
+kitty/.config/kitty/sessions/*
+# but not these files
+!kitty/.config/kitty/sessions/example.session
+!kitty/.config/kitty/sessions/README.md
+!kitty/.config/kitty/sessions/readme.md
