@@ -1,6 +1,5 @@
 syncthing
 coreutils
-kanata
 lsd
 starship
 zoxide
@@ -67,3 +66,4 @@ thunar-media-tags-plugin
 gvfs
 swayosd
 cliphist
+strace
