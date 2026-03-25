@@ -133,7 +133,7 @@
          ralt ())
 )
 
-;; mLyr is for wl-kbptr. which is better than mouseless as this has both hover and click.
+;; mLyr is for wl-kbptr. which is better than mouseless as this has both hover and click when using script.
 ;; works with wayland + free.
 (defalias
   ;; this remove the lalt hold keys. if need change to use tap-tap-hold-tap-keys and inside is is tap-dance?
@@ -149,14 +149,20 @@
   ;;      ))
 
   mLyr (tap-hold-tap-keys $tt $ht
-        (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh))
-        (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover))
+        (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh) lalt)
+        ;; (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover) lalt)
+        lalt
         ())
 
   mLyr2 (tap-hold-tap-keys $tt $ht
         (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh)
-        (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover) ;; TODO: make it run cmd hover and then change to mouse layer. but it needs to wait though
+        ;; (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover) ;; TODO: make it run cmd hover and then change to mouse layer. but it needs to wait though
+        lalt
         ())
+)
+
+(defchordsv2
+  (lalt j) (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover)) 50 all-released ()
 )
 
 (deflayer mouse
