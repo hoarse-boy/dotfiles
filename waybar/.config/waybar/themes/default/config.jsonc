@@ -10,13 +10,15 @@
     "clock",
     "custom/mpd-prev",
     "mpd",
-    "custom/mpd-next"
+    "custom/mpd-next",
+    "custom/kanata-layer"
   ],
   "modules-center": [
     "hyprland/workspaces"
   ],
   "modules-right": [
     "tray",
+    "custom/power-profile",
     "network",
     "pulseaudio",
     "custom/mic",
@@ -41,7 +43,7 @@
       "1": "", // Browser
       // "1": "", // Browser
       "2": "", // Terminal
-      "3": "", // Postman
+      "3": "", // Postman and db
       "4": "", // Telegram
       "5": "󰐝", // Others
       // "5": "", // Files
@@ -52,7 +54,7 @@
     "timezone": "Asia/Jakarta",
     "tooltip": false,
     "format": "{:%H:%M  -  %A, %d/%m/%y}",
-    "interval": 1,
+    "interval": 60,
     "on-click": "qs -c ~/.config/quickshell/music msg music toggle",
   },
   "network": {
@@ -81,6 +83,19 @@
   //   "on-click": "$HOME/.config/wlogout/launch-wlogout.sh",
   //   "tooltip": false,
   // },
+"custom/fifo-demo": {
+  "exec": "~/.config/waybar/scripts/fifo-reader.sh",
+  "return-type": "json",
+  "signal": 8
+},
+  "custom/power-profile": {
+  "exec": "~/.config/waybar/scripts/power-profile-status.sh",
+  "return-type": "json",
+  // "interval": 0, // FIX: . there is a bug 0 should run once but it keeps running the exec causing cpu spikes
+  "signal": 9,
+  "on-click": "~/.config/waybar/scripts/power-profile-toggle.sh",
+  "tooltip": true,
+  },
   "tray": {
     "icon-size": 18,
     "spacing": 5,
@@ -89,10 +104,16 @@
       "TelegramDesktop": "$HOME/.local/share/icons/hicolor/16x16/apps/telegram.png",
     },
   },
+  "custom/kanata-layer": {
+    "exec": "~/.config/waybar/scripts/kanata-reader.sh",
+    "return-type": "json",
+    "signal": 10,
+    "format": "  {}"
+  },
   "custom/mic": {
     "exec": "$HOME/.config/waybar/scripts/mic-status.sh",
     "return-type": "json",
-    "interval": 1,
+    "interval": 10,
     "tooltip": false,
     "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
   },
@@ -144,7 +165,6 @@
   },
   "custom/menu": {
     "format": " {}",
-    // "format": "{}",
     "exec": "echo ; echo 󱓟 app launcher",
     "interval": 86400, // once every day
     "tooltip": false,

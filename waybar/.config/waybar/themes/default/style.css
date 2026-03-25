@@ -78,6 +78,7 @@
   min-width: 0;
   border: none;
 }
+
 #custom-power,
 #custom-notification,
 #pulseaudio,
@@ -97,9 +98,11 @@
   color: @error;
   min-width: 15px;
 }
+
 #tray {
   padding-right: 0.45rem;
 }
+
 #custom-notification {
   padding-right: 0.68rem;
   transition: all 0.2s ease-in-out;
@@ -116,6 +119,7 @@
   border: none;
   transition: all 0.2s ease-in-out;
 }
+
 #custom-mpd-prev,
 #custom-mpd-next {
   color: @primary;
@@ -183,4 +187,51 @@
 
 #custom-mic.muted {
   color: @error;
+}
+
+/* #custom-kanata-layer { */
+/*   background-color: @surface; */
+/*   color: @tertiary; */
+/*   padding: 0.3rem 0.7rem; */
+/*   margin: 5px 5px; */
+/*   border-radius: 100px; */
+/*   font-size: 14px; */
+/* } */
+
+#custom-kanata-layer {
+  background-color: @surface;
+  color: @tertiary;
+  padding: 0.3rem 0.7rem;
+  margin: 5px 5px;  
+  margin-left: 15px;
+  border-radius: 100px;
+  font-size: 14px;
+}
+
+#custom-kanata-layer.mouse {
+  color: @inverse_primary;
+}
+
+#custom-kanata-layer.navigation {
+  color: @primary;
+}
+
+#custom-power-profile {
+  background-color: @surface;
+  padding: 0.3rem 0.7rem;
+  margin: 5px 5px;
+  border-radius: 100px;
+  font-size: 16px;
+}
+
+#custom-power-profile.low {
+  color: @primary;
+}
+
+#custom-power-profile.balanced {
+  color: @inverse_primary;
+}
+
+#custom-power-profile.high {
+  color: @error_container;
 }
