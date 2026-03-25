@@ -556,3 +556,13 @@ encrypt
 imv
 thunar
 wl-kbptr
+strace
+fifo
+nc
+pam
+tuigreet
+greetd
+atch
+session_manager
+kimi
+scrollback

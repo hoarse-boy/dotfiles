@@ -219,6 +219,7 @@ return {
         { "<leader>np", function () require("plugins.util.find-files").open_a_file("personal-todo-moc.md", my_notes_dir) end, desc = printf("Open Personal Todo"), mode = "n" },
         { "<leader>nq", function () require("plugins.util.find-files").open_a_file("quick-note.md", my_notes_dir) end, desc = printf("Open Quick Note"), mode = "n" },
         { "<leader>nC", function() require("plugins.util.find-files").open_a_file("nvim-cheat-sheets.md", my_notes_dir) end, desc = printf("Open Nvim Cheat Sheets"), mode = "n" },
+        { "<leader>nw", function() require("plugins.util.find-files").open_a_file("work-note-moc.md", my_notes_dir) end, desc = printf("Open Work Note"), mode = "n" },
 
         -- create notes
         { "<leader>nc", function() telekasten.new_note() end, desc = printf("Create new note"), mode = "n" },
@@ -226,7 +227,7 @@ return {
 
         -- weekly and daily notes.
         { "<leader>nd", function() telekasten.goto_today() end, desc = printf("Open today note"), mode = "n" }, -- will also create weekly note if not exist
-        { "<leader>nw", function() telekasten.goto_thisweek() end, desc = printf("Open weekly note"), mode = "n" }, -- will also create weekly note if not exist
+        { "<leader>nW", function() telekasten.goto_thisweek() end, desc = printf("Open weekly note"), mode = "n" }, -- will also create weekly note if not exist
 
         -- other rarely used note searching
         { "<leader>nF", icon = "󱞁", group = printf("Search Notes"), mode = "n" }, -- group key with prefix like '+'

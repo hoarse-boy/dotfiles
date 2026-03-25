@@ -18,6 +18,7 @@ local filetype_formats = {
   perl = "# %s",
   ruby = "# %s",
   conf = "# %s",
+  kitty = "# %s",
   hyprlang = "# %s",
   fish = "# %s",
   python = "# %s",
