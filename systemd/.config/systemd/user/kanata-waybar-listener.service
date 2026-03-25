@@ -1,0 +1,13 @@
+[Unit]
+Description=Kanata Waybar Listener
+; BindsTo=kanata.service
+After=kanata.service
+
+[Service]
+Type=simple
+ExecStart=%h/.config/waybar/scripts/kanata-listener.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

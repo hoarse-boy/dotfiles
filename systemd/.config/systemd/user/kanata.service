@@ -1,13 +1,13 @@
+ WantedBy=sysinit.target
+
 [Unit]
 Description=Kanata keyboard remapper
 Documentation=https://github.com/jtroo/kanata
+After=graphical-session.target dbus-user-session.target
 
 [Service]
-Environment=PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/bin
-Environment=DISPLAY=:0
-Environment=HOME=/path/to/home/folder
 Type=simple
-ExecStart=/usr/bin/kanata -c %h/.config/kanata/config.kbd -p 7070 --nodelay
+ExecStart=%h/.cargo/bin/kanata -c %h/.config/kanata/config.kbd -p 7070 --nodelay
 Restart=on-failure
 RestartSec=5
 
