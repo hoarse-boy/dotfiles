@@ -107,5 +107,20 @@ function load_os_cmds --description "Load OS-specific commands"
             set -U fish_user_paths $fish_user_paths $HOME/go/bin
 
             mise activate fish | source
+
+            # atch commands
+            alias atch "env SHELL=(which fish) atch"
+            abbr a atch
+
+            # kill
+            abbr ak "atch -k"
+            abbr al "atch -l"
+
+            # current session
+            abbr ai "atch -i"
+            abbr ae "atch -e '^B'"
+
+            # FIX: . check and test this. remove comments later:
+            set -Ux PAGER "bat --paging=always --style=plain"
     end
 end

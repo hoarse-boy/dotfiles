@@ -5,17 +5,13 @@ else
     echo "Warning: uname not available yet" >&2
 end
 
-# ensure PATH is clean
-# dedupe_path #  FIX: . Check and test this. remove comments later
-
-custom_fish_prompt
+if command -q starship
+    starship init fish | source
+end
 
 if command -q zoxide
     zoxide init fish | source
 end
-
-# ensure fish_user_paths is unique
-# ensure_unique_path # FIX: . Check and test this. remove comments later
 
 # universal paths (only if commands exist)
 if command -q npm
@@ -52,9 +48,6 @@ abbr diff 'delta --pager=never'
 
 # nvim
 abbr v nvim
-
-# to use mise env var for dap # FIX: . check and test this. remove comments later:
-# abbr v 'mise exec -- nvim'
 
 alias vim nvim
 # abbr lazy "cd ~/.local/share/nvim/lazy/LazyVim/ && $editor"
@@ -120,7 +113,3 @@ set -Ux EDITOR nvim # used for crontab -e
 
 # opam configuration
 source $HOME/.opam/opam-init/init.fish >/dev/null 2>/dev/null; or true
-
-# source (COMPLETE=fish slumber | psub) # causes this err: Error: No collection file found in current or ancestor directories. why?
-
-# direnv hook fish | source
