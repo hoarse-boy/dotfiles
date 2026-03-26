@@ -44,42 +44,6 @@ function M.search_front_matter(query, is_done_status, dir) -- FIX: finding false
   })
 end
 
--- function M.search_front_matter(query, is_done_status, dir) -- FIX: not working
---   -- Define the search patterns based on the user input
---   local search_pattern = query and query or "#work_task"
---   local is_done_pattern = is_done_status and "is_done: " .. is_done_status or ""
-
---   -- Telescope live_grep arguments (start building the `rg` command)
---   local search_cmd = { "rg", "--no-heading", "--with-filename", "--line-number", "--column" }
-
---   -- Add the pattern for the tag
---   if search_pattern ~= "" then
---     table.insert(search_cmd, search_pattern)
---   end
-
---   -- Add the pattern for the `is_done` status if provided
---   if is_done_pattern ~= "" then
---     -- Append both search patterns with an AND condition (i.e., both must be found in the file)
---     table.insert(search_cmd, "--and")
---     table.insert(search_cmd, "--regexp")
---     table.insert(search_cmd, is_done_pattern)
---   end
-
---   -- Filter by markdown files only
---   table.insert(search_cmd, "-g")
---   table.insert(search_cmd, "*.md")
-
---   -- Change the directory where we are searching
---   teles_find.ChangeDir(dir)
-
---   -- Execute Telescope with the constructed search command
---   require("telescope.builtin").live_grep({
---     prompt_title = "Search Front Matter",
---     search_dirs = { dir }, -- Search only in the specified directory
---     vimgrep_arguments = search_cmd, -- Pass our custom `rg` search command
---   })
--- end
-
 function M.delete_current_file()
   local current_file = vim.fn.expand("%:p")
   if current_file and current_file ~= "" then
@@ -448,7 +412,9 @@ end
 
 function M.insert_latest_screenshot()
   -- Get paths
-  local screenshot_dir = os.getenv("HOME") .. "/Pictures/Screenshots"
+  local screenshot_dir = "/tmp/screenshots"
+  -- local screenshot_dir = os.getenv("HOME") .. "/Pictures/Screenshots"
+
   local assets_dir = vim.fn.expand("~/jho-notes/assets")
 
   -- Find latest AVIF screenshot
@@ -517,7 +483,7 @@ function M.screenshot_picker()
     return
   end
 
-  -- Prepare items for picker
+  -- Prepare items for picker with file field for preview
   local items = {}
   for _, img_path in ipairs(images) do
     local img_name = vim.fn.fnamemodify(img_path, ":t")
@@ -528,46 +494,128 @@ function M.screenshot_picker()
     end
 
     table.insert(items, {
+      text = img_name,        -- Display in picker list
+      file = img_path,        -- Required for image preview
       display = img_name,
-      value = {
-        path = img_path,
-        rel_path = "./" .. vim.fn.fnamemodify(img_path, ":~:."),
-        clean_name = clean_name,
-      },
+      path = img_path,
+      rel_path = "./assets/" .. img_name,  -- Relative to notes root
+      clean_name = clean_name,
     })
   end
 
-  -- TODO: make it to show image preview like snacks.files
-  -- Show picker
-  require("snacks.picker").select(items, {
-    prompt = "Select Image:",
-    format_item = function(item)
-      return "🖼️ " .. item.display
-    end,
-    previewer = function(item)
-      return {
-        type = "text",
-        lines = {
-          "File: " .. item.display,
-          "Path: " .. item.value.path,
-          "Alt Text: " .. item.value.clean_name,
-          "",
-          "Press Enter to insert Markdown link",
-        },
-      }
-    end,
-  }, function(choice)
-    if choice then
-      local markdown_link = string.format("![%s](%s)", choice.value.clean_name, choice.value.rel_path)
+  -- Use snacks.picker.pick with image preview
+  Snacks.picker.pick({
+    source = "custom",
+    items = items,
+    format = "file",        -- Shows file icon
+    preview = "file",       -- Enables image preview
+    layout = {
+      preset = "default",
+    },
+    title = "Insert Image from Assets (reference only)",
+    -- Override confirm to just insert markdown reference (no copy)
+    confirm = function(picker, item)
+      picker:close()
+      if not item then return end
+
+      -- Just insert markdown reference to existing file
+      local markdown_link = string.format("![%s](%s)", item.clean_name, item.rel_path)
       vim.api.nvim_put({ markdown_link }, "", false, true)
-    end
-  end)
+      vim.notify("✓ Inserted reference: " .. item.display)
+    end,
+  })
 end
 
 -- TODO: make the othe rfunc above to use this config M.notes_dir etc.
 -- Config
 M.notes_dir = vim.fn.expand("~/jho-notes")
 M.assets_dir = M.notes_dir .. "/assets"
+
+function M.pick_ss_and_insert_to_notes()
+  local tmp_dir = "/tmp/screenshots"
+  local assets_dir = vim.fn.expand("~/jho-notes/assets")
+
+  -- Ensure directories exist
+  vim.fn.mkdir(tmp_dir, "p")
+  vim.fn.mkdir(assets_dir, "p")
+
+  -- Get AVIF files manually first
+  local handle = io.popen(string.format('ls -t "%s"/*.avif 2>/dev/null', tmp_dir))
+  if not handle then
+    vim.notify("Failed to read " .. tmp_dir, vim.log.levels.ERROR)
+    return
+  end
+
+  local files = {}
+  for line in handle:lines() do
+    table.insert(files, line)
+  end
+  handle:close()
+
+  if #files == 0 then
+    vim.notify("No AVIF screenshots found in " .. tmp_dir, vim.log.levels.WARN)
+    return
+  end
+
+  -- Build items with file field for preview
+  local items = {}
+  for _, filepath in ipairs(files) do
+    local filename = vim.fn.fnamemodify(filepath, ":t")
+    table.insert(items, {
+      text = filename,
+      file = filepath, -- Required for file preview
+      filename = filename,
+    })
+  end
+
+  -- Use pick() with items and override confirm directly
+  Snacks.picker.pick({
+    source = "custom",
+    items = items,
+    format = "file",
+    preview = "file",
+    layout = {
+      preset = "default",
+    },
+    title = "Screenshots (/tmp) - Enter to copy to notes",
+    -- Override confirm action directly (not in actions table)
+    confirm = function(picker, item)
+      picker:close()
+      if not item or not item.file then
+        return
+      end
+
+      local source_path = item.file
+
+      -- Prompt for image name
+      vim.ui.input({
+        prompt = "Image name (empty for 'image'): ",
+        default = "",
+      }, function(input)
+        if not input then
+          return
+        end
+
+        local base_name = input ~= "" and input:gsub("%s+", "-"):gsub("[^%w%-]", ""):lower() or "image"
+        local timestamp = os.date("%Y-%m-%d-%H-%M-%S")
+        local new_filename = base_name .. "-" .. timestamp .. ".avif"
+        local dest_path = assets_dir .. "/" .. new_filename
+
+        -- move file from /tmp to assets
+        local success = os.execute(string.format('mv "%s" "%s"', source_path, dest_path))
+
+        if success then
+          -- Insert markdown link at cursor
+          local markdown_link = string.format("![%s](./assets/%s)", base_name, new_filename)
+          vim.api.nvim_put({ markdown_link }, "", false, true)
+          vim.notify("✓ Copied and inserted: " .. new_filename)
+        else
+          vim.notify("Failed to copy image", vim.log.levels.ERROR)
+        end
+      end)
+    end,
+  })
+end
 
 local function get_current_datetime_suffix()
   return os.date("%Y-%m-%d-%H-%M-%S")

@@ -566,3 +566,8 @@ atch
 session_manager
 kimi
 scrollback
+upscayl
+record
+screen_recording
+gpu-screen-recorder
+wf-recorder

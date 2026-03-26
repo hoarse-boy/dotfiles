@@ -257,8 +257,9 @@ return {
           if os_name == os_util.LINUX then
             screenshot_mapping = {
               -- stylua: ignore start
-              {"<leader>lv", function() markdown_func.insert_latest_screenshot() end , mode = "n", desc = printf("Insert image from screenshot folder"), buffer = 0 },
-              {"<leader>li", function() markdown_func.screenshot_picker() end , mode = "n", desc = printf("Select exiting image and generate image link"), buffer = 0 },
+              {"<leader>lv", function() markdown_func.insert_latest_screenshot() end , mode = "n", desc = printf("Insert image from avif screenshot folder"), buffer = 0 },
+              {"<leader>lV", function() markdown_func.pick_ss_and_insert_to_notes() end, mode = "n", desc = printf("Pick avif screenshot and insert to notes") , buffer = 0 },
+              {"<leader>li", function() markdown_func.screenshot_picker() end , mode = "n", desc = printf("Select existing image and generate image link"), buffer = 0 },
               -- stylua: ignore end
             }
           end
