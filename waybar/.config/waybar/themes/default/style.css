@@ -235,3 +235,21 @@
 #custom-power-profile.high {
   color: @error_container;
 }
+
+#custom-record {
+  color: #ff4444;
+  font-size: 16px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#custom-record.recording {
+  color: #ff0000;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}

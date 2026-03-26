@@ -18,6 +18,7 @@
   ],
   "modules-right": [
     "tray",
+    "custom/record",
     "custom/power-profile",
     "network",
     "pulseaudio",
@@ -61,7 +62,8 @@
     "format-wifi": "󰤢  {essid}",
     "format-ethernet": "󰈀  {ifname}",
     "format-disconnected": "󰤠 ",
-    "interval": 5,
+    "interval": 30,
+    // "interval": 5,
     "tooltip": false,
     "on-click": "nm-connection-editor",
   },
@@ -83,11 +85,13 @@
   //   "on-click": "$HOME/.config/wlogout/launch-wlogout.sh",
   //   "tooltip": false,
   // },
-"custom/fifo-demo": {
-  "exec": "~/.config/waybar/scripts/fifo-reader.sh",
-  "return-type": "json",
-  "signal": 8
-},
+  "custom/record": {
+    "exec": "~/.config/waybar/scripts/record-status.sh",
+    "return-type": "json",
+    "signal": 11,
+    "on-click": "~/.config/hypr/scripts/record-screen.sh",
+    "tooltip": false
+  },
   "custom/power-profile": {
   "exec": "~/.config/waybar/scripts/power-profile-status.sh",
   "return-type": "json",
@@ -113,7 +117,7 @@
   "custom/mic": {
     "exec": "$HOME/.config/waybar/scripts/mic-status.sh",
     "return-type": "json",
-    "interval": 10,
+    // "interval": 10,
     "tooltip": false,
     "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
   },
