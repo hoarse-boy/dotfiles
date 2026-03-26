@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
 # Config
-SAVE_DIR="$HOME/Pictures/Screenshots"
+# For TEMP screenshots (deleted on reboot):
+SAVE_DIR="/tmp/screenshots"
+
+# For PERSISTENT screenshots (keep forever):
+# SAVE_DIR="$HOME/Pictures/Screenshots"
+
 mkdir -p "$SAVE_DIR"
 TIMESTAMP=$(date +'%Y-%m-%d_%H-%M-%S')
 FILENAME="$SAVE_DIR/screenshot_$TIMESTAMP.avif"
