@@ -67,3 +67,4 @@ gvfs
 swayosd
 cliphist
 strace
+gpu-screen-recorder
