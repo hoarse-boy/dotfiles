@@ -571,3 +571,5 @@ record
 screen_recording
 gpu-screen-recorder
 wf-recorder
+web_cam
+virtual_cam
