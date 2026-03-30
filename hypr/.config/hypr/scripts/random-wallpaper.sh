@@ -11,10 +11,10 @@ THEME_DIR="$(dirname "$CURRENT_WALL")"
 
 # pick random image
 WALL="$(find "$THEME_DIR" -maxdepth 1 -type f \
-  \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.gif" \) \
+  \( -iname "*.avif" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.gif" \) \
   | shuf -n1)"
 
 [[ -n "$WALL" ]] || exit 0
 
-swww img "$WALL" --transition-type any --transition-fps 75
+awww img "$WALL" --transition-type any --transition-fps 75
 ln -sf "$WALL" "$SYMLINK"

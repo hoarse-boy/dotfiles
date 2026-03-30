@@ -15,14 +15,15 @@ CURRENT_THEME_DIR=$(dirname "$CURRENT_WALL")  # wallpapers of current theme
 
 # --- Pick wallpaper from current theme ---
 RANDOM_WALL="$(find "$CURRENT_THEME_DIR" -maxdepth 1 -type f \
-  \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.gif" \) | shuf -n 1)"
+  \( -iname "*.avif" -o -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.gif" \) | shuf -n 1)"
+  # \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.gif" \) | shuf -n 1)" # FIX: . change to use avif
 
 SELECTED_WALL=$(
   {
     printf "󰒺  Random Wallpaper\0icon\x1f%s\n" "$RANDOM_WALL"
 
     find "$CURRENT_THEME_DIR" -maxdepth 1 -type f \
-      \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.gif" \) \
+      \( -iname "*.avif" -o -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.gif" \) \
       -printf "%T@ %p\n" | sort -nr | cut -d' ' -f2- |
     while read -r img; do
       name="$(basename "$img")"
@@ -43,7 +44,8 @@ fi
 # --- Apply wallpaper only using swww ---
 notify-send "Applying Wallpaper" --icon="~/.config/matugen/paint-brush.webp"
 
-swww img "$SELECTED_PATH" --transition-type any --transition-fps 60
+awww img "$SELECTED_PATH" --transition-type any --transition-fps 75
+# swww img "$SELECTED_PATH" --transition-type any --transition-fps 60
 ln -sf "$SELECTED_PATH" "$SYMLINK_PATH"
 
 echo "✅ Applied wallpaper: $SELECTED_PATH"
