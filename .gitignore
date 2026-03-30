@@ -109,3 +109,5 @@ kitty/.config/kitty/sessions/*
 !kitty/.config/kitty/sessions/example.session
 !kitty/.config/kitty/sessions/README.md
 !kitty/.config/kitty/sessions/readme.md
+/hypr/.config/hypr/hyprlock_wallpaper
+/hypr/.config/hypr/random_wallpaper_enabled
