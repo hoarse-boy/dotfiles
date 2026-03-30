@@ -6,9 +6,9 @@
 )
 
 ;; scln = semicolon
-;; lbrc and  rbrc = brackets
+;; lbrc and rbrc = brackets
 ;; bksl = backslash
-;; dont print the actual symbol, they will make break treesitter
+;; dont print the actual symbol, they will break treesitter
 
 (defvar
   ;; tap-timeout is used to make the tap-hol to have key repeat. ex. tap a and a in repeat succession and then hold a will produces a lot of 'a'.
@@ -165,6 +165,8 @@
         ;; (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover) ;; TODO: make it run cmd hover and then change to mouse layer. but it needs to wait though
         lalt
         ())
+
+  ctl_w (multi lctl w)
 )
 
 (defchordsv2
@@ -174,7 +176,7 @@
 (deflayer mouse
   _
   _      _       _        _      _      _      _      _      _       @tabL    @tabR     _     _    _
-  Home   _       _      mmid   mrgt     _      _      _     @ma↑       _        _      mbck  mfwd  _
+  Home   _       @ctl_w      mmid   mrgt     _      _      _     @ma↑       _        _      mbck  mfwd  _
   End   @slw    @fst    @fst   @fst     _      _     @ma←   @ma↓      @ma→      _       _     _
   @fst  @sFst   @cut    @copy  @paste   _     @mwd   @mwu   @mwl      @mwr      _       _     _
   _      _      @mLyr                  mlft                 @cBase     _        _       _     _    _
