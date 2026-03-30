@@ -4,4 +4,4 @@
 wallpaper=$(find ~/my-wallpaper -type f \( -iname '*.jpg' -o -iname '*.png' -o -iname '*.jpeg' -o -iname '*.webp' \) | shuf -n 1)
 
 # set it with transition
-swww img "$wallpaper" --transition-type any --transition-duration 2
+awww img "$wallpaper" --transition-type any --transition-duration 2

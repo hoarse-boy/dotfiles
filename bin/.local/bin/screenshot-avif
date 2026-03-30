@@ -50,8 +50,17 @@ if ! file /tmp/screenshot.png | grep -q "PNG image"; then
   exit 1
 fi
 
-# Convert to AVIF (using default quality)
-if ! avifenc /tmp/screenshot.png -o "$FILENAME"; then
+# # Convert to AVIF (using default quality)
+# if ! avifenc /tmp/screenshot.png -o "$FILENAME"; then
+#   notify-send "Conversion Failed" "Could not convert to AVIF" -t $TIME 
+#   exit 1
+# fi
+
+# Convert to AVIF (optimized for screenshots: text + images)
+# -q 65: Good quality for text readability, smaller than 80
+# -s 4: Balanced speed/compression
+# -y 444: No chroma subsampling = sharp text edges (critical for readability)
+if ! avifenc -q 65 -s 4 -y 444 /tmp/screenshot.png -o "$FILENAME"; then
   notify-send "Conversion Failed" "Could not convert to AVIF" -t $TIME 
   exit 1
 fi
