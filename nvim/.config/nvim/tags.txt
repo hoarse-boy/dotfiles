@@ -576,3 +576,4 @@ virtual_cam
 gtk
 avifenc
 awww
+hyprlock
