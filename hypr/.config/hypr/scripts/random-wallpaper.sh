@@ -1,7 +1,21 @@
 #!/usr/bin/env bash
+
 set -euo pipefail
 
 SYMLINK="$HOME/.config/hypr/current_wallpaper"
+TOGGLE_FILE="$HOME/.config/hypr/random_wallpaper_enabled"
+
+# default: disabled if file missing
+# [[ -f "$TOGGLE_FILE" ]] || exit 0
+
+# create file if missing and default to enabled
+[[ -f "$TOGGLE_FILE" ]] || echo "1" > "$TOGGLE_FILE"
+
+# read toggle value
+ENABLED="$(cat "$TOGGLE_FILE" 2>/dev/null || echo 0)"
+
+# only run if enabled = 1
+[[ "$ENABLED" == "1" ]] || exit 0
 
 # ensure symlink exists
 [[ -e "$SYMLINK" ]] || exit 0

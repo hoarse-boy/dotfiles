@@ -16,7 +16,6 @@ CURRENT_THEME_DIR=$(dirname "$CURRENT_WALL")  # wallpapers of current theme
 # --- Pick wallpaper from current theme ---
 RANDOM_WALL="$(find "$CURRENT_THEME_DIR" -maxdepth 1 -type f \
   \( -iname "*.avif" -o -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.gif" \) | shuf -n 1)"
-  # \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.gif" \) | shuf -n 1)" # FIX: . change to use avif
 
 SELECTED_WALL=$(
   {
