@@ -573,3 +573,6 @@ gpu-screen-recorder
 wf-recorder
 web_cam
 virtual_cam
+gtk
+avifenc
+awww
