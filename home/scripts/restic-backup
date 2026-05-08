@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# config
+export RESTIC_REPOSITORY="rclone:gdrive:backups/jho-notes"
+export RESTIC_PASSWORD_FILE="$HOME/.config/restic/pass"
+
+NOTES_DIR="$HOME/jho-notes"
+
+# protection against empty directory
+if [[ ! -d "$NOTES_DIR" ]] || [[ -z "$(find "$NOTES_DIR" -mindepth 1 -print -quit 2>/dev/null)" ]]; then
+    command -v notify-send >/dev/null && notify-send "restic" "backup skipped (empty directory)"
+    exit 0
+fi
+
+# notify start
+command -v notify-send >/dev/null && notify-send "restic" "backup started"
+
+# run backup
+if restic backup "$NOTES_DIR"; then
+    command -v notify-send >/dev/null && notify-send "restic" "backup success"
+else
+    command -v notify-send >/dev/null && notify-send "restic" "backup failed"
+    exit 1
+fi
+
+# cleanup old snapshots
+restic forget --keep-last 10 --prune
+
+command -v notify-send >/dev/null && notify-send "restic" "prune done"

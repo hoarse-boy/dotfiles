@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+trap 'echo "error on line $LINENO"' ERR
+
+# usage: ./classify.sh <theme-name> [--dry]
+
+THEME="${1:-}"
+[[ -z "$THEME" ]] && { echo "usage: $0 <theme-name> [--dry]"; exit 1; }
+
+DRY=false
+[[ "${2:-}" == "--dry" ]] && DRY=true
+
+shopt -s nullglob
+
+LIGHT_MIN=0.1
+
+# updated naming
+DIR_LIGHT="${THEME}-light"
+DIR_DARK="${THEME}-dark"
+
+mkdir -p "$DIR_LIGHT" "$DIR_DARK"
+
+light_count=0
+dark_count=0
+skip_count=0
+
+echo "theme: $THEME"
+echo "dry  : $DRY"
+echo
+
+# create opacity.conf (once per folder)
+create_opacity() {
+    local dir="$1"
+    local type="$2"
+    local conf="$dir/opacity.conf"
+
+    if [[ -f "$conf" ]]; then
+        echo "[skip] opacity.conf exists → $dir"
+        return
+    fi
+
+    if $DRY; then
+        echo "[conf] would create opacity.conf → $dir ($type)"
+        return
+    fi
+
+    echo "[conf] creating opacity.conf → $dir ($type)"
+
+    if [[ "$type" == "dark" ]]; then
+        cat > "$conf" <<'EOF'
+blackThemedOpacity=0.85
+opacityValue=0.93
+opacityDarker=0.97
+EOF
+    else
+        cat > "$conf" <<'EOF'
+blackThemedOpacity=0.9
+opacityValue=0.93
+opacityDarker=0.95
+EOF
+    fi
+}
+
+create_opacity "$DIR_LIGHT" "light"
+create_opacity "$DIR_DARK" "dark"
+
+# theme.jpg
+if [[ -f "theme.jpg" ]]; then
+    if $DRY; then
+        echo "[theme] would copy theme.jpg → all folders"
+    else
+        echo "[theme] copying theme.jpg"
+        cp -n theme.jpg "$DIR_LIGHT/"
+        cp -n theme.jpg "$DIR_DARK/"
+    fi
+fi
+
+files=( *.avif )
+echo "[scan] found ${#files[@]} avif files"
+echo
+
+for img in "${files[@]}"; do
+    # skip if already exists in either dir
+    if [[ -f "$DIR_LIGHT/$img" || -f "$DIR_DARK/$img" ]]; then
+        ((++skip_count))
+        echo "[skip] already exists → $img"
+        continue
+    fi
+
+    echo "[proc] $img"
+
+    val=$(magick "$img" -colorspace gray -threshold 95% -format "%[fx:mean*100]" info: 2>/dev/null || echo "ERR")
+
+    if [[ "$val" == "ERR" ]]; then
+        echo "  └─ magick failed"
+        continue
+    fi
+
+    class=$(awk -v v="$val" -v l="$LIGHT_MIN" '
+        BEGIN {
+            if (v >= l) print "light";
+            else print "dark";
+        }
+    ')
+
+    echo "  └─ value: $val → $class"
+
+    if $DRY; then
+        continue
+    fi
+
+    if [[ "$class" == "light" ]]; then
+        ((++light_count))
+        cp "$img" "$DIR_LIGHT/"
+        echo "  └─ copied → $DIR_LIGHT/"
+    else
+        ((++dark_count))
+        cp "$img" "$DIR_DARK/"
+        echo "  └─ copied → $DIR_DARK/"
+    fi
+done
+
+echo
+echo "[summary]"
+echo "light : $light_count"
+echo "dark  : $dark_count"
+echo "skip  : $skip_count"
+echo ""
+echo "manually check as this is not 100% accurate. some bright wallpaper might be moved to dark folder."

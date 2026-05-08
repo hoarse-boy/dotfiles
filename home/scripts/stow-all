@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+# WARN: DEPRECATED
+
+set -uo pipefail
+
+# -------------------------------
+# Silent cleanup for Neovim config
+# -------------------------------
+cleanup_nvim() {
+  NVIM_PATH="$HOME/.config/nvim"
+
+  if [[ -d "$NVIM_PATH" ]]; then
+    gum confirm "⚠️  Found existing Neovim config at ${NVIM_PATH}. Remove it?" && {
+      gum spin --spinner dot --title "Removing Neovim config..." -- rm -rf "$NVIM_PATH"
+      gum style --foreground 10 "✓ Removed old Neovim config."
+    } || {
+      gum style --foreground 11 "→ Skipping Neovim config removal."
+    }
+  fi
+}
+
+# -------------------------------
+# Stow packages
+# -------------------------------
+run_stow() {
+  cd ~/my-dotfiles || {
+    gum style --foreground 9 "✘ Failed to cd into ~/my-dotfiles"
+    return 1
+  }
+
+  EXCLUDE=("hypr" "arch-installation-script" ".git" "logs")
+
+  gum style --foreground 12 "📦 Stowing dotfiles..."
+
+  for package in */; do
+    package_name="${package%/}" # remove trailing slash
+
+    if printf '%s\n' "${EXCLUDE[@]}" | grep -Fxq "$package_name"; then
+      gum style --foreground 11 "→ Skipping excluded package: ${package_name}"
+      continue
+    fi
+
+    gum style --foreground 14 "→ Stowing: ${package_name}"
+    stow -v "$package_name"
+  done
+
+  gum style --foreground 10 "✅ All applicable packages stowed."
+}
+
+# -------------------------------
+# Main
+# -------------------------------
+cleanup_nvim
+run_stow
