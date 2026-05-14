@@ -4,8 +4,14 @@
 *.bak
 *.tmp
 
+.nomedia
+log
+socket
+pid
+
 # logs
 *.log
+log
 
 # system-specific files
 .DS_Store
@@ -54,7 +60,6 @@ dot_config/tmux/tmux.macos.conf
 dot_config/fish/fish_variables
 dot_config/fish/fish_variables-back
 
-
 # git
 .git-credentials
 private_dot_git-credentials
@@ -65,6 +70,27 @@ ghostty/.config/ghostty/macos
 tmux/.config/tmux/plugins
 tmux/.config/tmux/plugins
 kitty/.config/kitty/macos.conf
+
+stow/fish/.config/fish/macos.fish
+stow/fish/.config/fish/fish_variables-back
+stow/fish/.config/fish/fish_variables
+stow/ghostty/.config/ghostty/macos
+stow/tmux/.config/tmux/plugins
+stow/tmux/.config/tmux/plugins
+stow/kitty/.config/kitty/macos.conf
+
+# config
+/config/fish/macos.fish
+/config/fish/conf.d/fish_frozen_theme.fish
+/config/fish/conf.d/fish_frozen_key_bindings.fish
+/config/fish/fish_variables-back
+/config/fish/fish_variables
+/config/ghostty/macos
+/config/tmux/plugins
+/config/tmux/plugins
+/config/kitty/macos.conf
+/config/mpd/mpdstate
+/config/mpd/mpd.db
 
 # systemd
 systemd/.config/systemd/user/*.wants/
@@ -80,6 +106,9 @@ csrftokens.txt
 syncthing/.config/syncthing/*.db
 syncthing/.config/syncthing/.syncthing.tmp.*
 
+stow/syncthing/.config/syncthing/*.db
+stow/syncthing/.config/syncthing/.syncthing.tmp.*
+
 # exclude machine-specific binaries
 /.local/bin/*.bin
 /.local/bin/secrets_*
@@ -91,3 +120,102 @@ bin/.local/bin/etcher
 ghostty/.config/ghostty/other
 kitty/.config/kitty/arch.conf
 fish/.config/fish/arch.fish
+
+stow/.local/bin/*.bin
+stow/.local/bin/secrets_*
+stow/ghostty/.config/ghostty/arch
+stow/ghostty/.config/ghostty/arch.toml
+stow/bin/.local/bin/bunx
+stow/bin/.local/bin/balena-etcher
+stow/bin/.local/bin/etcher
+stow/ghostty/.config/ghostty/other
+stow/kitty/.config/kitty/arch.conf
+stow/fish/.config/fish/arch.fish
+
+/config/fish/arch.fish
+
+/hypr/.config/hypr/current_wallpaper
+/hypr/.config/hypr/colors/colors.conf
+/mpd/.config/mpd/mpdstate
+/rofi/.config/rofi/colors.rasi
+/quickshell/.config/quickshell/matugen.json
+/waybar/.config/waybar/.current_theme
+/waybar/.config/waybar/config.jsonc
+/waybar/.config/waybar/style.css
+/waybar/.config/waybar/colors/colors.css
+
+stow/hypr/.config/hypr/current_wallpaper
+stow/hypr/.config/hypr/colors/colors.conf
+stow/mpd/.config/mpd/mpdstate
+stow/rofi/.config/rofi/colors.rasi
+stow/quickshell/.config/quickshell/matugen.json
+stow/waybar/.config/waybar/.current_theme
+stow/waybar/.config/waybar/config.jsonc
+stow/waybar/.config/waybar/style.css
+stow/waybar/.config/waybar/colors/colors.css
+
+/hypr/.config/hypr/hyprlock_wallpaper
+/hypr/.config/hypr/random_wallpaper_enabled
+
+
+## ignore generated or symlinked files that are machine-specific
+/config/hypr/current_wallpaper
+/config/hypr/colors/colors.conf
+/config/mpd/.config/mpd/mpdstate
+/config/rofi/colors.rasi
+/config/quickshell/matugen.json
+/config/waybar/.current_theme
+/config/waybar/config.jsonc
+/config/waybar/style.css
+/config/waybar/colors/colors.css
+/config/hypr/hyprlock_wallpaper
+/config/hypr/random_wallpaper_enabled
+# FIX: . what about .config/hypr/current_wallpaper? is it ignored for nixos?
+
+## kitty
+# kitty session files
+kitty/.config/kitty/sessions/*
+stow/kitty/.config/kitty/sessions/*
+# but not these files
+!kitty/.config/kitty/sessions/example.session
+!kitty/.config/kitty/sessions/README.md
+!kitty/.config/kitty/sessions/readme.md
+
+# ignore all session other files
+/config/kitty/sessions/*
+
+# allow git to traverse dir
+!config/kitty/sessions/
+
+# re-include specific files
+!config/kitty/sessions/example.session
+!config/kitty/sessions/README.md
+!config/kitty/sessions/readme.md
+
+/config/kitty/arch.conf
+
+# other ignores
+stow/hypr/.config/hypr/hyprlock_wallpaper
+stow/hypr/.config/hypr/random_wallpaper_enabled
+
+# restic secrets
+restic/.config/restic/pass
+stow/restic/.config/restic/pass
+
+rclone/.config/rclone/rclone.conf
+/hypr/.config/hypr/conf/dynamic-var.conf
+
+stow/rclone/.config/rclone/rclone.conf
+stow/hypr/.config/hypr/conf/dynamic-var.conf
+
+# each machine must have its own hardware-configuration.nix
+nixos/hardware-configuration.nix
+
+# matugen
+/config/matugen/theme_cache
+/config/matugen/theme.txt
+/config/matugen/matugenskiposthook
+
+# ghostty
+/config/ghostty/arch
+

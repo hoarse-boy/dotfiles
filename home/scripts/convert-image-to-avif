@@ -1,0 +1,120 @@
+#!/bin/bash
+
+# Supported image extensions (lowercase)
+SUPPORTED=("jpg" "jpeg" "png" "webp" "y4m" "gif" "bmp" "tiff" "tif")
+
+# Output directory
+OUTPUT_DIR="converted-avif"
+mkdir -p "$OUTPUT_DIR"
+
+# Function to check if file extension is supported
+is_supported() {
+    local filename="$1"
+    local ext="${filename##*.}"
+    ext=$(echo "$ext" | tr '[:upper:]' '[:lower:]')
+    
+    # Skip if already avif
+    if [[ "$ext" == "avif" ]]; then
+        return 1
+    fi
+    
+    for supported_ext in "${SUPPORTED[@]}"; do
+        if [[ "$ext" == "$supported_ext" ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+# Function to check if output already exists
+output_exists() {
+    local name="$1"
+    # Check current dir and output dir
+    if [ -f "${name}.avif" ] || [ -f "${OUTPUT_DIR}/${name}.avif" ]; then
+        return 0
+    fi
+    return 1
+}
+
+# Function to convert a single file
+convert_file() {
+    local input="$1"
+    local basename=$(basename "$input")
+    local name="${basename%.*}"
+    local output="${OUTPUT_DIR}/${name}.avif"
+    # local output="${name}.avif"
+    
+    # Skip if already exists
+    if output_exists "$name"; then
+        echo "Skipping: $input (already converted)"
+        return 0
+    fi
+    
+    echo "Converting: $input"
+    
+    # Correct syntax: avifenc [options] input output
+    if ! avifenc -q 70 -s 4 -r full --cicp 1/13/1 "$input" "$output"; then
+        echo "Failed to convert: $input" >&2
+        return 1
+    fi
+    
+    echo "✓ Created: $output"
+    echo ""
+}
+
+# Main logic - default to processing all files if no argument or if argument is "."
+if [ $# -eq 0 ] || [ "$1" == "." ]; then
+    # Process all files in current directory
+    echo "Processing all images in current directory..."
+    echo ""
+    
+    found=0
+    for file in *; do
+        # Skip directories and the output folder
+        if [ -d "$file" ] || [[ "$file" == "$OUTPUT_DIR" ]]; then
+            continue
+        fi
+        
+        if is_supported "$file" && [ -f "$file" ]; then
+            convert_file "$file"
+            ((found++))
+        fi
+    done
+    
+    if [ $found -eq 0 ]; then
+        echo "No supported image files found in current directory."
+        exit 1
+    fi
+    
+    echo "Done! Converted $found file(s)."
+    
+else
+    # Single file mode
+    ARG="$1"
+    
+    if [ ! -f "$ARG" ]; then
+        echo "Error: File not found: $ARG"
+        exit 1
+    fi
+    
+    if ! is_supported "$ARG"; then
+        echo "Error: Unsupported file or already AVIF: $ARG"
+        echo "Supported formats: ${SUPPORTED[*]}"
+        exit 1
+    fi
+    
+    convert_file "$ARG"
+    echo "Done!"
+fi
+
+# Show results
+echo ""
+echo "Output files:"
+ls -lh *.avif 2>/dev/null || echo "No AVIF files in current directory"
+ls -lh "${OUTPUT_DIR}/" 2>/dev/null || echo "No AVIF files in ${OUTPUT_DIR}/"
+
+echo ""
+echo "Test with awww:"
+echo "  awww img ${OUTPUT_DIR}/*.avif"
+
+notify-send "convert-image-to-avif" "Done! Converted $found file(s)."

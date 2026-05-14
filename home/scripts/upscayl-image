@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+
+# Default values
+SCALE=2
+INPUT_PATH=""
+UPScalED_DIR="upscaled"
+
+# Function to display usage
+usage() {
+  echo "Usage: $0 [-s scale] [-d directory] [file]"
+  echo "  -s scale     Output scale (default: 2)"
+  echo "  -d directory Directory containing images (default: current directory)"
+  echo "  file         Optional: specific file to upscale (overrides directory)"
+  echo ""
+  echo "Supported formats: png, jpg, jpeg, webp"
+  exit 1
+}
+
+# Function to check if output already exists
+output_exists() {
+  local output_file="$1"
+  if [ -f "$output_file" ]; then
+    return 0  # File exists
+  else
+    return 1  # File does not exist
+  fi
+}
+
+# Parse command line arguments
+while getopts "s:d:h" opt; do
+  case $opt in
+  s) SCALE="$OPTARG" ;;
+  d) INPUT_PATH="$OPTARG" ;;
+  h) usage ;;
+  *) usage ;;
+  esac
+done
+
+# Shift to get the file argument if present
+shift $((OPTIND - 1))
+
+# Check if a specific file was provided as the remaining argument
+if [ $# -gt 0 ]; then
+  SINGLE_FILE="$1"
+  if [ -f "$SINGLE_FILE" ]; then
+    echo "Processing single file: $SINGLE_FILE"
+
+    # Create upscaled directory if it doesn't exist
+    mkdir -p "$UPScalED_DIR"
+
+    # Get filename without path
+    filename=$(basename "$SINGLE_FILE")
+    output_file="$UPScalED_DIR/${filename}"
+
+    # Check if output already exists
+    if output_exists "$output_file"; then
+      echo "⚠ Skipping: $filename (output already exists in $UPScalED_DIR/)"
+      notify-send "upscayl-image" "Skipped: $filename (already upscaled)"
+      exit 0
+    fi
+
+    # Upscale the single file
+    echo "Upscaling: $filename (scale: $SCALE)"
+    upscayl-bin -i "$SINGLE_FILE" -o "$output_file" -n realesrgan-x4plus -s "$SCALE"
+
+    if [ $? -eq 0 ]; then
+      echo "✓ Successfully upscaled to $output_file"
+      notify-send "upscayl-image" "✓ Upscaled: $filename"
+    else
+      echo "✗ Failed to upscale $filename"
+      notify-send "upscayl-image" "✗ Failed to upscale: $filename" --urgency=critical
+      exit 1
+    fi
+  else
+    echo "Error: File '$SINGLE_FILE' not found"
+    exit 1
+  fi
+else
+  # No specific file provided, process directory
+  # Use current directory if none specified
+  if [ -z "$INPUT_PATH" ]; then
+    INPUT_PATH="."
+  fi
+
+  # Check if directory exists
+  if [ ! -d "$INPUT_PATH" ]; then
+    echo "Error: Directory '$INPUT_PATH' not found"
+    exit 1
+  fi
+
+  # Create upscaled directory if it doesn't exist
+  mkdir -p "$UPScalED_DIR"
+
+  echo "Processing images in: $INPUT_PATH"
+  echo "Scale factor: $SCALE"
+  echo "Output directory: $UPScalED_DIR/"
+  echo "----------------------------------------"
+
+  # Counters for processed files
+  processed=0
+  skipped=0
+  failed=0
+
+  # Process each extension separately to avoid brace expansion issues
+  for ext in png jpg jpeg webp; do
+    for file in "$INPUT_PATH"/*."$ext"; do
+      # Skip if no files match (when glob doesn't expand)
+      [ -f "$file" ] || continue
+
+      # Get just the filename
+      filename=$(basename "$file")
+      output_file="$UPScalED_DIR/${filename}"
+
+      # Check if output already exists
+      if output_exists "$output_file"; then
+        echo "⚠ Skipping: $filename (output already exists)"
+        ((skipped++))
+        continue
+      fi
+
+      echo "Upscaling: $filename"
+      upscayl-bin -i "$file" -o "$output_file" -n realesrgan-x4plus -s "$SCALE"
+
+      if [ $? -eq 0 ]; then
+        echo "✓ Saved to $output_file"
+        ((processed++))
+      else
+        echo "✗ Failed to upscale $filename"
+        ((failed++))
+      fi
+      echo "---"
+    done
+  done
+
+  # Summary
+  echo "----------------------------------------"
+  echo "Complete! Processed: $processed, Skipped: $skipped, Failed: $failed"
+  
+  # Send notification with summary
+  if [ $processed -gt 0 ] || [ $skipped -gt 0 ] || [ $failed -gt 0 ]; then
+    notify-send "upscayl-image" "Complete! Processed: $processed | Skipped: $skipped | Failed: $failed"
+  fi
+fi

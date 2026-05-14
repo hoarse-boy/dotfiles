@@ -1,0 +1,32 @@
+[Default Applications]
+x-scheme-handler/postman=Postman.desktop
+text/html=vivaldi-stable.desktop
+x-scheme-handler/http=vivaldi-stable.desktop
+x-scheme-handler/https=vivaldi-stable.desktop
+x-scheme-handler/about=vivaldi-stable.desktop
+x-scheme-handler/unknown=vivaldi-stable.desktop
+x-scheme-handler/terabox=TeraBox.desktop
+image/avif=org.gnome.Loupe.desktop
+image/png=org.gnome.Loupe.desktop
+image/jpeg=org.gnome.Loupe.desktop
+image/gif=imv.desktop
+image/webp=org.gnome.Loupe.desktop
+image/tiff=imv.desktop
+image/bmp=imv.desktop
+image/svg+xml=imv.desktop
+image/jpg=imv.desktop
+image/x-portable-pixmap=imv.desktop
+image/x-portable-bitmap=imv.desktop
+image/x-portable-graymap=imv.desktop
+image/heic=imv.desktop
+image/heif=imv.desktop
+x-scheme-handler/tonsite=org.telegram.desktop.desktop
+
+[Added Associations]
+image/avif=gimp.desktop;imv.desktop;org.gnome.Loupe.desktop;
+image/png=gimp.desktop;feh.desktop;imv.desktop;userapp-upscayl-WA21M3.desktop;org.gnome.Loupe.desktop;
+video/mp4=mpv.desktop;vlc.desktop;
+image/jpeg=gimp.desktop;imv-dir.desktop;org.gnome.Loupe.desktop;feh.desktop;satty.desktop;imv.desktop;
+image/webp=gimp.desktop;org.gnome.Loupe.desktop;
+application/vnd.microsoft.portable-executable=wine.desktop;
+x-scheme-handler/tonsite=org.telegram.desktop.desktop;

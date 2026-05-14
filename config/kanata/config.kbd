@@ -1,0 +1,191 @@
+(defcfg
+  log-layer-changes no
+  process-unmapped-keys yes
+  danger-enable-cmd yes
+  concurrent-tap-hold yes
+)
+
+;; scln = semicolon
+;; lbrc and rbrc = brackets
+;; bksl = backslash
+;; dont print the actual symbol, they will break treesitter
+
+(defvar
+  ;; tap-timeout is used to make the tap-hol to have key repeat. ex. tap a and a in repeat succession and then hold a will produces a lot of 'a'.
+  tap-timeout   200
+  hold-timeout  250
+  tt $tap-timeout
+  ht $hold-timeout
+)
+
+(defsrc
+  esc
+  grv  1    2    3    4    5    6    7    8    9     0     -      =    bspc
+  tab  q    w    e    r    t    y    u    i    o     p    lbrc   rbrc  bksl
+  caps a    s    d    f    g    h    j    k    l    scln   '     ret
+  lsft z    x    c    v    b    n    m    ,    .     /    rsft    up
+  lctl lmet lalt           spc           ralt rmet  rctl  left   down  right
+)
+
+;; homerow
+(defalias
+  ;; tap-hold-tap-keys usefull for home row
+  ;; (tap-hold-tap-keys $tap-repress-timeout $hold-timeout $tap-action $hold-action $tap-keys)
+  ;; met_s (tap-hold-tap-keys $tt $ht s lmet (a b c))
+  ;; or empty () / $tap-keys to avoid early tap-hold behavior
+
+  nav (tap-hold-tap-keys $tt $ht spc (layer-while-held navigation) ())
+
+  ;; home row left side: alt, meta, shift, ctrl.
+  alt_a (tap-hold-tap-keys $tt $ht a lalt ())
+  met_s (tap-hold-tap-keys $tt $ht s lmet ())
+  sft_d (tap-hold-tap-keys $tt $ht d lsft ())
+  ctl_f (tap-hold-tap-keys $tt $ht f lctl ())
+
+  ;; this makes j, k and l to not have any repetition pressing. 
+  ctl_j (tap-hold-tap-keys $tt $ht j rctl ())
+  sft_k (tap-hold-tap-keys $tt $ht k rsft ())
+  met_l (tap-hold-tap-keys $tt $ht l rmet ())
+  alt_scln (tap-hold-tap-keys $tt $ht scln lalt ()) ;; it uses lalt because some keyboards have different behavior of lalt and ralt.
+)
+
+(deflayer base
+  esc
+  grv        1      2       3       4       5    6    7       8       9        0         -      =     bspc
+  tab        q      w       e       r       t    y    u       i       o        p        lbrc   rbrc   bksl
+  esc     @alt_a  @met_s  @sft_d  @ctl_f    g    h  @ctl_j  @sft_k  @met_l  @alt_scln    '     ret
+  lsft       z      x       c       v       b    n    m       ,       .        /        rsft   up
+  lctl     lmet   @mLyr2           @nav                     @cMouse  rmet     rctl      left   down   right
+)
+
+(defalias
+  endCaps (tap-hold-tap-keys $tt $ht End caps ())
+
+  ;; tab navigation
+  tabL (multi lctl lsft tab)
+  tabR (multi lctl tab)
+
+  ;; hyprland window switching
+  ;; from cyclenext dispatch in hyprland
+  AltTabL (multi lalt lsft tab)
+  AltTabR (multi lalt tab)
+  MAltTab (multi lmeta lalt tab)
+)
+
+(deflayer navigation
+  esc
+  grv        1    2    3    4     5      6        7         8         9          0        -      =     bspc
+  Home      esc   w    e    r     t      y     @AltTabL    up      @AltTabR   @MAltTab   lbrc   rbrc   bksl 
+  @endCaps   a    s    d    f   @tabL  @tabR     left     down     right        scln      '     ret
+  lsft       z    x    c    v     b     @mwd     @mwu     @mwl      @mwr       rpt-any   rsft    up
+  lctl      lmet lalt            spc                      ralt      rmet        rctl     left   down   right
+)
+
+;; mouse layer. kanata built-in mouse keys and wl-kbptr
+(defvar
+  mw-initial-v 35 
+  mw-maximum-v 300
+  mw-accel 1.15
+  mw-decel 0.1 ;; this make it move the mousewhell fast with no delay like regular mouse-wheel. 0.9 for example will make it have animation until it is done.
+
+  ;; mw-initial-v 10
+  ;; mw-maximum-v 120
+  ;; mw-accel 1.15
+  ;; mw-decel 0.93
+)
+
+(defalias
+  ;; mwu (mwheel-up 30 120)
+  ;; mwd (mwheel-down 30 120)
+  mwu (mwheel-accel-up   $mw-initial-v $mw-maximum-v $mw-accel $mw-decel)
+  mwd (mwheel-accel-down $mw-initial-v $mw-maximum-v $mw-accel $mw-decel)
+
+
+  mwl (mwheel-left 50 120)
+  mwr (mwheel-right 50 120)
+
+  ma↑ (movemouse-up 7 2)
+  ma← (movemouse-left 7 2)
+  ma↓ (movemouse-down 7 2)
+  ma→ (movemouse-right 7 2)
+
+  ;; ma↑ (movemouse-accel-up 1 1000 1 5)
+  ;; ma← (movemouse-accel-left 1 1000 1 5)
+  ;; ma↓ (movemouse-accel-down 1 1000 1 5)
+  ;; ma→ (movemouse-accel-right 1 1000 1 5)
+
+  sFst (movemouse-speed 500)
+  fst (movemouse-speed 200)
+  slw (movemouse-speed 15)
+
+  copy (macro C-c) 
+  paste (macro C-v) 
+  cut (macro C-x) 
+
+  cBase (tap-hold-tap-keys $tt $ht (multi
+        (layer-switch base)
+        ;; (push-msg "layer:base")
+        )
+        alt ())
+
+  ;; this is to change to base layer to avoid wl-kbptr / mouseless to unable to press keys
+  cBaseL (tap-hold-tap-keys $tt $ht
+         (multi
+         (layer-switch base)
+         ;; (push-msg "layer:base")
+         lalt
+         )
+         lalt ())
+
+  cMouse (tap-hold-tap-keys $tt $ht (multi
+         (layer-switch mouse)
+         ;; (push-msg "layer:mouse")
+         )
+         ralt ())
+)
+
+;; mLyr is for wl-kbptr. which is better than mouseless as this has both hover and click when using script.
+;; works with wayland + free.
+(defalias
+  ;; this remove the lalt hold keys. if need change to use tap-tap-hold-tap-keys and inside is is tap-dance?
+  ;; timeout makes it slower than hyprland's. but making it 150 or lower will make it missfires as i need to double tap super fast.
+  ;; mLyr (tap-dance 200 (
+  ;;      (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh))
+  ;;      (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover))
+  ;;      ))
+
+  ;; mLyr2 (tap-dance 200 (
+  ;;      (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh)
+  ;;      (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover)
+  ;;      ))
+
+  mLyr (tap-hold-tap-keys $tt $ht
+        (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh) lalt)
+        ;; (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover) lalt)
+        lalt
+        ())
+
+  mLyr2 (tap-hold-tap-keys $tt $ht
+        (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh)
+        ;; (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover) ;; TODO: make it run cmd hover and then change to mouse layer. but it needs to wait though
+        lalt
+        ())
+
+  ctl_w (multi lctl w)
+)
+
+(defchordsv2
+  (lalt j) (multi (layer-switch base) (cmd /home/jho/.config/hypr/scripts/wl-kbptr.sh hover)) 50 all-released ()
+)
+
+(deflayer mouse
+  _
+  _      _       _        _      _       _      _      _      _         _       _       _     _    _
+  Home   _      @ctl_w  mmid   mrgt      _      _      _     @ma↑       _       _      mbck  mfwd  _
+  End   @slw    @fst    @fst   @fst    @tabL  @tabR   @ma←   @ma↓      @ma→     _       _     _
+  @fst  @sFst   @cut    @copy  @paste    _     @mwd   @mwu   @mwl      @mwr     _       _     _
+  _      _      @mLyr                   mlft                 @cBase     _       _       _     _    _
+)
+
+;; dont copy below to any file that nvim reads ex. md file.
+;; vim:ft=lisp

@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# check dependencies
+command -v ffprobe >/dev/null 2>&1 || { echo "ffprobe not found"; exit 1; }
+command -v id3v2 >/dev/null 2>&1 || { echo "id3v2 not found"; exit 1; }
+
+# find all mp3 files recursively
+find . -type f -iname "*.mp3" | while IFS= read -r file; do
+    echo "checking: $file"
+
+    # extract title using ffprobe
+    title=$(ffprobe -v error \
+        -show_entries format_tags=title \
+        -of default=noprint_wrappers=1:nokey=1 \
+        "$file" || true)
+
+    if [[ -n "${title:-}" ]]; then
+        echo "  → has title, skipping"
+        continue
+    fi
+
+    # generate title from filename
+    filename=$(basename "$file")
+    generated_title="${filename%.mp3}"
+
+    echo "  → missing title, setting: $generated_title"
+
+    id3v2 -t "$generated_title" \
+          -a "Unknown" \
+          -A "Unknown" \
+          "$file"
+
+    echo "  → updated"
+done
+
+echo "done"

@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+WALLPAPER_SRC="$HOME/Pictures/wallpapers"
+MP3_SRC="$HOME/Music/sync-music"
+
+DEST_BASE="mega:/backup"
+
+notify() {
+    command -v notify-send >/dev/null && notify-send "rclone" "$1"
+}
+
+sync_dir () {
+    local SRC="$1"
+    local DEST="$2"
+
+    if [[ ! -d "$SRC" ]] || [[ -z "$(find "$SRC" -mindepth 1 -print -quit 2>/dev/null)" ]]; then
+        notify "skip $(basename "$SRC") (empty)"
+        return 0
+    fi
+
+    if rclone copy "$SRC" "$DEST" \
+        --checksum \
+        --transfers=4 \
+        --checkers=8 \
+        --create-empty-src-dirs; then
+        notify "$(basename "$SRC") backup success"
+    else
+        notify "$(basename "$SRC") backup failed"
+        return 1
+    fi
+}
+
+notify "backup started"
+
+sync_dir "$WALLPAPER_SRC" "$DEST_BASE/wallpapers"
+sync_dir "$MP3_SRC" "$DEST_BASE/mp3"
+
+notify "all done"

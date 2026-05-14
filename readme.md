@@ -1,93 +1,35 @@
-# dotfiles setup guide
+- [ ] update read me for nixos
 
-## prerequisites
+- [ ] for dir config that has symlink or ever changing files like theme color. dont put into home manager
 
-before cloning this repository, make sure you have **git** and **gnu stow** or **curl** installed.
+- [ ] clean up readme. make it readable
 
-### install git & stow
+must run this manually
 
-#### arch linux
+- `lsblk`
+- `cfdisk`
+- `mkfs`
+- `mount`
 
-```sh
-sudo pacman -S git stow curl
-```
 
-#### macos (homebrew)
+## After `/mnt` + `/mnt/boot` are mounted:
 
-```sh
-brew install git stow
-```
+Use one command.
 
-## cloning and setting up
+## One-liner
 
-### linux
-
-#### complete installation script (arch linux only)
-
-Install [Hyprland](https://hyprland.org/) bootstraped by [ML4W](https://github.com/mylinuxforwork/dotfiles), stow dotfiles and run arch init scripts.
+ <!-- FIX: .  -->priority. check this
 
 ```bash
-bash <(curl -sL https://raw.githubusercontent.com/hoarse-boy/dotfiles/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/hoarse-boy/dotfiles/main/bootstrap.sh)
 ```
 
-the install.sh does the following:
-- install ML4W and its dotfiles.
-- stow dotfiles to home directory.
-- install packages.
-- run arch init scripts (systemd, setup commands, etc).
 
-### macos
 
-#### 1. clone the repository
 
-```sh
-git clone --recursive https://github.com/hoarse-boy/dotfiles.git ~/my-dotfiles
+---
+
+
+```bash
+sudo nixos-rebuild switch --flake ~/dotfiles#jho
 ```
-
-#### 2. navigate to the dotfiles directory
-
-```sh
-cd ~/my-dotfiles
-```
-
-#### 3. symlink dotfiles
-
-run the following commands to create symlinks:
-
-```sh
-stow-all
-```
-
-or stow one folder:
-
-```sh
-stow aerospace/
-```
-
-#### 3.1 symlink specific files (optional)
-
-this is for stowing hyprland config files.
-
-```sh
-manage-ml4w-config
-```
-
-#### 4. verify the symlinks
-
-run:
-
-```sh
-ls -l ~/.config/
-```
-
-you should see **symlinks** pointing to `~/my-dotfiles/.config/`.
-
-## additional notes
-
-- to remove a symlinked folder without deleting the original files, use:
-
-    ```sh
-    remove-dotfiles
-    ```
-
-- if you encounter permission errors, run `chown -R $USER:$USER ~/my-dotfiles/`.

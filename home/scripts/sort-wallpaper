@@ -1,0 +1,186 @@
+#!/bin/bash
+
+# Usage:
+#   ./sort_wallpapers.sh [--test] [--blur] [directory]
+#   ./sort_wallpapers.sh [--test] [--blur] image1.jpg image2.png ...
+
+TARGET_DIR="."
+TEST_MODE=false
+BLUR_CHECK=false
+SPECIFIC_FILES=()
+
+# Pixel thresholds
+PIXELS_4K=$(( 3840 * 2160 ))
+PIXELS_FHD=$(( 1920 * 1080 ))
+PIXELS_HD=$(( 1280 * 720 ))
+
+# Quality threshold (only for 4K+ images)
+MIN_QUALITY=75
+
+# Blur threshold — % of image blocks considered blurry (0-100)
+# Lower = stricter. 40 means "if 40%+ of blocks are blurry, reject"
+MAX_BLUR_RATIO=40
+
+# --- Argument parsing ---
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --test)  TEST_MODE=true;  shift ;;
+        --blur)  BLUR_CHECK=true; shift ;;
+        *)
+            if [[ -d "$1" && ${#SPECIFIC_FILES[@]} -eq 0 ]]; then
+                TARGET_DIR="$1"
+            else
+                SPECIFIC_FILES+=("$1")
+            fi
+            shift
+            ;;
+    esac
+done
+
+DIR_2X="$TARGET_DIR/needs-upscaling/2x"
+DIR_3X="$TARGET_DIR/needs-upscaling/3x"
+DIR_4X="$TARGET_DIR/needs-upscaling/4x"
+DIR_LOWQ="$TARGET_DIR/low-4k-quality"
+DIR_BLUR="$TARGET_DIR/too-blurry"
+
+kept=0; up2=0; up3=0; up4=0; lowq=0; blurry=0; skipped=0
+
+$TEST_MODE && echo "[ TEST MODE — no files will be moved ]"
+$BLUR_CHECK && echo "[ BLUR CHECK enabled — threshold: ${MAX_BLUR_RATIO}% ]"
+echo ""
+
+# --- Python blur checker (block-based ratio, not single Laplacian score) ---
+# Splits image into 16x16 blocks, checks each block's Laplacian variance.
+# Counts what % of blocks are blurry. Works better for anime/flat-color art
+# than a single global score because sharp outline blocks still get detected
+# even if large flat-color areas score low.
+read -r -d '' BLUR_SCRIPT << 'EOF'
+import cv2, sys, numpy as np
+
+path = sys.argv[1]
+threshold = float(sys.argv[2])   # blur threshold per block
+max_ratio = float(sys.argv[3])   # % of blurry blocks to flag as blurry
+
+img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+if img is None:
+    print("error")
+    sys.exit(1)
+
+h, w = img.shape
+block_size = max(16, min(h, w) // 32)   # adaptive block size
+
+blurry_blocks = 0
+total_blocks = 0
+
+for y in range(0, h - block_size, block_size):
+    for x in range(0, w - block_size, block_size):
+        block = img[y:y+block_size, x:x+block_size]
+        variance = cv2.Laplacian(block, cv2.CV_64F).var()
+        if variance < threshold:
+            blurry_blocks += 1
+        total_blocks += 1
+
+if total_blocks == 0:
+    print("error")
+    sys.exit(1)
+
+blur_ratio = (blurry_blocks / total_blocks) * 100
+is_blurry = blur_ratio >= max_ratio
+
+print(f"{blur_ratio:.1f}:{'blurry' if is_blurry else 'sharp'}")
+EOF
+
+check_blur() {
+    local img="$1"
+    # block threshold: anime needs lower value (15) vs photos (30)
+    # we use 15 to be safe for anime
+    python3 -c "$BLUR_SCRIPT" "$img" 15 "$MAX_BLUR_RATIO" 2>/dev/null
+}
+
+# --- Build file list ---
+if [[ ${#SPECIFIC_FILES[@]} -gt 0 ]]; then
+    files=("${SPECIFIC_FILES[@]}")
+else
+    files=()
+    for ext in jpg jpeg png webp JPG JPEG PNG; do
+        for f in "$TARGET_DIR"/*."$ext"; do
+            [[ -f "$f" ]] && files+=("$f")
+        done
+    done
+fi
+
+# --- Move helper ---
+do_move() {
+    local src="$1" dest_dir="$2"
+    if ! $TEST_MODE; then
+        mkdir -p "$dest_dir"
+        mv "$src" "$dest_dir/"
+    fi
+}
+
+# --- Process ---
+for img in "${files[@]}"; do
+    [[ -f "$img" ]] || continue
+
+    read width height quality <<< $(identify -format "%w %h %Q" "$img" 2>/dev/null)
+
+    if [[ -z "$width" ]]; then
+        echo "⚠  SKIP          $(basename "$img")"
+        ((skipped++))
+        continue
+    fi
+
+    total_pixels=$(( width * height ))
+
+    # --- 4K+ images ---
+    if (( total_pixels >= PIXELS_4K )); then
+
+        # quality check
+        if (( quality < MIN_QUALITY )); then
+            echo "⚠  LOW-QUALITY   ${width}x${height} Q${quality}  $(basename "$img")"
+            do_move "$img" "$DIR_LOWQ"
+            ((lowq++))
+            continue
+        fi
+
+        # optional blur check (only on 4K+ that passed quality)
+        if $BLUR_CHECK; then
+            result=$(check_blur "$img")
+            blur_ratio="${result%%:*}"
+            blur_verdict="${result##*:}"
+
+            if [[ "$blur_verdict" == "blurry" ]]; then
+                echo "✗  BLURRY        ${width}x${height} Q${quality} blur=${blur_ratio}%  $(basename "$img")"
+                do_move "$img" "$DIR_BLUR"
+                ((blurry++))
+                continue
+            else
+                echo "✓  KEEP          ${width}x${height} Q${quality} blur=${blur_ratio}%  $(basename "$img")"
+            fi
+        else
+            echo "✓  KEEP          ${width}x${height} Q${quality}  $(basename "$img")"
+        fi
+        ((kept++))
+
+    # --- Below 4K — upscale buckets ---
+    elif (( total_pixels >= PIXELS_FHD )); then
+        echo "↑  2x UPSCALE    ${width}x${height} Q${quality}  $(basename "$img")"
+        do_move "$img" "$DIR_2X"
+        ((up2++))
+
+    elif (( total_pixels >= PIXELS_HD )); then
+        echo "↑  3x UPSCALE    ${width}x${height} Q${quality}  $(basename "$img")"
+        do_move "$img" "$DIR_3X"
+        ((up3++))
+
+    else
+        echo "↑  4x UPSCALE    ${width}x${height} Q${quality}  $(basename "$img")"
+        do_move "$img" "$DIR_4X"
+        ((up4++))
+    fi
+
+done
+
+echo ""
+echo "Done — kept: $kept  |  2x: $up2  |  3x: $up3  |  4x: $up4  |  low-quality: $lowq  |  blurry: $blurry  |  skipped: $skipped"
+$TEST_MODE && echo "[ TEST MODE — re-run without --test to apply moves ]"

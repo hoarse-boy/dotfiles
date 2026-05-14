@@ -1,0 +1,177 @@
+{
+  "layer": "top",
+  "position": "top",
+  "margin-left": 10,
+  "margin-right": 10,
+  "margin-top": 0,
+  "margin-bottom": -10,
+  "modules-left": [
+    "custom/menu",
+    "clock",
+    "custom/mpd-prev",
+    "mpd",
+    "custom/mpd-next",
+    "custom/kanata-layer"
+  ],
+  "modules-center": [
+    "hyprland/workspaces"
+  ],
+  "modules-right": [
+    "tray",
+    "custom/record",
+    "custom/power-profile",
+    "network",
+    "pulseaudio",
+    "custom/mic",
+    "custom/notification",
+  ],
+  "hyprland/workspaces": {
+    "active-only": true,
+    "all-outputs": true,
+    "on-click": "activate",
+    // "format": "{icon}",
+    "format": "<span size='12pt'>{icon}</span>",
+    "persistent-workspaces": {
+      "*": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+    },
+    "format-icons": {
+      "1": "", // Browser
+      "2": "", // Terminal
+      "3": "", // Postman and db
+      "4": "", // messangers
+      "5": "󰐝", // Others
+
+      // named workspaces 
+      "cf": "", 
+      "tm": "", 
+      "nt": "", 
+      "ai": "󱜸", 
+      "default": "󰄯",
+    },
+  },
+  "clock": {
+    "timezone": "Asia/Jakarta",
+    "tooltip": false,
+    "format": "{:%H:%M  -  %A, %d/%m/%y}",
+    "interval": 60,
+    "on-click": "qs -c ~/.config/quickshell/music msg music toggle",
+  },
+  "network": {
+    "format-wifi": "󰤢  {essid}",
+    "format-ethernet": "󰈀  {ifname}",
+    "format-disconnected": "󰤠 ",
+    "interval": 30,
+    // "interval": 5,
+    "tooltip": false,
+    "on-click": "nm-connection-editor",
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "",
+    "format-icons": {
+      "default": [
+        "",
+        "",
+        " "
+      ],
+    },
+    "tooltip": false,
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+  },
+  "custom/record": {
+    "exec": "~/.config/waybar/scripts/record-status.sh",
+    "return-type": "json",
+    "signal": 11,
+    "on-click": "~/.config/hypr/scripts/record-screen.sh",
+    "tooltip": false
+  },
+  "custom/power-profile": {
+  "exec": "~/.config/waybar/scripts/power-profile-status.sh",
+  "return-type": "json",
+  // "interval": 0, // FIX: . there is a bug 0 should run once but it keeps running the exec causing cpu spikes
+  "signal": 9,
+  "on-click": "~/.config/waybar/scripts/power-profile-toggle.sh",
+  "tooltip": true,
+  },
+  "tray": {
+    "icon-size": 18,
+    "spacing": 5,
+    "icons": {
+      "blueman": "bluetooth",
+      "TelegramDesktop": "$HOME/.local/share/icons/hicolor/16x16/apps/telegram.png",
+    },
+  },
+  "custom/kanata-layer": {
+    "exec": "~/.config/waybar/scripts/kanata-reader.sh",
+    "return-type": "json",
+    "signal": 10,
+    "format": "  {}"
+  },
+  "custom/mic": {
+    "exec": "$HOME/.config/waybar/scripts/mic-status.sh",
+    "return-type": "json",
+    "interval": 60,
+    "tooltip": false,
+    "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+  },
+  "custom/notification": {
+    "tooltip": true,
+    "format": "<span size='12pt'>{icon}</span>",
+    "format-icons": {
+      "notification": "󱅫",
+      "none": "󰂜",
+      "dnd-notification": "󰂠",
+      "dnd-none": "󰪓",
+      "inhibited-notification": "󰂛",
+      "inhibited-none": "󰪑",
+      "dnd-inhibited-notification": "󰂛",
+      "dnd-inhibited-none": "󰪑",
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true,
+  },
+  "custom/mpd-prev": {
+    "format": "󰒮",
+    "on-click": "mpc prev",
+    "tooltip": false
+  },
+  "mpd": {
+    "format": "{stateIcon}   {title}",
+    "format-paused": "   {title}",
+    "format-stopped": "  MPD",
+    "state-icons": {
+      "playing": "",
+      "paused": "",
+      "stopped": "",
+    },
+    "max-length": 20,
+    "ellipsis": true,
+    "tooltip": false,
+    "on-click": "mpc toggle",
+    "on-scroll-up": "mpc next",
+    "on-scroll-down": "mpc prev"
+  },
+  "custom/mpd-next": {
+    "format": "󰒭",
+    "on-click": "mpc next",
+    "tooltip": false
+  },
+  "custom/menu": {
+    "format": " {}",
+    "exec": "echo ; echo 󱓟 app launcher",
+    "interval": 86400, // once every day
+    "tooltip": false,
+    "on-click": "pkill rofi || rofi -show drun",
+    "on-click-right": "~/.config/hypr/wppicker.sh",
+  }
+}
